@@ -1,5 +1,6 @@
 # pipafin
-Modulo financeiro - Grupo Pipa
+
+Modulo financeiro - Grupo Pipa (em desenvolvimento)
 
 Projeto usando NodeJS versão: 20.10.0.
 
