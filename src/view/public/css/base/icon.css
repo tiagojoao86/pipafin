@@ -1,0 +1,68 @@
+.icon {
+  mask-size: 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  mask-position: center;
+}
+
+.icon-user {
+  mask-image: url(../../imgs/icons/account_circle_FILL0_wght400_GRAD0_opsz24.svg);
+}
+
+.hover-gray:hover {
+  background-color: rgb(185, 185, 185);
+}
+
+.icon-menu {
+  mask-image: url(../../imgs/icons/menu_FILL0_wght400_GRAD0_opsz24.svg);
+}
+
+.icon-close {
+  mask-image: url(../../imgs/icons/cancel_FILL0_wght400_GRAD0_opsz24.svg);
+}
+
+.icon-money {
+  mask-image: url(../../imgs/icons/attach_money_FILL0_wght400_GRAD0_opsz24.svg);
+}
+
+.icon-chevron-left {
+  mask-image: url(../../imgs/icons/chevron_left_FILL0_wght400_GRAD0_opsz24.svg);
+}
+
+.icon-chevron-right {
+  mask-image: url(../../imgs/icons/chevron_right_FILL0_wght400_GRAD0_opsz24.svg);
+}
+
+.icon-home {
+  mask-image: url(../../imgs/icons/home_FILL0_wght400_GRAD0_opsz24.svg);
+}
+
+.icon-36 {
+  width: 36px;
+  height: 36px;
+}
+
+.icon-24 {
+  width: 24px;
+  height: 24px;
+}
+
+.icon-white {
+  background-color: white;
+}
+
+.icon-text {
+  background-color: var(--text-color);
+}
+
+.icon-danger {
+  background-color: var(--danger-foreground);
+}
+
+.icon-click:active {
+  transform: scale(1.1) translateY(2px);
+}
+
+.icon-click:hover {
+  transform: scale(1.1);
+}

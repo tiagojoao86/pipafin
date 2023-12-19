@@ -1,0 +1,67 @@
+.div-main-table {
+  box-shadow: 7px 9px 10px 0px grey;
+  width: 98%;
+  margin: auto;
+  border-radius: 8px;
+}
+.table {
+  background-color: #cfcfcf1c;
+  width: 98%;
+  margin: auto;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+.table > thead {
+  font-size: 1.2em;
+  font-weight: 600;
+  border-bottom: 1px solid var(--border-color);
+  background-color: #e5e5e5;
+}
+
+.table > tbody {
+  font-size: 1.2em;
+}
+
+.table > tbody > tr:nth-child(even) {
+  background-color: #e5e5e5;
+}
+
+.table > thead > tr > th {
+  padding: 8px;
+  font-size: 1.1em;
+}
+
+.table > tbody > tr > th {
+  padding: 0px 2px 2px 2px;
+}
+
+.table > nav {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  padding: 5px;
+}
+
+.table > nav > ul {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  padding: 5px;
+  border: 1px solid var(--border-color);
+  width: fit-content;
+}
+
+.table > nav > ul > li {
+  padding: 7px;
+  font-size: 1.2em;
+  font-weight: 600;
+  color: var(--primary-color);
+  cursor: pointer;
+}
+
+.table > nav > ul > li:hover {
+  transform: scale(1.3);
+}

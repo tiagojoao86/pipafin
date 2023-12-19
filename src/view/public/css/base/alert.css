@@ -1,0 +1,21 @@
+.alert {
+  height: auto;
+  font-size: 1.2rem;
+  padding: 8px;
+  border: 1px solid black;
+  border-radius: 4px;
+  display: flex;
+  justify-content: space-between;
+  justify-items: center;
+  line-height: 1.5;
+}
+
+.alert-danger {
+  background-color: var(--danger-background);
+  color: var(--danger-foreground);
+  border-color: var(--danger-foreground);
+}
+
+.message {
+  flex-grow: 1;
+}

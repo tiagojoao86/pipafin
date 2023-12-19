@@ -1,0 +1,33 @@
+.top-bar {
+  background-color: var(--pipa-blue);
+  color: white;
+  height: 8vh;
+}
+
+.main {
+  flex-grow: 10;
+}
+
+.side-menu {
+  flex-grow: 1;
+  height: 91vh;
+  background-color: var(--gray-background);
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
+  box-shadow: 2px 4px 14px 1px gray;
+}
+
+.side-menu > ul > li {
+  font-size: 1.4em;
+  padding: 10px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.side-menu > ul > li > ul > li {
+  padding: 5px 0px 5px 20px;
+}
+
+.item-menu {
+  text-decoration: none;
+  color: var(--text-color);
+}
