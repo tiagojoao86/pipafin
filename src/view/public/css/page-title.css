@@ -6,6 +6,7 @@
 
 .main {
   flex-grow: 10;
+  height: 91vh;
 }
 
 .side-menu {
@@ -30,4 +31,27 @@
 .item-menu {
   text-decoration: none;
   color: var(--text-color);
+}
+
+.user-menu {
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+.user-menu-content {
+  position: absolute;
+  box-shadow: 2px 4px 14px 1px gray;
+  padding: 10px;
+  background-color: var(--gray-background);
+  color: var(--text-color);
+  min-width: 10vw;
+  text-align: right;
+  font-size: 1.2rem;
+  border-radius: 8px;
+}
+
+.user-menu-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }

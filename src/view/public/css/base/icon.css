@@ -37,6 +37,10 @@
   mask-image: url(../../imgs/icons/home_FILL0_wght400_GRAD0_opsz24.svg);
 }
 
+.icon-logout {
+  mask-image: url(../../imgs/icons/logout_FILL0_wght400_GRAD0_opsz24.svg);
+}
+
 .icon-36 {
   width: 36px;
   height: 36px;

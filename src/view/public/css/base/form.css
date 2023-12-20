@@ -21,7 +21,7 @@
 
 .form-control:focus-visible {
   outline: var(--border-color) solid 0px;
-  box-shadow: 0px 0px 5px 1px black;
+  box-shadow: 0px 0px 5px 1px var(--pipa-blue);
 }
 
 .form-text {

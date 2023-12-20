@@ -5,6 +5,10 @@ export class MainComponent {
   menu: SideMenuGroup[] = [];
   sideMenu: HTMLElement = document.getElementById('side-menu')!;
   sideMenuIcon: HTMLElement = document.getElementById('sideMenuIcon')!;
+  userMenuIcon: HTMLElement = document.getElementById('userMenuIcon')!;
+  userMenuContent: HTMLElement = document.getElementById('userMenuContent')!;
+
+  logoutIcon: HTMLElement = document.getElementById('logoutIcon')!;
 
   constructor() {
     this.populateMenu();
@@ -77,12 +81,29 @@ export class MainComponent {
       'click',
       this.hideShowSideMenu.bind(this)
     );
+
+    this.userMenuIcon.addEventListener(
+      'click',
+      this.hideShowUserMenu.bind(this)
+    );
+
+    this.logoutIcon.addEventListener('click', this.logout.bind(this));
+  }
+
+  private logout(): void {
+    window.location.href = '/login';
   }
 
   private hideShowSideMenu(): void {
     if (this.sideMenu.classList.contains('hidden'))
       this.sideMenu.classList.remove('hidden');
     else this.sideMenu.classList.add('hidden');
+  }
+
+  private hideShowUserMenu(): void {
+    if (this.userMenuContent.classList.contains('hidden'))
+      this.userMenuContent.classList.remove('hidden');
+    else this.userMenuContent.classList.add('hidden');
   }
 }
 
