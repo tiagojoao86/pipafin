@@ -20,6 +20,12 @@ export class FrontendApp {
   private configureRoutes(): void {
     this.app.use('/financeiro', new TitulosRoutes(Router()).routes());
 
+    this.app.use('/inicio', (req: any, res: any) => {
+      res.render('inicio', {
+        pageTitle: 'Pipafin',
+      });
+    });
+
     this.app.use('/login', (req: any, res: any) => {
       res.render('login', {
         pageTitle: 'Pipafin',
@@ -29,6 +35,7 @@ export class FrontendApp {
     this.app.use((req: any, res: any, next: any) => {
       if (req.originalUrl === '/' || req.originalUrl === '') {
         res.redirect('/login');
+        return;
       }
       res.status(404).render('404', {
         pageTitle: '',

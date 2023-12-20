@@ -6,6 +6,7 @@
 
 .main {
   flex-grow: 10;
+  height: 91vh;
 }
 
 .side-menu {

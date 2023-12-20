@@ -31,7 +31,7 @@ export class LoginComponent {
     }
 
     const access = btoa(this.loginInput.value + '#' + this.passwordInput.value);
-    window.location.href = '/titulos';
+    window.location.href = '/inicio';
   }
 
   closeAlertLogin() {

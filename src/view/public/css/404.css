@@ -1,14 +1,1 @@
-.flex-box {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 
-.container-box {
-  height: 90vh;
-}
-
-.content-box {
-  text-align: center;
-  width: 100vw;
-}
