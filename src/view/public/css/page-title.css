@@ -19,7 +19,7 @@
 }
 
 .side-menu > ul > li {
-  font-size: 1.4em;
+  font-size: 1.4rem;
   padding: 10px;
   border-bottom: 1px solid var(--border-color);
 }

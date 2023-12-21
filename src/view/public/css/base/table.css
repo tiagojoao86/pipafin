@@ -13,14 +13,14 @@
 }
 
 .table > thead {
-  font-size: 1.2em;
+  font-size: 1.2rem;
   font-weight: 600;
   border-bottom: 1px solid var(--border-color);
   background-color: #e5e5e5;
 }
 
 .table > tbody {
-  font-size: 1.2em;
+  font-size: 1.2rem;
 }
 
 .table > tbody > tr:nth-child(even) {
@@ -29,7 +29,7 @@
 
 .table > thead > tr > th {
   padding: 8px;
-  font-size: 1.1em;
+  font-size: 1.2rem;
 }
 
 .table > tbody > tr > th {
@@ -56,7 +56,7 @@
 
 .table > nav > ul > li {
   padding: 7px;
-  font-size: 1.2em;
+  font-size: 1.2rem;
   font-weight: 600;
   color: var(--primary-color);
   cursor: pointer;

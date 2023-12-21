@@ -3,6 +3,10 @@
   background-color: white;
   font-weight: 600;
   padding: 10 10 10 10px;
+  font-size: 1.2rem;
+  margin: 2px 2px 2px 2px;
+  min-width: 75px;
+  text-align: center;
 }
 
 .btn:hover {
@@ -17,7 +21,7 @@
   box-shadow: 7px 9px 10px 0px grey;
 }
 
-.btn-white {
+.btn-font-white {
   color: white;
 }
 
@@ -27,6 +31,10 @@
 
 .btn-primary {
   background-color: var(--primary-color);
+}
+
+.btn-danger {
+  background-color: var(--danger-background);
 }
 
 .btn-border {

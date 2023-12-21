@@ -10,6 +10,12 @@ export class TitulosRoutes {
       });
     });
 
+    this.router.get('/titulos/new', (req, res, next) => {
+      res.render('titulo/criar-titulo', {
+        pageTitle: 'Título',
+      });
+    });
+
     return this.router;
   }
 }
