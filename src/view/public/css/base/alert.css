@@ -11,9 +11,9 @@
 }
 
 .alert-danger {
-  background-color: var(--danger-background);
-  color: var(--danger-foreground);
-  border-color: var(--danger-foreground);
+  background-color: var(--danger-background-alert);
+  color: var(--danger-foreground-alert);
+  border-color: var(--danger-foreground-alert);
 }
 
 .message {

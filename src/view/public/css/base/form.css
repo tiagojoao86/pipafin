@@ -4,15 +4,14 @@
 }
 
 .form-group > label {
-  font-size: 1.2em;
+  font-size: 1.2rem;
   font-weight: 500;
   padding-bottom: 3px;
 }
 
 .form-control {
   line-height: 2;
-  margin-bottom: 5px;
-  margin-top: 3px;
+  margin: 3px 2px 5px 2px;
   border: 1px solid var(--border-color);
   border-radius: 3px;
   padding: 0px 2px 0px 2px;
@@ -28,7 +27,7 @@
   color: grey;
   padding: 5px;
   font-weight: 500;
-  font-size: 1.2em;
+  font-size: 1.2rem;
 }
 
 .form-text > a {
