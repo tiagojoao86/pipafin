@@ -35,3 +35,7 @@
   font-size: 1em;
   color: var(--text-color);
 }
+
+select {
+  padding: 5px !important;
+}

@@ -1,8 +1,30 @@
+import { resolve } from 'path';
+
 export class ModalComponent {
   overlayEl: HTMLElement = document.createElement('div');
   modal: HTMLElement = document.createElement('div');
 
-  constructor(width: number, height: number, url: string) {
+  constructor() {}
+
+  public async openModal(
+    width: number,
+    height: number,
+    url: string
+  ): Promise<boolean> {
+    const page = await this.buildModal(width, height, url);
+    this.modal.innerHTML = page;
+    document.body.appendChild(this.overlayEl);
+
+    return new Promise((resolve) => {
+      resolve(true);
+    });
+  }
+
+  async buildModal(
+    width: number,
+    height: number,
+    url: string
+  ): Promise<string> {
     this.overlayEl.classList.add('modal-overlay');
     this.overlayEl.addEventListener('click', this.closeModal.bind(this));
 
@@ -14,15 +36,8 @@ export class ModalComponent {
     });
     this.overlayEl.appendChild(this.modal);
 
-    fetch('titulos/new').then((response) => {
-      response.text().then((page) => {
-        this.modal.innerHTML = page;
-      });
-    });
-  }
-
-  public openModal(): void {
-    document.body.appendChild(this.overlayEl);
+    const response = await fetch(url);
+    return response.text();
   }
 
   public closeModal($event: Event): void {
