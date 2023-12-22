@@ -18,7 +18,7 @@ export class CriarTituloDto {
   dataVencimento: Date;
 
   @IsNotEmpty()
-  dataPagamento: Date;
+  dataPagamento?: Date;
 
   constructor(
     numero: string,

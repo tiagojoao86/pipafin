@@ -11,7 +11,7 @@ export interface TituloDto {
   situacao: SituacaoTitulo;
   dataCriacao: Date;
   dataVencimento: Date;
-  dataPagamento: Date;
+  dataPagamento?: Date;
 }
 
 export function criarTituloDtoDoModelo(titulo: Titulo): TituloDto {

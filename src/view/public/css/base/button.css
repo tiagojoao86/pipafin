@@ -7,6 +7,7 @@
   margin: 2px 2px 2px 2px;
   min-width: 75px;
   text-align: center;
+  cursor: pointer;
 }
 
 .btn:hover {
@@ -35,6 +36,10 @@
 
 .btn-danger {
   background-color: var(--danger-background);
+}
+
+.btn-success {
+  background-color: var(--success-background);
 }
 
 .btn-border {

@@ -1,5 +1,5 @@
 import path, { dirname } from 'path';
-import { TitulosRoutes } from './view/routes/titulos-routes.js';
+import { TitulosRoutes } from './view/routes/titulo-routes.js';
 import express, { Router } from 'express';
 import { fileURLToPath } from 'url';
 
@@ -18,7 +18,7 @@ export class FrontendApp {
   }
 
   private configureRoutes(): void {
-    this.app.use('/financeiro', new TitulosRoutes(Router()).routes());
+    this.app.use('/financeiro/titulo', new TitulosRoutes(Router()).routes());
 
     this.app.use('/inicio', (req: any, res: any) => {
       res.render('inicio', {

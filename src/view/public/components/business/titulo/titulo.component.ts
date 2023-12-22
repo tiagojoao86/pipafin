@@ -5,6 +5,8 @@ import { WidthColumnClass } from '../../base/table/width-column-class.enum.js';
 import { TituloDataManager } from './titulo.data-manager.js';
 import { TipoTitulo } from '../../../model/titulo/enum/tipo-titulo.enum.js';
 import { ModalComponent } from '../../base/modal/modal.component.js';
+import { dataManager } from './titulo.module.js';
+import { TituloDetail } from './titulo-detail.component.js';
 
 export class TituloComponent {
   table: TableComponent<Titulo>;
@@ -70,8 +72,10 @@ export class TituloComponent {
   }
 
   btnCriarClick() {
-    const modal: ModalComponent = new ModalComponent(370, 290, '/titulos/new');
-    modal.openModal();
+    const modal: ModalComponent = new ModalComponent();
+    modal.openModal(330, 245, 'titulo/titulo-detail').then((ready) => {
+      new TituloDetail(this.dataManager);
+    });
   }
 
   async loadInitialData() {
@@ -112,4 +116,4 @@ export class TituloComponent {
   }
 }
 
-new TituloComponent(new TituloDataManager());
+new TituloComponent(dataManager);

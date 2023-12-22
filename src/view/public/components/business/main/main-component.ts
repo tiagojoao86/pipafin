@@ -67,7 +67,7 @@ export class MainComponent {
       itens: [
         {
           name: 'Manutenção de Títulos',
-          url: '/financeiro/titulos',
+          url: '/financeiro/titulo',
         },
       ],
     };
