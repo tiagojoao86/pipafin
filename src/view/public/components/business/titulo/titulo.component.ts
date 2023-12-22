@@ -1,4 +1,4 @@
-import { Titulo } from 'src/view/public/model/titulo/titulo.model.js';
+import { Titulo } from '../../../model/titulo/titulo.model.js';
 import { ColumnType } from '../../base/table/column-type.js';
 import { TableComponent } from '../../base/table/table.component.js';
 import { WidthColumnClass } from '../../base/table/width-column-class.enum.js';
@@ -7,9 +7,12 @@ import { TipoTitulo } from '../../../model/titulo/enum/tipo-titulo.enum.js';
 import { ModalComponent } from '../../base/modal/modal.component.js';
 import { dataManager } from './titulo.module.js';
 import { TituloDetail } from './titulo-detail.component.js';
+import { BaseComponent } from '../../base/base.component.js';
 
-export class TituloComponent {
+export class TituloComponent extends BaseComponent {
   table: TableComponent<Titulo>;
+
+  data: Titulo[] = [];
 
   tituloMain: HTMLElement | null = document.getElementById('titulo-main');
 
@@ -65,6 +68,7 @@ export class TituloComponent {
   ];
 
   constructor(private dataManager: TituloDataManager) {
+    super();
     this.table = new TableComponent('titulos__table', this.headers, null, true);
     this.tituloMain?.appendChild(this.table.getTable());
     this.loadInitialData();
@@ -74,13 +78,14 @@ export class TituloComponent {
   btnCriarClick() {
     const modal: ModalComponent = new ModalComponent();
     modal.openModal(330, 245, 'titulo/titulo-detail').then((ready) => {
-      new TituloDetail(this.dataManager);
+      const tituloDetail = new TituloDetail(this.dataManager);
+      modal.setContentID(tituloDetail.componentID);
     });
   }
 
   async loadInitialData() {
-    const data = await this.dataManager.getTitulo();
-    this.table.updateData(data);
+    this.data = await this.dataManager.getTitulo();
+    this.table.updateData(this.data);
   }
 
   dateFormatter(date: Date): string {
@@ -113,6 +118,16 @@ export class TituloComponent {
     }
 
     return '';
+  }
+
+  protected handleMessages(
+    message: string,
+    payload: any,
+    origin: string
+  ): void {
+    if (message === 'titulo-salvo') {
+      this.table.appendRow(payload as Titulo);
+    }
   }
 }
 

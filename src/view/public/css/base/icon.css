@@ -59,8 +59,8 @@
   background-color: var(--text-color);
 }
 
-.icon-danger {
-  background-color: var(--danger-foreground);
+.icon-danger-alert {
+  background-color: var(--danger-foreground-alert);
 }
 
 .icon-click:active {

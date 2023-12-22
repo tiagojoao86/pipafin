@@ -1,10 +1,17 @@
-import { resolve } from 'path';
+import { BaseComponent } from '../base.component.js';
 
-export class ModalComponent {
+export class ModalComponent extends BaseComponent {
+  contentID: string = '';
   overlayEl: HTMLElement = document.createElement('div');
   modal: HTMLElement = document.createElement('div');
 
-  constructor() {}
+  constructor() {
+    super();
+  }
+
+  public setContentID(contentID: string): void {
+    this.contentID = contentID;
+  }
 
   public async openModal(
     width: number,
@@ -40,7 +47,18 @@ export class ModalComponent {
     return response.text();
   }
 
-  public closeModal($event: Event): void {
+  private closeModal(): void {
+    super.unsubscribeMessages();
     document.body.removeChild(this.overlayEl);
+  }
+
+  protected handleMessages(
+    message: string,
+    payload: any,
+    origin: string
+  ): void {
+    if (message === 'close-modal' && origin === this.contentID) {
+      this.closeModal();
+    }
   }
 }

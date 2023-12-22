@@ -49,6 +49,10 @@ export class TableComponent<E> {
     this.populateTable();
   }
 
+  public appendRow(item: E) {
+    this.tbodyEl.appendChild(this.createRow(item));
+  }
+
   private organizeChilds(): void {
     this.divTable.appendChild(this.tableEl);
     this.divPagination.appendChild(this.paginationEl);
@@ -68,15 +72,20 @@ export class TableComponent<E> {
   /** Populates table */
   private populateTable(): void {
     this.data?.forEach((item: any) => {
-      const trEl = document.createElement('tr');
-
-      this.verifyAndCreateRowSelector(item, trEl);
-
-      this.columns.forEach((header) => {
-        this.createDataRow(item, header, trEl);
-      });
-      this.tbodyEl.appendChild(trEl);
+      this.tbodyEl.appendChild(this.createRow(item));
     });
+  }
+
+  private createRow(item: E): HTMLTableRowElement {
+    const trEl = document.createElement('tr');
+
+    this.verifyAndCreateRowSelector(item, trEl);
+
+    this.columns.forEach((header) => {
+      this.createDataRow(item, header, trEl);
+    });
+
+    return trEl;
   }
 
   /** Creates rows with data */
