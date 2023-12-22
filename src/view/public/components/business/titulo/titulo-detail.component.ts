@@ -1,28 +1,54 @@
 import { CriarTituloDto } from 'src/view/public/model/titulo/dto/criar-titulo.dto';
 import { TituloDataManager } from './titulo.data-manager';
 import { TipoTitulo } from 'src/view/public/model/titulo/enum/tipo-titulo.enum';
+import { BaseComponent } from '../../base/base.component.js';
+import { MessagesControl } from '../../base/messages.component.js';
+import { dataManager } from './titulo.module.js';
 
-export class TituloDetail {
-  salvarButton: HTMLElement = document.getElementById('btnSalvarTitulo')!;
+export class TituloDetail extends BaseComponent {
+  btnSalvarTitulo: HTMLElement = document.getElementById('btnSalvarTitulo')!;
+  btnCancelarEdicao: HTMLElement =
+    document.getElementById('btnCancelarEdicao')!;
   tituloDetail: HTMLFormElement = document.querySelector('form')!;
   inputValorTitulo: HTMLInputElement = document.getElementById(
     'inputValorTitulo'
   )! as HTMLInputElement;
 
+  alert = document.getElementById('alertTituloDetail');
+  message = document.getElementById('messageTituloDetail');
+  btnCloseAlertTituloDetail = document.getElementById('closeAlertTituloDetail');
+
   constructor(private dataManager: TituloDataManager) {
+    super();
     this.addEventListeners();
   }
 
   addEventListeners() {
-    this.salvarButton?.addEventListener('click', this.salvarTitulo.bind(this));
+    this.btnSalvarTitulo?.addEventListener(
+      'click',
+      this.salvarTitulo.bind(this)
+    );
     this.inputValorTitulo.addEventListener(
       'keyup',
       this.formatMoney.bind(this)
     );
+
+    this.btnCancelarEdicao.addEventListener(
+      'click',
+      this.cancelarEdicao.bind(this)
+    );
+
+    this.btnCloseAlertTituloDetail?.addEventListener(
+      'click',
+      this.closeAlertLogin.bind(this)
+    );
+  }
+
+  cancelarEdicao(): void {
+    this.publishCloseModal();
   }
 
   formatMoney($event: any) {
-    console.log($event);
     if (
       $event.key.match(/[^\d|\,]/g) &&
       $event.key !== 'Backspace' &&
@@ -36,12 +62,12 @@ export class TituloDetail {
       if (this.inputValorTitulo.value.length > 2) {
         let value = this.inputValorTitulo.value;
         value = value.replace(',', '');
-        console.log('value', value);
+
         const decimal = value.substring(value.length - 2, value.length);
-        console.log('decimal', decimal);
         let inteiro = value.substring(0, value.length - 2);
-        console.log('inteiro', inteiro);
+
         if (inteiro === '') inteiro = '0';
+
         this.inputValorTitulo.value = inteiro + ',' + decimal;
       }
     }
@@ -64,7 +90,15 @@ export class TituloDetail {
       return;
     }
 
-    this.dataManager.salvarTitulo(criarTitulo);
+    this.dataManager.salvarTitulo(criarTitulo).then((titulo) => {
+      MessagesControl.publishMessage('titulo-salvo', titulo, this.componentID);
+      this.publishCloseModal();
+    });
+  }
+
+  publishCloseModal() {
+    super.unsubscribeMessages();
+    MessagesControl.publishMessage('close-modal', null, this.componentID);
   }
 
   validarForm(formData: FormData): boolean {
@@ -82,8 +116,18 @@ export class TituloDetail {
     if (isNaN(new Date(formData.get('dataVencimento') as string).getTime()))
       errors.push('A data de vencimento precisa ser válida');
 
-    console.log(errors);
+    if (errors.length > 0) {
+      this.alert?.classList.remove('hidden');
+
+      if (this.message) this.message.innerHTML = errors.join('<br>');
+    }
 
     return errors.length === 0;
+  }
+
+  closeAlertLogin() {
+    if (this.message) this.message.innerHTML = '';
+
+    this.alert?.classList.add('hidden');
   }
 }

@@ -1,7 +1,8 @@
 import { SideMenuGroup } from 'src/view/public/model/side-menu/side-menu-group.js';
 import { SideMenuItem } from 'src/view/public/model/side-menu/side-menu-item';
+import { BaseComponent } from '../../base/base.component.js';
 
-export class MainComponent {
+export class MainComponent extends BaseComponent {
   menu: SideMenuGroup[] = [];
   sideMenu: HTMLElement = document.getElementById('side-menu')!;
   sideMenuIcon: HTMLElement = document.getElementById('sideMenuIcon')!;
@@ -11,6 +12,7 @@ export class MainComponent {
   logoutIcon: HTMLElement = document.getElementById('logoutIcon')!;
 
   constructor() {
+    super();
     this.populateMenu();
     this.addEventListener();
   }

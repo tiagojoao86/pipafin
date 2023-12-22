@@ -1,5 +1,5 @@
-import { SituacaoTitulo } from './enum/situacao-titulo.enum';
-import { TipoTitulo } from './enum/tipo-titulo.enum';
+import { SituacaoTitulo } from './enum/situacao-titulo.enum.js';
+import { TipoTitulo } from './enum/tipo-titulo.enum.js';
 
 export class Titulo {
   id: string;
