@@ -42,14 +42,14 @@ export class MainComponent extends BaseComponent {
 
   private getGroupHtml(item: SideMenuGroup): string {
     return `<a href="${item.url}" class="item-menu flex-row-container flex-center">
-              <div class="icon icon-24 icon-text ${item.icon}"></div>
+              <div class="icon icon-24 icon-color-text ${item.icon}"></div>
               <div>${item.name}</div>
             </a>`;
   }
 
   private getItemHtml(item: SideMenuItem): string {
     return `<a href="${item.url}" class="item-menu flex-row-container flex-center">
-              <div class="icon icon-24 icon-text icon-chevron-right"></div>
+              <div class="icon icon-24 icon-color-text icon-chevron-right"></div>
               <div>${item.name}</div>
             </a>`;
   }

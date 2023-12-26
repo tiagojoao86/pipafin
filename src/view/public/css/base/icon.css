@@ -41,6 +41,18 @@
   mask-image: url(../../imgs/icons/logout_FILL0_wght400_GRAD0_opsz24.svg);
 }
 
+.icon-info {
+  mask-image: url(../../imgs/icons/info_FILL0_wght400_GRAD0_opsz24.svg);
+}
+
+.icon-error {
+  mask-image: url(../../imgs/icons/error_FILL0_wght400_GRAD0_opsz24.svg);
+}
+
+.icon-warning {
+  mask-image: url(../../imgs/icons/warning_FILL0_wght400_GRAD0_opsz24.svg);
+}
+
 .icon-36 {
   width: 36px;
   height: 36px;
@@ -51,12 +63,24 @@
   height: 24px;
 }
 
-.icon-white {
+.icon-color-white {
   background-color: white;
 }
 
-.icon-text {
+.icon-color-black {
+  background-color: black;
+}
+
+.icon-color-text {
   background-color: var(--text-color);
+}
+
+.icon-color-primary {
+  background-color: var(--primary-color);
+}
+
+.icon-color-warning {
+  background-color: var(--warning-color);
 }
 
 .icon-danger-alert {
@@ -69,4 +93,21 @@
 
 .icon-click:hover {
   transform: scale(1.1);
+}
+
+.icon-warning-background {
+  background-color: var(--icon-warning-background);
+}
+
+.icon-info-background {
+  background-color: var(--icon-info-background);
+}
+
+.icon-error-background {
+  background-color: var(--icon-error-background);
+}
+
+.icon-background {
+  border-radius: 8px;
+  padding: 10px 10px 10px 10px;
 }

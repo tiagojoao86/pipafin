@@ -1,0 +1,10 @@
+.dialog-title {
+  font-size: 1.8rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.dialog-message {
+  font-size: 1.4rem;
+  padding: 0px 0px 0px 20px;
+}

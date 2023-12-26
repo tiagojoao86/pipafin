@@ -51,6 +51,7 @@ export class TableComponent<E> {
 
   public appendRow(item: E) {
     this.tbodyEl.appendChild(this.createRow(item));
+    this.data?.push(item);
   }
 
   private organizeChilds(): void {
