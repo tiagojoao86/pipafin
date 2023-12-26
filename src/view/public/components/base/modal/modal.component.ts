@@ -13,6 +13,16 @@ export class ModalComponent extends BaseComponent {
     this.contentID = contentID;
   }
 
+  public async openDialog(width: number, height: number, dialog: string) {
+    this.buildBaseModal(width, height, false);
+    this.modal.innerHTML = dialog;
+    document.body.appendChild(this.overlayEl);
+
+    return new Promise((resolve) => {
+      resolve(true);
+    });
+  }
+
   public async openModal(
     width: number,
     height: number,
@@ -32,19 +42,29 @@ export class ModalComponent extends BaseComponent {
     height: number,
     url: string
   ): Promise<string> {
-    this.overlayEl.classList.add('modal-overlay');
-    this.overlayEl.addEventListener('click', this.closeModal.bind(this));
+    this.buildBaseModal(width, height, true);
 
-    this.modal.style.width = `${width}px`;
-    this.modal.style.height = `${height}px`;
+    const response = await fetch(url);
+    return response.text();
+  }
+
+  private buildBaseModal(
+    width: number,
+    height: number,
+    closeOnOverlayClick: boolean
+  ) {
+    this.overlayEl.classList.add('modal-overlay');
+
+    if (closeOnOverlayClick)
+      this.overlayEl.addEventListener('click', this.closeModal.bind(this));
+
+    this.modal.style.width = width ? `${width}px` : 'fit-content';
+    this.modal.style.height = height ? `${height}px` : 'fit-content';
     this.modal.classList.add('modal');
     this.modal.addEventListener('click', ($event) => {
       $event.stopPropagation();
     });
     this.overlayEl.appendChild(this.modal);
-
-    const response = await fetch(url);
-    return response.text();
   }
 
   private closeModal(): void {

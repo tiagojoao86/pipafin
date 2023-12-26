@@ -8,6 +8,8 @@ import { ModalComponent } from '../../base/modal/modal.component.js';
 import { dataManager } from './titulo.module.js';
 import { TituloDetail } from './titulo-detail.component.js';
 import { BaseComponent } from '../../base/base.component.js';
+import { DialogComponent } from '../../base/modal/dialog.component.js';
+import { DialogType } from '../../base/modal/dialog-type.js';
 
 export class TituloComponent extends BaseComponent {
   table: TableComponent<Titulo>;
@@ -16,7 +18,9 @@ export class TituloComponent extends BaseComponent {
 
   tituloMain: HTMLElement | null = document.getElementById('titulo-main');
 
-  btnCriar: HTMLElement | null = document.getElementById('titulos__btn-criar');
+  btnCriar: HTMLElement = document.getElementById('titulos__btn-criar')!;
+  btnEditar: HTMLElement = document.getElementById('titulos__btn-editar')!;
+  btnExcluir: HTMLElement = document.getElementById('titulos__btn-excluir')!;
 
   headers: ColumnType[] = [
     {
@@ -72,7 +76,21 @@ export class TituloComponent extends BaseComponent {
     this.table = new TableComponent('titulos__table', this.headers, null, true);
     this.tituloMain?.appendChild(this.table.getTable());
     this.loadInitialData();
-    this.btnCriar?.addEventListener('click', this.btnCriarClick.bind(this));
+    this.btnCriar.addEventListener('click', this.btnCriarClick.bind(this));
+    this.btnEditar.addEventListener('click', this.btnEditarClick.bind(this));
+    this.btnExcluir.addEventListener('click', this.btnExcluirClick.bind(this));
+  }
+
+  btnEditarClick() {
+    console.log(this.table.selectedRows);
+    const dialog: DialogComponent = new DialogComponent();
+    dialog.openDialog('Teste', 'Messagem Teste', DialogType.INFO);
+  }
+
+  btnExcluirClick() {
+    console.log(this.table.selectedRows);
+    const dialog: DialogComponent = new DialogComponent();
+    dialog.openDialog('Teste', 'Messagem Teste', DialogType.WARNING);
   }
 
   btnCriarClick() {
