@@ -1,6 +1,4 @@
 export enum DialogType {
-  INFO,
-  WARNING,
-  ERROR,
+  OK,
   YES_NO,
 }

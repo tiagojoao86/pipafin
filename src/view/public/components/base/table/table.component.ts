@@ -3,7 +3,7 @@ import { ColumnType } from './column-type';
 export class TableComponent<E> {
   columns: ColumnType[];
   data: E[] | null;
-  selectedRows: E[] | null;
+  selectedRows: E[];
   divMainEl = document.createElement('div');
   divTable = document.createElement('div');
   divPagination = document.createElement('div');
@@ -54,6 +54,17 @@ export class TableComponent<E> {
     this.data?.push(item);
   }
 
+  public removeRow(itemId: string) {
+    const rows = this.tbodyEl.getElementsByTagName('TR');
+
+    for (let i = 0; i < rows.length; i++) {
+      if (rows[i].getAttribute('id') === itemId) {
+        const child = this.tbodyEl.children.item(i);
+        if (child) this.tbodyEl.removeChild(child);
+      }
+    }
+  }
+
   private organizeChilds(): void {
     this.divTable.appendChild(this.tableEl);
     this.divPagination.appendChild(this.paginationEl);
@@ -94,7 +105,7 @@ export class TableComponent<E> {
     const attribute = item[header.dataAttribute];
     const thEl = document.createElement('th');
 
-    if (header.isId) thEl.id = item[header.dataAttribute];
+    if (header.isId) trEl.id = item[header.dataAttribute];
     if (header.hidden) thEl.style.display = 'none';
 
     thEl.innerHTML = header.formatter

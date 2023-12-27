@@ -78,17 +78,17 @@ export class TituloDetail extends BaseComponent {
 
     let criarTitulo: CriarTituloDto;
 
-    if (this.validarForm(formData)) {
-      criarTitulo = {
-        numero: formData.get('numero') as string,
-        valor: +(formData.get('valor') as string).replace(',', '.'),
-        descricao: formData.get('descricao') as string,
-        tipo: formData.get('tipo') as TipoTitulo,
-        dataVencimento: new Date(formData.get('dataVencimento') as string),
-      };
-    } else {
+    if (!this.validarForm(formData)) {
       return;
     }
+
+    criarTitulo = {
+      numero: formData.get('numero') as string,
+      valor: +(formData.get('valor') as string).replace(',', '.'),
+      descricao: formData.get('descricao') as string,
+      tipo: formData.get('tipo') as TipoTitulo,
+      dataVencimento: new Date(formData.get('dataVencimento') as string),
+    };
 
     this.dataManager.salvarTitulo(criarTitulo).then((titulo) => {
       MessagesControl.publishMessage('titulo-salvo', titulo, this.componentID);
