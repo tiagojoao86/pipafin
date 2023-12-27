@@ -33,4 +33,20 @@ export class TituloDataManager extends BaseDataManger {
 
     return tituloSalvo;
   }
+
+  public async removerTitulo(id: string): Promise<Titulo> {
+    const options = {
+      method: this.METHODS.DELETE,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    const tituloRemovido = await this.getJson(
+      this.url + `/${id}`,
+      options
+    ).then((data) => data);
+
+    return tituloRemovido;
+  }
 }

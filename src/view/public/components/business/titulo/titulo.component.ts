@@ -10,6 +10,7 @@ import { TituloDetail } from './titulo-detail.component.js';
 import { BaseComponent } from '../../base/base.component.js';
 import { DialogComponent } from '../../base/modal/dialog.component.js';
 import { DialogType } from '../../base/modal/dialog-type.js';
+import { DialogSeverity } from '../../base/modal/dialog-severity.js';
 
 export class TituloComponent extends BaseComponent {
   table: TableComponent<Titulo>;
@@ -82,15 +83,61 @@ export class TituloComponent extends BaseComponent {
   }
 
   btnEditarClick() {
+    if (this.table.selectedRows.length > 1) {
+      const dialog: DialogComponent = new DialogComponent();
+      dialog.openDialog(
+        'Informação',
+        'Você só pode editar 1 (um) registro por vez.',
+        {
+          severity: DialogSeverity.INFO,
+          type: DialogType.OK,
+        }
+      );
+    }
+
+    if (this.table.selectedRows.length === 0) {
+      this.abrirNenhumRegistroSelecionadoDialog();
+    }
+
     console.log(this.table.selectedRows);
-    const dialog: DialogComponent = new DialogComponent();
-    dialog.openDialog('Teste', 'Messagem Teste', DialogType.INFO);
   }
 
   btnExcluirClick() {
-    console.log(this.table.selectedRows);
+    if (this.table.selectedRows.length === 0) {
+      this.abrirNenhumRegistroSelecionadoDialog();
+    }
+
+    if (this.table.selectedRows.length > 0) {
+      const dialog: DialogComponent = new DialogComponent();
+      dialog.openDialog(
+        'Atenção!',
+        `Deseja realmente excluir ${this.table.selectedRows.length} registro(s)?`,
+        {
+          severity: DialogSeverity.WARNING,
+          type: DialogType.YES_NO,
+          YesOkCb: this.excluirRegistros.bind(this),
+        }
+      );
+    }
+  }
+
+  private excluirRegistros(): void {
+    this.table.selectedRows.forEach((row) => {
+      this.dataManager.removerTitulo(row.id);
+      this.table.removeRow(row.id);
+    });
+  }
+
+  private abrirNenhumRegistroSelecionadoDialog() {
     const dialog: DialogComponent = new DialogComponent();
-    dialog.openDialog('Teste', 'Messagem Teste', DialogType.WARNING);
+    dialog.openDialog(
+      'Informação',
+      'Você precisa selecionar pelo menos 1 (um) registro.',
+      {
+        severity: DialogSeverity.INFO,
+        type: DialogType.OK,
+      }
+    );
   }
 
   btnCriarClick() {
