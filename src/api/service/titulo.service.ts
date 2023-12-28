@@ -8,6 +8,7 @@ import {
 } from '../../view/public/model/titulo/dto/titulo.dto.js';
 import { SituacaoTitulo } from '../../view/public/model/titulo/enum/situacao-titulo.enum.js';
 import { Titulo } from '../../view/public/model/titulo/titulo.model.js';
+import { EditarTituloDto } from 'src/view/public/model/titulo/dto/editar-titulo.dto.js';
 
 export class TituloService {
   private titulos = new Array<Titulo>();
@@ -64,6 +65,26 @@ export class TituloService {
     titulo.situacao = novaSituacao;
 
     return criarTituloDtoDoModelo(titulo);
+  }
+
+  public editarTitulo(
+    id: string,
+    tituloEditado: EditarTituloDto
+  ): Titulo | undefined {
+    let titulo = this.titulos.find((tit) => tit.id === id);
+    if (titulo) {
+      if (tituloEditado.numero) titulo.numero = tituloEditado.numero;
+      if (tituloEditado.valor) titulo.valor = tituloEditado.valor;
+      if (tituloEditado.descricao) titulo.descricao = tituloEditado.descricao;
+      if (tituloEditado.tipo) titulo.tipo = tituloEditado.tipo;
+      if (tituloEditado.situacao) titulo.situacao = tituloEditado.situacao;
+      if (tituloEditado.dataVencimento)
+        titulo.dataVencimento = tituloEditado.dataVencimento;
+      if (tituloEditado.dataPagamento)
+        titulo.dataPagamento = tituloEditado.dataPagamento;
+    }
+
+    return titulo;
   }
 
   public filtrarTitulosPeloNumero(
