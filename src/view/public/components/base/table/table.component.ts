@@ -1,6 +1,7 @@
+import { BaseModel } from '../../../model/base-model.js';
 import { ColumnType } from './column-type';
 
-export class TableComponent<E> {
+export class TableComponent<E extends BaseModel> {
   columns: ColumnType[];
   data: E[] | null;
   selectedRows: E[];
@@ -52,6 +53,12 @@ export class TableComponent<E> {
   public appendRow(item: E) {
     this.tbodyEl.appendChild(this.createRow(item));
     this.data?.push(item);
+  }
+
+  public editRow(itemId: string, item: E) {
+    this.removeRow(itemId);
+    this.appendRow(item);
+    this.selectedRows = [];
   }
 
   public removeRow(itemId: string) {

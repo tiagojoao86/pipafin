@@ -97,14 +97,23 @@ export class TituloComponent extends BaseComponent {
 
     if (this.table.selectedRows.length === 0) {
       this.abrirNenhumRegistroSelecionadoDialog();
+      return;
     }
 
-    console.log(this.table.selectedRows);
+    const modal: ModalComponent = new ModalComponent();
+    modal.openModal(330, 245, 'titulo/titulo-detail').then(() => {
+      const tituloDetail = new TituloDetail(
+        this.dataManager,
+        this.table.selectedRows[0]
+      );
+      modal.setContentID(tituloDetail.componentID);
+    });
   }
 
   btnExcluirClick() {
     if (this.table.selectedRows.length === 0) {
       this.abrirNenhumRegistroSelecionadoDialog();
+      return;
     }
 
     if (this.table.selectedRows.length > 0) {
@@ -190,8 +199,12 @@ export class TituloComponent extends BaseComponent {
     payload: any,
     origin: string
   ): void {
-    if (message === 'titulo-salvo') {
+    if (message === 'titulo-criado') {
       this.table.appendRow(payload as Titulo);
+    }
+    if (message === 'titulo-editado') {
+      const titulo = payload as Titulo;
+      this.table.editRow(titulo.id, titulo);
     }
   }
 }

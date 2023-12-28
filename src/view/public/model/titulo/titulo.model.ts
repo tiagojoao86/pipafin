@@ -1,8 +1,8 @@
+import { BaseModel } from '../base-model.js';
 import { SituacaoTitulo } from './enum/situacao-titulo.enum.js';
 import { TipoTitulo } from './enum/tipo-titulo.enum.js';
 
-export class Titulo {
-  id: string;
+export class Titulo extends BaseModel {
   numero: string;
   valor: number;
   descricao: string;
@@ -22,7 +22,7 @@ export class Titulo {
     dataVencimento: Date,
     dataPagamento: Date
   ) {
-    this.id = id;
+    super(id);
     this.numero = numero;
     this.valor = valor;
     this.descricao = descricao;

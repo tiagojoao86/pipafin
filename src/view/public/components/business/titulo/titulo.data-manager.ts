@@ -1,6 +1,7 @@
 import { Titulo } from 'src/view/public/model/titulo/titulo.model.js';
 import { BaseDataManger } from '../../base/base.data-manager.js';
 import { CriarTituloDto } from 'src/view/public/model/titulo/dto/criar-titulo.dto.js';
+import { EditarTituloDto } from 'src/view/public/model/titulo/dto/editar-titulo.dto.js';
 
 export class TituloDataManager extends BaseDataManger {
   url = this.baseUrl + 'titulo';
@@ -48,5 +49,24 @@ export class TituloDataManager extends BaseDataManger {
     ).then((data) => data);
 
     return tituloRemovido;
+  }
+
+  public async editarTitulo(
+    id: string,
+    titulo: EditarTituloDto
+  ): Promise<Titulo> {
+    const options = {
+      method: this.METHODS.PATCH,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(titulo),
+    };
+
+    const tituloSalvo = await this.getJson(this.url + `/${id}`, options).then(
+      (data) => data
+    );
+
+    return tituloSalvo;
   }
 }
