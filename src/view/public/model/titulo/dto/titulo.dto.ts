@@ -16,7 +16,7 @@ export interface TituloDto {
 
 export function criarTituloDtoDoModelo(titulo: Titulo): TituloDto {
   return {
-    id: titulo.id,
+    id: titulo.id!,
     numero: titulo.numero,
     valor: titulo.valor,
     descricao: titulo.descricao,

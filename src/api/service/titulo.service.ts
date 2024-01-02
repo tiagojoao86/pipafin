@@ -1,7 +1,6 @@
 import { randomUUID } from 'crypto';
 import { CriarTituloDto } from '../../view/public/model/titulo/dto/criar-titulo.dto.js';
 import { FiltroTituloNumeroDto } from '../../view/public/model/titulo/dto/filtro-titulo.dto.js';
-import { TituloRemovidoDto } from '../../view/public/model/titulo/dto/titulo-removido.dto.js';
 import {
   criarTituloDtoDoModelo,
   TituloDto,
@@ -9,69 +8,67 @@ import {
 import { SituacaoTitulo } from '../../view/public/model/titulo/enum/situacao-titulo.enum.js';
 import { Titulo } from '../../view/public/model/titulo/titulo.model.js';
 import { EditarTituloDto } from 'src/view/public/model/titulo/dto/editar-titulo.dto.js';
+import { TituloRepository } from '../repository/titulo-repository.js';
 
 export class TituloService {
   private titulos = new Array<Titulo>();
 
-  constructor() {}
+  constructor(private repository: TituloRepository) {}
 
-  public buscarTitulos(): Array<TituloDto> {
-    return this.titulos.map((tit) => criarTituloDtoDoModelo(tit));
+  public async buscarTitulos(): Promise<TituloDto[]> {
+    const lista = await this.repository.listarTitulo();
+
+    return lista.map((tit) => criarTituloDtoDoModelo(tit));
   }
 
-  public criarTitulo(dto: CriarTituloDto): TituloDto | null {
-    const titulo = {
-      id: randomUUID(),
-      numero: dto.numero,
-      valor: dto.valor,
-      descricao: dto.descricao,
-      tipo: dto.tipo,
-      situacao: SituacaoTitulo.ABERTO,
-      dataCriacao: new Date(),
-      dataVencimento: dto.dataVencimento,
-      dataPagamento: dto.dataPagamento,
-    };
+  public async criarTitulo(dto: CriarTituloDto): Promise<TituloDto> {
+    const titulo = new Titulo(
+      dto.numero,
+      dto.valor,
+      dto.descricao,
+      dto.tipo,
+      SituacaoTitulo.ABERTO,
+      dto.dataVencimento,
+      dto.dataPagamento
+    );
 
-    this.adicionarTitulo(titulo);
+    const newTitulo = await this.repository.salvarTitulo(titulo);
 
-    return criarTituloDtoDoModelo(titulo);
+    return criarTituloDtoDoModelo(newTitulo);
   }
 
-  public buscarTituloPorId(id: string): TituloDto | null {
-    const titulo = this.titulos.find((tit) => tit.id === id);
+  public async buscarTituloPorId(id: string): Promise<TituloDto | null> {
+    const titulo = await this.repository.buscarTituloPeloId(id);
 
     if (!titulo) return null;
 
     return criarTituloDtoDoModelo(titulo);
   }
 
-  public removerTituloPeloId(id: string): TituloRemovidoDto | null {
-    const index = this.titulos.findIndex((tit) => tit.id === id);
+  public async removerTituloPeloId(
+    ids: string[]
+  ): Promise<number | null | undefined> {
+    const deleteResult = await this.repository.deletarTituloPorIds(ids);
 
-    if (index !== -1) {
-      const { numero, valor, descricao } = this.titulos.splice(index, 1)[0];
+    return deleteResult?.affected;
+  }
 
-      return { numero, valor, descricao };
-    }
+  public async alterarSituacaoTitulo(
+    id: string,
+    novaSituacao: SituacaoTitulo
+  ): Promise<TituloDto | null> {
+    const titulo = await this.repository.editarSituacaoTitulo(id, novaSituacao);
+
+    if (titulo) return criarTituloDtoDoModelo(titulo);
 
     return null;
   }
 
-  public alterarSituacaoTitulo(id: string, novaSituacao: SituacaoTitulo) {
-    const titulo = this.titulos.find((tit) => tit.id === id);
-
-    if (!titulo) return null;
-
-    titulo.situacao = novaSituacao;
-
-    return criarTituloDtoDoModelo(titulo);
-  }
-
-  public editarTitulo(
+  public async editarTitulo(
     id: string,
     tituloEditado: EditarTituloDto
-  ): Titulo | undefined {
-    let titulo = this.titulos.find((tit) => tit.id === id);
+  ): Promise<Titulo | null> {
+    let titulo = await this.buscarTituloPorId(id);
     if (titulo) {
       if (tituloEditado.numero) titulo.numero = tituloEditado.numero;
       if (tituloEditado.valor) titulo.valor = tituloEditado.valor;
@@ -82,18 +79,18 @@ export class TituloService {
         titulo.dataVencimento = tituloEditado.dataVencimento;
       if (tituloEditado.dataPagamento)
         titulo.dataPagamento = tituloEditado.dataPagamento;
+
+      return await this.repository.editarTitulo(titulo);
     }
 
-    return titulo;
+    return null;
   }
 
   public filtrarTitulosPeloNumero(
     filtro: FiltroTituloNumeroDto
   ): Array<TituloDto> {
-    return this.titulos.filter((tit) => tit.numero === filtro.numero);
-  }
-
-  private adicionarTitulo(titulo: Titulo) {
-    this.titulos.push(titulo);
+    return this.titulos
+      .filter((tit) => tit.numero === filtro.numero)
+      .map((tit) => criarTituloDtoDoModelo(tit));
   }
 }

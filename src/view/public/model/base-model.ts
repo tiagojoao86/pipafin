@@ -1,7 +1,8 @@
-export abstract class BaseModel {
-  id: string;
+import { PrimaryGeneratedColumn } from 'typeorm';
 
-  constructor(id: string) {
-    this.id = id;
-  }
+export abstract class BaseModel {
+  @PrimaryGeneratedColumn('uuid')
+  id!: string;
+
+  constructor() {}
 }

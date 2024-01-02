@@ -93,6 +93,7 @@ export class TituloComponent extends BaseComponent {
           type: DialogType.OK,
         }
       );
+      return;
     }
 
     if (this.table.selectedRows.length === 0) {
@@ -131,9 +132,18 @@ export class TituloComponent extends BaseComponent {
   }
 
   private excluirRegistros(): void {
-    this.table.selectedRows.forEach((row) => {
-      this.dataManager.removerTitulo(row.id);
-      this.table.removeRow(row.id);
+    const ids = this.table.selectedRows.map((row) => row.id);
+    this.dataManager.removerTitulo(ids).then((titulosRemovidos) => {
+      const dialog: DialogComponent = new DialogComponent();
+      dialog.openDialog(
+        'Informação',
+        `Total de registros removidos: ${titulosRemovidos}`,
+        {
+          severity: DialogSeverity.INFO,
+          type: DialogType.OK,
+        }
+      );
+      this.table.removeRows(ids);
     });
   }
 
@@ -157,9 +167,11 @@ export class TituloComponent extends BaseComponent {
     });
   }
 
-  async loadInitialData() {
-    this.data = await this.dataManager.getTitulo();
-    this.table.updateData(this.data);
+  loadInitialData() {
+    this.dataManager.listarTitulo().then((titulos) => {
+      this.data = titulos;
+      this.table.updateData(this.data);
+    });
   }
 
   dateFormatter(date: Date): string {
@@ -168,6 +180,7 @@ export class TituloComponent extends BaseComponent {
         day: 'numeric',
         month: 'numeric',
         year: 'numeric',
+        timeZone: 'UTC',
       }).format(new Date(date));
     }
 
@@ -187,7 +200,7 @@ export class TituloComponent extends BaseComponent {
 
   tipoFormatter(tipo: TipoTitulo): string {
     if (tipo) {
-      const color = tipo === TipoTitulo.PAGAR ? 'green' : 'red';
+      const color = tipo === TipoTitulo.PAGAR ? 'red' : 'green';
       return `<p style="color: ${color}; margin: 0px">${tipo}</p>`;
     }
 
