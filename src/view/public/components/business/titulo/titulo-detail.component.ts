@@ -1,11 +1,10 @@
-import { CriarTituloDto } from 'src/view/public/model/titulo/dto/criar-titulo.dto';
-import { TituloDataManager } from './titulo.data-manager';
-import { TipoTitulo } from 'src/view/public/model/titulo/enum/tipo-titulo.enum';
+import { CriarTituloDto } from '../../../model/titulo/dto/criar-titulo.dto.js';
+import { TituloDataManager } from './titulo.data-manager.js';
+import { TipoTitulo } from '../../../model/titulo/enum/tipo-titulo.enum.js';
 import { BaseComponent } from '../../base/base.component.js';
 import { MessagesControl } from '../../base/messages.component.js';
-import { dataManager } from './titulo.module.js';
-import { Titulo } from 'src/view/public/model/titulo/titulo.model';
-import { EditarTituloDto } from 'src/view/public/model/titulo/dto/editar-titulo.dto';
+import { Titulo } from '../../../model/titulo/titulo.model.js';
+import { EditarTituloDto } from '../../../model/titulo/dto/editar-titulo.dto.js';
 
 export class TituloDetail extends BaseComponent {
   btnSalvarTitulo: HTMLElement = document.getElementById('btnSalvarTitulo')!;

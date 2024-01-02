@@ -1,23 +1,33 @@
-import { Pool } from 'pg';
-
-class Database {
-  pool: Pool;
+import { Titulo } from '../../view/public/model/titulo/titulo.model.js';
+import { BaseModel } from '../../view/public/model/base-model.js';
+import { DataSource } from 'typeorm';
+export class Database {
+  datasource: DataSource;
   random: number;
 
   constructor() {
-    this.pool = new Pool({
+    this.datasource = new DataSource({
+      type: 'postgres',
       host: 'localhost',
-      user: 'pipa',
-      password: 'pipa123',
+      port: 5432,
       database: 'pipafin',
+      username: 'pipa',
+      password: 'pipa123',
+      synchronize: false,
+      logging: true,
+      entities: [BaseModel, Titulo],
     });
+
+    this.datasource
+      .initialize()
+      .then(() => {})
+      .catch((error: any) => console.log(error));
+
     this.random = Math.round(Math.random() * 10);
   }
 
-  public getConnection(): Pool {
+  public getConnection(): DataSource {
     console.log(this.random);
-    return this.pool;
+    return this.datasource;
   }
 }
-
-export const database = new Database();

@@ -10,7 +10,7 @@ export class TituloDataManager extends BaseDataManger {
     super();
   }
 
-  public async getTitulo(): Promise<Titulo[]> {
+  public async listarTitulo(): Promise<Titulo[]> {
     const options = {
       method: this.METHODS.GET,
     };
@@ -35,26 +35,32 @@ export class TituloDataManager extends BaseDataManger {
     return tituloSalvo;
   }
 
-  public async removerTitulo(id: string): Promise<Titulo> {
+  public async removerTitulo(
+    ids: string[]
+  ): Promise<number | null | undefined> {
     const options = {
       method: this.METHODS.DELETE,
       headers: {
         'Content-Type': 'application/json',
       },
+      body: JSON.stringify({ ids: ids }),
     };
 
-    const tituloRemovido = await this.getJson(
-      this.url + `/${id}`,
-      options
-    ).then((data) => data);
+    console.log(options);
 
-    return tituloRemovido;
+    const registrosRemovidos = await this.getJson(this.url, options).then(
+      (data) => data
+    );
+
+    return registrosRemovidos;
   }
 
   public async editarTitulo(
     id: string,
     titulo: EditarTituloDto
   ): Promise<Titulo> {
+    console.log(titulo);
+    console.log(JSON.stringify(titulo));
     const options = {
       method: this.METHODS.PATCH,
       headers: {

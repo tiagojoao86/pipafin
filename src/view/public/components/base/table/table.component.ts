@@ -1,7 +1,6 @@
-import { BaseModel } from '../../../model/base-model.js';
 import { ColumnType } from './column-type';
 
-export class TableComponent<E extends BaseModel> {
+export class TableComponent<E> {
   columns: ColumnType[];
   data: E[] | null;
   selectedRows: E[];
@@ -30,6 +29,8 @@ export class TableComponent<E extends BaseModel> {
     this.hasRowSelector = hasRowSelector;
     this.tableEl.id = id;
 
+    this.validateColumns();
+
     this.organizeChilds();
     this.applyInitialClasses();
     this.buildHeaders();
@@ -56,20 +57,23 @@ export class TableComponent<E extends BaseModel> {
   }
 
   public editRow(itemId: string, item: E) {
-    this.removeRow(itemId);
+    this.removeRows([itemId]);
     this.appendRow(item);
     this.selectedRows = [];
   }
 
-  public removeRow(itemId: string) {
+  public removeRows(itemsIds: string[]) {
+    const columnId: any = this.columns.find((column) => column.isId);
     const rows = this.tbodyEl.getElementsByTagName('TR');
 
     for (let i = 0; i < rows.length; i++) {
-      if (rows[i].getAttribute('id') === itemId) {
+      if (itemsIds.includes(rows[i].getAttribute(columnId.dataAttribute)!)) {
         const child = this.tbodyEl.children.item(i);
         if (child) this.tbodyEl.removeChild(child);
       }
     }
+
+    this.selectedRows = [];
   }
 
   private organizeChilds(): void {
@@ -183,7 +187,6 @@ export class TableComponent<E extends BaseModel> {
   /** when was selected 1 row, this method is call */
   public selectRow(id: any, wasSelected: boolean): void {
     const columnId: any = this.columns.find((column) => column.isId);
-
     if (columnId) {
       if (wasSelected) {
         const item = this.data?.find(
@@ -193,10 +196,10 @@ export class TableComponent<E extends BaseModel> {
           this.selectedRows?.push(item);
         }
       } else {
-        const itemIndex = this.data?.findIndex(
-          (el: any) => el[columnId] === id
-        );
-        if (itemIndex) {
+        const itemIndex = this.selectedRows?.findIndex(
+          (el: any) => el[columnId.dataAttribute] === id
+        )!;
+        if (itemIndex != -1) {
           this.selectedRows?.splice(itemIndex, 1);
         }
       }
@@ -281,5 +284,16 @@ export class TableComponent<E extends BaseModel> {
     liEl.appendChild(spanEl);
 
     return liEl;
+  }
+
+  private validateColumns(): boolean {
+    const columnId = this.columns.filter((col) => col.isId);
+
+    if (columnId.length < 1)
+      throw new Error(`One column needs to be flagged with "isId"`);
+    if (columnId.length > 1)
+      throw new Error(`Only one column can be flagged with "isId"`);
+
+    return true;
   }
 }
