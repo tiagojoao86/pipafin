@@ -27,7 +27,7 @@ export class Titulo extends BaseModel {
   dataVencimento: Date;
 
   @Column({ name: 'data_pagamento', type: 'date' })
-  dataPagamento?: Date;
+  dataPagamento: Date | null;
 
   constructor(
     numero: string,
@@ -36,7 +36,7 @@ export class Titulo extends BaseModel {
     tipo: TipoTitulo,
     situacao: SituacaoTitulo,
     dataVencimento: Date,
-    dataPagamento?: Date,
+    dataPagamento: Date | null,
     id?: string
   ) {
     super();
@@ -48,6 +48,6 @@ export class Titulo extends BaseModel {
     this.situacao = situacao;
     this.dataCriacao = new Date();
     this.dataVencimento = dataVencimento;
-    if (dataPagamento) this.dataPagamento = dataPagamento;
+    this.dataPagamento = dataPagamento;
   }
 }

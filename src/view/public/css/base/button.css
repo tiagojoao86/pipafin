@@ -42,6 +42,10 @@
   background-color: var(--success-background);
 }
 
+.btn-third-action {
+  background-color: var(--third-action);
+}
+
 .btn-border {
   border: 1px solid;
   border-color: black;

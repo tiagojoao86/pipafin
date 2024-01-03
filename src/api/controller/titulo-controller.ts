@@ -3,6 +3,7 @@ import { FiltroTituloNumeroDto } from '../../view/public/model/titulo/dto/filtro
 import { SituacaoTitulo } from '../../view/public/model/titulo/enum/situacao-titulo.enum';
 import { TituloService } from '../service/titulo.service';
 import { EditarTituloDto } from 'src/view/public/model/titulo/dto/editar-titulo.dto';
+import { TituloPagarDto } from 'src/view/public/model/titulo/dto/titulo-pagar.dto';
 
 export class TituloController {
   constructor(private router: Router, private tituloService: TituloService) {}
@@ -39,12 +40,14 @@ export class TituloController {
         .then((tituloEditado) => res.status(200).json(tituloEditado));
     });
 
-    this.router.patch('/:id/situacao', (req, res, next) => {
-      const novaSituacao: SituacaoTitulo = req.body.situacao;
-      this.tituloService
-        .alterarSituacaoTitulo(req.params.id, novaSituacao)
-        .then((situacaoAtualizada) => res.status(200).json(situacaoAtualizada));
-    });
+    this.router.patch(
+      '/editar-titulo/registrar-pago',
+      (req: Request<TituloPagarDto>, res, next) => {
+        this.tituloService
+          .registrarPagamento(req.body)
+          .then((registros) => res.status(200).json(registros));
+      }
+    );
 
     this.router.post('/filtrar', (req, res, next) => {
       const filtroDto: FiltroTituloNumeroDto = req.body;

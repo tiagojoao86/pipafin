@@ -9,6 +9,7 @@ import { SituacaoTitulo } from '../../view/public/model/titulo/enum/situacao-tit
 import { Titulo } from '../../view/public/model/titulo/titulo.model.js';
 import { EditarTituloDto } from 'src/view/public/model/titulo/dto/editar-titulo.dto.js';
 import { TituloRepository } from '../repository/titulo-repository.js';
+import { TituloPagarDto } from 'src/view/public/model/titulo/dto/titulo-pagar.dto.js';
 
 export class TituloService {
   private titulos = new Array<Titulo>();
@@ -27,7 +28,7 @@ export class TituloService {
       dto.valor,
       dto.descricao,
       dto.tipo,
-      SituacaoTitulo.ABERTO,
+      dto.situacao,
       dto.dataVencimento,
       dto.dataPagamento
     );
@@ -53,15 +54,20 @@ export class TituloService {
     return deleteResult?.affected;
   }
 
-  public async alterarSituacaoTitulo(
-    id: string,
-    novaSituacao: SituacaoTitulo
-  ): Promise<TituloDto | null> {
-    const titulo = await this.repository.editarSituacaoTitulo(id, novaSituacao);
+  public async registrarPagamento(
+    dto: TituloPagarDto
+  ): Promise<TituloPagarDto | null> {
+    const updateResult = await this.repository.registrarPagamento(
+      dto.ids,
+      dto.dataPagamento
+    );
 
-    if (titulo) return criarTituloDtoDoModelo(titulo);
-
-    return null;
+    if (updateResult && updateResult.raw)
+      return {
+        ids: (updateResult.raw as Titulo[]).map((it) => it.id),
+        dataPagamento: dto.dataPagamento,
+      };
+    else return null;
   }
 
   public async editarTitulo(
@@ -77,8 +83,8 @@ export class TituloService {
       if (tituloEditado.situacao) titulo.situacao = tituloEditado.situacao;
       if (tituloEditado.dataVencimento)
         titulo.dataVencimento = tituloEditado.dataVencimento;
-      if (tituloEditado.dataPagamento)
-        titulo.dataPagamento = tituloEditado.dataPagamento;
+
+      titulo.dataPagamento = tituloEditado.dataPagamento;
 
       return await this.repository.editarTitulo(titulo);
     }

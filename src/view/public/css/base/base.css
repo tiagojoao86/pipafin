@@ -13,6 +13,7 @@
   --icon-error-background: var(--danger-background);
   --icon-info-background: var(--primary-color);
   --gray-background: #e7e7e7;
+  --third-action: #ff8300e0;
   font-family: 'Arial' !important;
   font-weight: 500 !important;
   font-size: 10px !important;

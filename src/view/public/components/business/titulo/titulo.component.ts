@@ -11,6 +11,9 @@ import { BaseComponent } from '../../base/base.component.js';
 import { DialogComponent } from '../../base/modal/dialog.component.js';
 import { DialogType } from '../../base/modal/dialog-type.js';
 import { DialogSeverity } from '../../base/modal/dialog-severity.js';
+import { TituloPagar } from './titulo-pagar.component.js';
+import { SituacaoTitulo } from '../../../model/titulo/enum/situacao-titulo.enum.js';
+import { TituloPagarDto } from 'src/view/public/model/titulo/dto/titulo-pagar.dto.js';
 
 export class TituloComponent extends BaseComponent {
   table: TableComponent<Titulo>;
@@ -22,6 +25,7 @@ export class TituloComponent extends BaseComponent {
   btnCriar: HTMLElement = document.getElementById('titulos__btn-criar')!;
   btnEditar: HTMLElement = document.getElementById('titulos__btn-editar')!;
   btnExcluir: HTMLElement = document.getElementById('titulos__btn-excluir')!;
+  btnPagar: HTMLElement = document.getElementById('titulos__btn-pagar')!;
 
   headers: ColumnType[] = [
     {
@@ -80,6 +84,23 @@ export class TituloComponent extends BaseComponent {
     this.btnCriar.addEventListener('click', this.btnCriarClick.bind(this));
     this.btnEditar.addEventListener('click', this.btnEditarClick.bind(this));
     this.btnExcluir.addEventListener('click', this.btnExcluirClick.bind(this));
+    this.btnPagar.addEventListener('click', this.btnPagarClick.bind(this));
+  }
+
+  btnPagarClick() {
+    if (this.table.selectedRows.length === 0) {
+      this.abrirNenhumRegistroSelecionadoDialog();
+      return;
+    }
+
+    const modal: ModalComponent = new ModalComponent();
+    modal.openModal(330, 150, 'titulo/titulo-pagar').then(() => {
+      const tituloPagar = new TituloPagar(
+        this.dataManager,
+        this.table.selectedRows.map((it) => it.id)
+      );
+      modal.setContentID(tituloPagar.componentID);
+    });
   }
 
   btnEditarClick() {
@@ -102,7 +123,7 @@ export class TituloComponent extends BaseComponent {
     }
 
     const modal: ModalComponent = new ModalComponent();
-    modal.openModal(330, 245, 'titulo/titulo-detail').then(() => {
+    modal.openModal(330, null, 'titulo/titulo-detail').then(() => {
       const tituloDetail = new TituloDetail(
         this.dataManager,
         this.table.selectedRows[0]
@@ -161,7 +182,7 @@ export class TituloComponent extends BaseComponent {
 
   btnCriarClick() {
     const modal: ModalComponent = new ModalComponent();
-    modal.openModal(330, 245, 'titulo/titulo-detail').then((ready) => {
+    modal.openModal(330, null, 'titulo/titulo-detail').then((ready) => {
       const tituloDetail = new TituloDetail(this.dataManager);
       modal.setContentID(tituloDetail.componentID);
     });
@@ -218,6 +239,27 @@ export class TituloComponent extends BaseComponent {
     if (message === 'titulo-editado') {
       const titulo = payload as Titulo;
       this.table.editRow(titulo.id, titulo);
+    }
+    if (message === 'titulo-pagar') {
+      const dto = payload as TituloPagarDto;
+      const registros = [...this.table.selectedRows]
+        .filter((it) => dto.ids.includes(it.id))
+        .map((it) => {
+          it.dataPagamento = dto.dataPagamento;
+          it.situacao = SituacaoTitulo.PAGO;
+          return it;
+        });
+      registros.forEach((item) => this.table.editRow(item.id, item));
+
+      const dialog: DialogComponent = new DialogComponent();
+      dialog.openDialog(
+        'Informação',
+        `Registros modificados: ${registros.length}.`,
+        {
+          severity: DialogSeverity.INFO,
+          type: DialogType.OK,
+        }
+      );
     }
   }
 }

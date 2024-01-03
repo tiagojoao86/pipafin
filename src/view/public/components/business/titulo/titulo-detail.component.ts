@@ -5,6 +5,7 @@ import { BaseComponent } from '../../base/base.component.js';
 import { MessagesControl } from '../../base/messages.component.js';
 import { Titulo } from '../../../model/titulo/titulo.model.js';
 import { EditarTituloDto } from '../../../model/titulo/dto/editar-titulo.dto.js';
+import { SituacaoTitulo } from 'src/view/public/model/titulo/enum/situacao-titulo.enum.js';
 
 export class TituloDetail extends BaseComponent {
   btnSalvarTitulo: HTMLElement = document.getElementById('btnSalvarTitulo')!;
@@ -37,8 +38,9 @@ export class TituloDetail extends BaseComponent {
             break;
           }
           case 'valor': {
-            (this.tituloDetail.elements[i] as HTMLInputElement).value =
-              '' + this.titulo.valor;
+            (this.tituloDetail.elements[i] as HTMLInputElement).value = (
+              '' + this.titulo.valor
+            ).replace('.', ',');
             break;
           }
           case 'descricao': {
@@ -54,6 +56,18 @@ export class TituloDetail extends BaseComponent {
           case 'dataVencimento': {
             (this.tituloDetail.elements[i] as HTMLInputElement).value =
               new Date(this.titulo.dataVencimento).toISOString().split('T')[0];
+            break;
+          }
+          case 'dataPagamento': {
+            if (this.titulo.dataPagamento)
+              (this.tituloDetail.elements[i] as HTMLInputElement).value =
+                new Date(this.titulo.dataPagamento).toISOString().split('T')[0];
+
+            break;
+          }
+          case 'situacao': {
+            (this.tituloDetail.elements[i] as HTMLInputElement).value =
+              this.titulo.situacao;
             break;
           }
         }
@@ -131,6 +145,12 @@ export class TituloDetail extends BaseComponent {
       descricao: formData.get('descricao') as string,
       tipo: formData.get('tipo') as TipoTitulo,
       dataVencimento: new Date(formData.get('dataVencimento') as string),
+      dataPagamento: isNaN(
+        new Date(formData.get('dataPagamento') as string).getTime()
+      )
+        ? null
+        : new Date(formData.get('dataPagamento') as string),
+      situacao: formData.get('situacao') as SituacaoTitulo,
     };
 
     this.dataManager
@@ -154,6 +174,12 @@ export class TituloDetail extends BaseComponent {
       descricao: formData.get('descricao') as string,
       tipo: formData.get('tipo') as TipoTitulo,
       dataVencimento: new Date(formData.get('dataVencimento') as string),
+      dataPagamento: isNaN(
+        new Date(formData.get('dataPagamento') as string).getTime()
+      )
+        ? null
+        : new Date(formData.get('dataPagamento') as string),
+      situacao: formData.get('situacao') as SituacaoTitulo,
     };
 
     this.dataManager.salvarTitulo(criarTitulo).then((titulo) => {
@@ -181,6 +207,14 @@ export class TituloDetail extends BaseComponent {
 
     if (isNaN(new Date(formData.get('dataVencimento') as string).getTime()))
       errors.push('A data de vencimento precisa ser válida');
+
+    if (
+      (formData.get('situacao') as string) === 'PAGO' &&
+      isNaN(new Date(formData.get('dataPagamento') as string).getTime())
+    )
+      errors.push(
+        `Quando a situação é 'Pago', a data de pagamento precisa ser válida`
+      );
 
     if (errors.length > 0) {
       this.alert?.classList.remove('hidden');

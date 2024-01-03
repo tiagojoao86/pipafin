@@ -24,8 +24,8 @@ export class ModalComponent extends BaseComponent {
   }
 
   public async openModal(
-    width: number,
-    height: number,
+    width: number | null,
+    height: number | null,
     url: string
   ): Promise<boolean> {
     const page = await this.buildModal(width, height, url);
@@ -38,8 +38,8 @@ export class ModalComponent extends BaseComponent {
   }
 
   async buildModal(
-    width: number,
-    height: number,
+    width: number | null,
+    height: number | null,
     url: string
   ): Promise<string> {
     this.buildBaseModal(width, height, true);
@@ -49,8 +49,8 @@ export class ModalComponent extends BaseComponent {
   }
 
   private buildBaseModal(
-    width: number,
-    height: number,
+    width: number | null,
+    height: number | null,
     closeOnOverlayClick: boolean
   ) {
     this.overlayEl.classList.add('modal-overlay');
