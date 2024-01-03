@@ -1,7 +1,8 @@
-import { Titulo } from 'src/view/public/model/titulo/titulo.model.js';
+import { Titulo } from '../../../model/titulo/titulo.model.js';
 import { BaseDataManger } from '../../base/base.data-manager.js';
-import { CriarTituloDto } from 'src/view/public/model/titulo/dto/criar-titulo.dto.js';
-import { EditarTituloDto } from 'src/view/public/model/titulo/dto/editar-titulo.dto.js';
+import { CriarTituloDto } from '../../../model/titulo/dto/criar-titulo.dto.js';
+import { EditarTituloDto } from '../../../model/titulo/dto/editar-titulo.dto.js';
+import { TituloPagarDto } from '../../../model/titulo/dto/titulo-pagar.dto.js';
 
 export class TituloDataManager extends BaseDataManger {
   url = this.baseUrl + 'titulo';
@@ -59,8 +60,6 @@ export class TituloDataManager extends BaseDataManger {
     id: string,
     titulo: EditarTituloDto
   ): Promise<Titulo> {
-    console.log(titulo);
-    console.log(JSON.stringify(titulo));
     const options = {
       method: this.METHODS.PATCH,
       headers: {
@@ -74,5 +73,24 @@ export class TituloDataManager extends BaseDataManger {
     );
 
     return tituloSalvo;
+  }
+
+  public async pagarTitulos(
+    tituloPagarDto: TituloPagarDto
+  ): Promise<TituloPagarDto | null> {
+    const options = {
+      method: this.METHODS.PATCH,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(tituloPagarDto),
+    };
+
+    const registros: TituloPagarDto = await this.getJson(
+      this.url + `/editar-titulo/registrar-pago`,
+      options
+    ).then((data) => data);
+
+    return registros;
   }
 }

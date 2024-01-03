@@ -16,6 +16,12 @@ export class TitulosRoutes {
       });
     });
 
+    this.router.get('/titulo-pagar', (req, res, next) => {
+      res.render('titulo/titulo-pagar', {
+        pageTitle: 'Registrar pagamento de título(s)',
+      });
+    });
+
     return this.router;
   }
 }

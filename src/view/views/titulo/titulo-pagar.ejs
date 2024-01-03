@@ -1,0 +1,26 @@
+<div class="flex-column-container">
+  <div class="modal-title">
+    <p>Registrar pagamento de título(s)</p>
+    <hr />
+  </div>
+  <form id="titulo-pagar__form">
+    <div class="flex-row-container">
+      <div class="form-group box-1">
+        <label for="inputDataPagamento">Data Pagamento</label>
+        <input type="date" class="form-control" id="inputDataPagamento" name="dataPagamento">
+      </div>
+    </div>
+  </form>
+  <div class="modal-footer">
+    <div class="flex-row-container flex-content-right">
+      <button type="button" class="btn btn-font-white btn-round btn-success"
+        id="titulo-pagar__btn-salvar">Salvar</button>
+      <button type="button" class="btn btn-font-white btn-round btn-danger"
+        id="titulo-pagar__btn-cancelar">Cancelar</button>
+    </div>
+  </div>
+  <div id="titulo-pagar__alert" class="alert alert-danger hidden my-2" role="alert">
+    <div id="titulo-pagar__message"></div>
+    <div id="titulo-pagar__close-alert" class="icon icon-close icon-24 icon-danger-alert icon-click pointer"></div>
+  </div>
+</div>

@@ -37,6 +37,19 @@ export class TituloRepository {
     return await this.repository.save(titulo);
   }
 
+  public async registrarPagamento(
+    ids: string[],
+    datapagamento: Date
+  ): Promise<UpdateResult> {
+    return await this.repository
+      .createQueryBuilder()
+      .update(Titulo)
+      .set({ situacao: SituacaoTitulo.PAGO, dataPagamento: datapagamento })
+      .where('id in (:...ids)', { ids: ids })
+      .returning('id')
+      .execute();
+  }
+
   public async editarSituacaoTitulo(
     id: string,
     novaSituacao: SituacaoTitulo

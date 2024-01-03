@@ -8,5 +8,5 @@ export interface EditarTituloDto {
   tipo?: TipoTitulo;
   situacao?: SituacaoTitulo;
   dataVencimento?: Date;
-  dataPagamento?: Date;
+  dataPagamento: Date | null;
 }
