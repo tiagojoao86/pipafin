@@ -4,9 +4,6 @@ export class TableComponent<E> {
   columns: ColumnType[];
   data: E[] | null;
   selectedRows: E[];
-  divMainEl = document.createElement('div');
-  divTable = document.createElement('div');
-  divPagination = document.createElement('div');
   tableEl = document.createElement('table');
   tbodyEl = document.createElement('tbody');
   theadEl = document.createElement('thead');
@@ -35,11 +32,10 @@ export class TableComponent<E> {
     this.applyInitialClasses();
     this.buildHeaders();
     this.buildFooter();
-    this.buildDivPagination();
   }
 
   public getTable(): HTMLElement {
-    return this.divMainEl;
+    return this.tableEl;
   }
 
   public getData() {
@@ -77,19 +73,13 @@ export class TableComponent<E> {
   }
 
   private organizeChilds(): void {
-    this.divTable.appendChild(this.tableEl);
-    this.divPagination.appendChild(this.paginationEl);
-    this.divMainEl.appendChild(this.divTable);
-    this.divMainEl.appendChild(this.divPagination);
     this.tableEl.appendChild(this.theadEl);
     this.tableEl.appendChild(this.tbodyEl);
     this.tableEl.appendChild(this.tfootEl);
   }
 
   private applyInitialClasses(): void {
-    this.divMainEl.classList.add('div-main-table');
     this.tableEl.classList.add('table');
-    this.divPagination.classList.add('table');
   }
 
   /** Populates table */
@@ -227,9 +217,18 @@ export class TableComponent<E> {
   }
 
   /** builds the footer (pagination) */
-  private buildFooter(): void {}
+  private buildFooter(): void {
+    const tdEl = document.createElement('td');
+    tdEl.setAttribute('colspan', this.columns.length + '');
+    const div = document.createElement('div');
 
-  private buildDivPagination() {
+    div.appendChild(this.buildPaginationList());
+    div.appendChild(this.buildItemPerPageSelector());
+    tdEl.appendChild(div);
+    this.tfootEl.appendChild(tdEl);
+  }
+
+  private buildPaginationList(): HTMLUListElement {
     const ulEl = document.createElement('ul');
 
     ulEl.appendChild(this.buildItemPagination('<<', this.firstPage));
@@ -238,7 +237,39 @@ export class TableComponent<E> {
     ulEl.appendChild(this.buildItemPagination('>', this.nextPage));
     ulEl.appendChild(this.buildItemPagination('>>', this.lastPage));
 
-    this.paginationEl.appendChild(ulEl);
+    return ulEl;
+  }
+
+  private buildItemPerPageSelector(): HTMLDivElement {
+    const div = document.createElement('div');
+    div.classList.add('item-per-page');
+    const select = document.createElement('select');
+    this.buildOptionsPerPageSelector().forEach((option) =>
+      select.appendChild(option)
+    );
+
+    const label = document.createElement('label');
+    label.innerHTML = 'Itens';
+    div.appendChild(select);
+    div.appendChild(label);
+
+    return div;
+  }
+
+  private buildOptionsPerPageSelector(): HTMLOptionElement[] {
+    const items: HTMLOptionElement[] = [];
+
+    const five = document.createElement('option');
+    five.setAttribute('value', '5');
+    five.innerHTML = '5';
+    items.push(five);
+
+    const ten = document.createElement('option');
+    ten.setAttribute('value', '10');
+    ten.innerHTML = '10';
+    items.push(ten);
+
+    return items;
   }
 
   private buildItemPagination(icon: string, clickEvent: Function): HTMLElement {
