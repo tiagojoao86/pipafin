@@ -1,18 +1,29 @@
+import { Pagination } from 'src/view/public/model/pagination/pagination';
 import { ColumnType } from './column-type';
 
 export class TableComponent<E> {
-  columns: ColumnType[];
-  data: E[] | null;
-  selectedRows: E[];
-  tableEl = document.createElement('table');
-  tbodyEl = document.createElement('tbody');
-  theadEl = document.createElement('thead');
-  tfootEl = document.createElement('tfoot');
-  paginationEl = document.createElement('nav');
-  hasRowSelector: boolean;
-  totalPages: number = 1;
-  currentPage: number = 1;
-  readonly ID_CHECKBOX_HEADER = '0';
+  private columns: ColumnType[];
+  private data: E[] | null;
+  private selectedRows: E[];
+  private tableEl = document.createElement('table');
+  private tbodyEl = document.createElement('tbody');
+  private theadEl = document.createElement('thead');
+  private tfootEl = document.createElement('tfoot');
+  private hasRowSelector: boolean;
+  private totalPages: number = 1;
+  private currentPage: number = 1;
+  private pageData = document.createElement('span');
+  private readonly ID_CHECKBOX_HEADER = '0';
+
+  private changeItemsPerPageFunction: Function = () => {};
+  private changePageFunction: Function = () => {};
+
+  private NEXT_PAGE: HTMLLIElement = document.createElement('li');
+  private PREVIOUS_PAGE: HTMLLIElement = document.createElement('li');
+  private LAST_PAGE: HTMLLIElement = document.createElement('li');
+  private FIRST_PAGE: HTMLLIElement = document.createElement('li');
+
+  private paginationOptions: string[] = ['5', '10', '25', '50'];
 
   constructor(
     id: string,
@@ -34,6 +45,10 @@ export class TableComponent<E> {
     this.buildFooter();
   }
 
+  public setPaginationOptions(list: string[]) {
+    this.paginationOptions = list;
+  }
+
   public getTable(): HTMLElement {
     return this.tableEl;
   }
@@ -42,9 +57,11 @@ export class TableComponent<E> {
     return this.data;
   }
 
-  public updateData(data: E[]) {
+  public updateData(data: E[], pagination: Pagination) {
+    this.removeAllData();
     this.data = data;
     this.populateTable();
+    this.updatePageNumbers(pagination.page, pagination.totalPages);
   }
 
   public appendRow(item: E) {
@@ -80,6 +97,11 @@ export class TableComponent<E> {
 
   private applyInitialClasses(): void {
     this.tableEl.classList.add('table');
+  }
+
+  private removeAllData(): void {
+    this.data = [];
+    this.tbodyEl.innerHTML = '';
   }
 
   /** Populates table */
@@ -231,11 +253,19 @@ export class TableComponent<E> {
   private buildPaginationList(): HTMLUListElement {
     const ulEl = document.createElement('ul');
 
-    ulEl.appendChild(this.buildItemPagination('<<', this.firstPage));
-    ulEl.appendChild(this.buildItemPagination('<', this.previousPage));
+    ulEl.appendChild(
+      this.buildItemPagination('<<', this.firstPage, this.FIRST_PAGE)
+    );
+    ulEl.appendChild(
+      this.buildItemPagination('<', this.previousPage, this.PREVIOUS_PAGE)
+    );
     ulEl.appendChild(this.getElementPageNumbers());
-    ulEl.appendChild(this.buildItemPagination('>', this.nextPage));
-    ulEl.appendChild(this.buildItemPagination('>>', this.lastPage));
+    ulEl.appendChild(
+      this.buildItemPagination('>', this.nextPage, this.NEXT_PAGE)
+    );
+    ulEl.appendChild(
+      this.buildItemPagination('>>', this.lastPage, this.LAST_PAGE)
+    );
 
     return ulEl;
   }
@@ -246,6 +276,11 @@ export class TableComponent<E> {
     const select = document.createElement('select');
     this.buildOptionsPerPageSelector().forEach((option) =>
       select.appendChild(option)
+    );
+
+    select.addEventListener(
+      'change',
+      this.changeItemsPerPageQuantity.bind(this)
     );
 
     const label = document.createElement('label');
@@ -259,21 +294,22 @@ export class TableComponent<E> {
   private buildOptionsPerPageSelector(): HTMLOptionElement[] {
     const items: HTMLOptionElement[] = [];
 
-    const five = document.createElement('option');
-    five.setAttribute('value', '5');
-    five.innerHTML = '5';
-    items.push(five);
-
-    const ten = document.createElement('option');
-    ten.setAttribute('value', '10');
-    ten.innerHTML = '10';
-    items.push(ten);
+    this.paginationOptions.forEach((item) => {
+      const option = document.createElement('option');
+      option.setAttribute('value', item);
+      option.innerHTML = item;
+      items.push(option);
+    });
 
     return items;
   }
 
-  private buildItemPagination(icon: string, clickEvent: Function): HTMLElement {
-    const liEl = document.createElement('li');
+  private buildItemPagination(
+    icon: string,
+    clickEvent: Function,
+    liEl: HTMLLIElement
+  ): HTMLElement {
+    liEl = document.createElement('li');
 
     const spanEl = document.createElement('span');
     spanEl.innerHTML = icon;
@@ -284,37 +320,25 @@ export class TableComponent<E> {
     return liEl;
   }
 
-  private nextPage() {
-    console.log('nextPage');
-  }
-
-  private previousPage() {
-    console.log('previousPage');
-  }
-
-  private firstPage() {
-    console.log('firstPage');
-  }
-
-  private lastPage() {
-    console.log('lastPage');
-  }
-
   private updatePageNumbers(currentPage: number, totalPages: number) {
     this.currentPage = currentPage;
     this.totalPages = totalPages;
+    this.updatePageData();
   }
 
   private getElementPageNumbers() {
     const liEl = document.createElement('li');
-    const spanEl = document.createElement('span');
     liEl.style.cursor = 'default';
     liEl.style.pointerEvents = 'none';
-    spanEl.innerHTML = `${this.currentPage} de ${this.totalPages}`;
+    liEl.appendChild(this.pageData);
 
-    liEl.appendChild(spanEl);
+    this.updatePageData();
 
     return liEl;
+  }
+
+  private updatePageData(): void {
+    this.pageData.innerHTML = `${this.currentPage + 1} de ${this.totalPages}`;
   }
 
   private validateColumns(): boolean {
@@ -326,5 +350,43 @@ export class TableComponent<E> {
       throw new Error(`Only one column can be flagged with "isId"`);
 
     return true;
+  }
+
+  public getSelectedRows(): E[] {
+    return this.selectedRows;
+  }
+
+  public setChangeItemsPerPageCallback(cb: Function): void {
+    this.changeItemsPerPageFunction = cb;
+  }
+
+  public setChangePageCallback(cb: Function): void {
+    this.changePageFunction = cb;
+  }
+
+  private changeItemsPerPageQuantity($event: any): void {
+    this.changeItemsPerPageFunction.call(this, $event.target.value);
+  }
+
+  private nextPage() {
+    if (this.currentPage + 1 === this.totalPages) return;
+
+    this.changePageFunction.call(this, this.currentPage + 1);
+  }
+
+  private previousPage() {
+    if (this.currentPage === 0) return;
+
+    this.changePageFunction.call(this, this.currentPage - 1);
+  }
+
+  private firstPage() {
+    this.currentPage = 0;
+    this.changePageFunction.call(this, this.currentPage);
+  }
+
+  private lastPage() {
+    this.currentPage = this.totalPages - 1;
+    this.changePageFunction.call(this, this.currentPage);
   }
 }

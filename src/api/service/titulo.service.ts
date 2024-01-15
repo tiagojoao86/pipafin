@@ -1,15 +1,14 @@
-import { randomUUID } from 'crypto';
 import { CriarTituloDto } from '../../view/public/model/titulo/dto/criar-titulo.dto.js';
-import { FiltroTituloNumeroDto } from '../../view/public/model/titulo/dto/filtro-titulo.dto.js';
 import {
   criarTituloDtoDoModelo,
   TituloDto,
 } from '../../view/public/model/titulo/dto/titulo.dto.js';
-import { SituacaoTitulo } from '../../view/public/model/titulo/enum/situacao-titulo.enum.js';
 import { Titulo } from '../../view/public/model/titulo/titulo.model.js';
 import { EditarTituloDto } from 'src/view/public/model/titulo/dto/editar-titulo.dto.js';
 import { TituloRepository } from '../repository/titulo-repository.js';
-import { TituloPagarDto } from 'src/view/public/model/titulo/dto/titulo-pagar.dto.js';
+import { TituloPagarDto } from '../../view/public/model/titulo/dto/titulo-pagar.dto.js';
+import { FiltrarTituloDTO } from '../../view/public/model/titulo/dto/filtrar-titulo.js';
+import { FilterResult } from '../../view/public/model/pagination/filter-result.js';
 
 export class TituloService {
   private titulos = new Array<Titulo>();
@@ -20,6 +19,20 @@ export class TituloService {
     const lista = await this.repository.listarTitulo();
 
     return lista.map((tit) => criarTituloDtoDoModelo(tit));
+  }
+
+  public async filtrar(
+    filtro: FiltrarTituloDTO
+  ): Promise<FilterResult<TituloDto>> {
+    const result = await this.repository.filtrar(filtro);
+
+    const totalFiltro = await this.repository.countFiltrar(filtro);
+
+    filtro.totalPages = Math.ceil(totalFiltro / filtro.pageSize);
+
+    const lista = result.map((tit) => criarTituloDtoDoModelo(tit));
+
+    return new FilterResult(lista, filtro);
   }
 
   public async criarTitulo(dto: CriarTituloDto): Promise<TituloDto> {
@@ -90,13 +103,5 @@ export class TituloService {
     }
 
     return null;
-  }
-
-  public filtrarTitulosPeloNumero(
-    filtro: FiltroTituloNumeroDto
-  ): Array<TituloDto> {
-    return this.titulos
-      .filter((tit) => tit.numero === filtro.numero)
-      .map((tit) => criarTituloDtoDoModelo(tit));
   }
 }
