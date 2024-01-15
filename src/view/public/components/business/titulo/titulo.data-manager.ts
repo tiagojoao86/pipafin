@@ -3,6 +3,9 @@ import { BaseDataManger } from '../../base/base.data-manager.js';
 import { CriarTituloDto } from '../../../model/titulo/dto/criar-titulo.dto.js';
 import { EditarTituloDto } from '../../../model/titulo/dto/editar-titulo.dto.js';
 import { TituloPagarDto } from '../../../model/titulo/dto/titulo-pagar.dto.js';
+import { FiltrarTituloDTO } from '../../../model/titulo/dto/filtrar-titulo.js';
+import { FilterResult } from 'src/view/public/model/pagination/filter-result.js';
+import { TituloDto } from 'src/view/public/model/titulo/dto/titulo.dto.js';
 
 export class TituloDataManager extends BaseDataManger {
   url = this.baseUrl + 'titulo';
@@ -92,5 +95,22 @@ export class TituloDataManager extends BaseDataManger {
     ).then((data) => data);
 
     return registros;
+  }
+
+  public async filtrarTitulo(
+    filtro: FiltrarTituloDTO
+  ): Promise<FilterResult<TituloDto>> {
+    const options = {
+      method: this.METHODS.POST,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(filtro),
+    };
+    const list = await this.getJson(this.url + '/filtrar', options).then(
+      (data) => data
+    );
+
+    return list;
   }
 }

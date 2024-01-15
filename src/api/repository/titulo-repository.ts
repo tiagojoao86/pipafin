@@ -2,6 +2,7 @@ import { Titulo } from '../../view/public/model/titulo/titulo.model.js';
 import { SituacaoTitulo } from '../../view/public/model/titulo/enum/situacao-titulo.enum.js';
 import { Database } from './database.js';
 import { Repository, DeleteResult, UpdateResult } from 'typeorm';
+import { FiltrarTituloDTO } from '../../view/public/model/titulo/dto/filtrar-titulo.js';
 
 export class TituloRepository {
   repository: Repository<Titulo>;
@@ -66,5 +67,18 @@ export class TituloRepository {
     }
 
     return null;
+  }
+
+  public async filtrar(filtro: FiltrarTituloDTO): Promise<Titulo[]> {
+    return await this.repository
+      .createQueryBuilder()
+      .select()
+      .offset(filtro.page * filtro.pageSize)
+      .limit(filtro.pageSize)
+      .getMany();
+  }
+
+  public async countFiltrar(filtro: FiltrarTituloDTO): Promise<number> {
+    return await this.repository.createQueryBuilder().getCount();
   }
 }

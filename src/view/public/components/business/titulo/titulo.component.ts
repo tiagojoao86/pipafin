@@ -13,21 +13,42 @@ import { DialogType } from '../../base/modal/dialog-type.js';
 import { DialogSeverity } from '../../base/modal/dialog-severity.js';
 import { TituloPagar } from './titulo-pagar.component.js';
 import { SituacaoTitulo } from '../../../model/titulo/enum/situacao-titulo.enum.js';
-import { TituloPagarDto } from 'src/view/public/model/titulo/dto/titulo-pagar.dto.js';
+import { TituloPagarDto } from '../../../model/titulo/dto/titulo-pagar.dto.js';
+import { FiltrarTituloDTO } from '../../../model/titulo/dto/filtrar-titulo.js';
+import { SortOrder } from '../../../model/pagination/sort-order.js';
 
 export class TituloComponent extends BaseComponent {
-  table: TableComponent<Titulo>;
+  private table: TableComponent<Titulo>;
 
-  data: Titulo[] = [];
+  private data: Titulo[] = [];
+  private filtro: FiltrarTituloDTO = {
+    page: 0,
+    pageSize: 5,
+    totalPages: 0,
+    orderBy: 'numero',
+    sortOrder: SortOrder.ASC,
+  };
 
-  tituloMain: HTMLElement | null = document.getElementById('titulo-main');
+  private modal: ModalComponent = new ModalComponent();
 
-  btnCriar: HTMLElement = document.getElementById('titulos__btn-criar')!;
-  btnEditar: HTMLElement = document.getElementById('titulos__btn-editar')!;
-  btnExcluir: HTMLElement = document.getElementById('titulos__btn-excluir')!;
-  btnPagar: HTMLElement = document.getElementById('titulos__btn-pagar')!;
+  private tituloMain: HTMLElement | null =
+    document.getElementById('titulo-main');
 
-  headers: ColumnType[] = [
+  private btnCriar: HTMLElement =
+    document.getElementById('titulos__btn-criar')!;
+
+  private btnEditar: HTMLElement = document.getElementById(
+    'titulos__btn-editar'
+  )!;
+
+  private btnExcluir: HTMLElement = document.getElementById(
+    'titulos__btn-excluir'
+  )!;
+
+  private btnPagar: HTMLElement =
+    document.getElementById('titulos__btn-pagar')!;
+
+  private headers: ColumnType[] = [
     {
       header: 'Id',
       widthClass: WidthColumnClass.W05,
@@ -79,6 +100,7 @@ export class TituloComponent extends BaseComponent {
   constructor(private dataManager: TituloDataManager) {
     super();
     this.table = new TableComponent('titulos__table', this.headers, null, true);
+    this.assingTableCallBackFunctions();
     this.tituloMain?.appendChild(this.table.getTable());
     this.loadInitialData();
     this.btnCriar.addEventListener('click', this.btnCriarClick.bind(this));
@@ -87,24 +109,39 @@ export class TituloComponent extends BaseComponent {
     this.btnPagar.addEventListener('click', this.btnPagarClick.bind(this));
   }
 
-  btnPagarClick() {
-    if (this.table.selectedRows.length === 0) {
+  private assingTableCallBackFunctions(): void {
+    this.table.setChangeItemsPerPageCallback(
+      this.changeItemsPerPage.bind(this)
+    );
+    this.table.setChangePageCallback(this.changePage.bind(this));
+  }
+
+  private changeItemsPerPage(newPageSize: number): void {
+    this.filtro.pageSize = newPageSize;
+    this.filtrar();
+  }
+
+  private changePage(newPage: number): void {
+    this.filtro.page = newPage;
+    this.filtrar();
+  }
+
+  private btnPagarClick(): void {
+    if (this.table.getSelectedRows().length === 0) {
       this.abrirNenhumRegistroSelecionadoDialog();
       return;
     }
 
-    const modal: ModalComponent = new ModalComponent();
-    modal.openModal(330, 150, 'titulo/titulo-pagar').then(() => {
-      const tituloPagar = new TituloPagar(
+    this.modal.openModal(330, 150, 'titulo/titulo-pagar').then(() => {
+      new TituloPagar(
         this.dataManager,
-        this.table.selectedRows.map((it) => it.id)
+        this.table.getSelectedRows().map((it) => it.id)
       );
-      modal.setContentID(tituloPagar.componentID);
     });
   }
 
-  btnEditarClick() {
-    if (this.table.selectedRows.length > 1) {
+  private btnEditarClick(): void {
+    if (this.table.getSelectedRows().length > 1) {
       const dialog: DialogComponent = new DialogComponent();
       dialog.openDialog(
         'Informação',
@@ -117,32 +154,29 @@ export class TituloComponent extends BaseComponent {
       return;
     }
 
-    if (this.table.selectedRows.length === 0) {
+    if (this.table.getSelectedRows().length === 0) {
       this.abrirNenhumRegistroSelecionadoDialog();
       return;
     }
 
-    const modal: ModalComponent = new ModalComponent();
-    modal.openModal(330, null, 'titulo/titulo-detail').then(() => {
-      const tituloDetail = new TituloDetail(
-        this.dataManager,
-        this.table.selectedRows[0]
-      );
-      modal.setContentID(tituloDetail.componentID);
+    this.modal.openModal(330, null, 'titulo/titulo-detail').then(() => {
+      new TituloDetail(this.dataManager, this.table.getSelectedRows()[0]);
     });
   }
 
-  btnExcluirClick() {
-    if (this.table.selectedRows.length === 0) {
+  private btnExcluirClick(): void {
+    if (this.table.getSelectedRows().length === 0) {
       this.abrirNenhumRegistroSelecionadoDialog();
       return;
     }
 
-    if (this.table.selectedRows.length > 0) {
+    if (this.table.getSelectedRows().length > 0) {
       const dialog: DialogComponent = new DialogComponent();
       dialog.openDialog(
         'Atenção!',
-        `Deseja realmente excluir ${this.table.selectedRows.length} registro(s)?`,
+        `Deseja realmente excluir ${
+          this.table.getSelectedRows().length
+        } registro(s)?`,
         {
           severity: DialogSeverity.WARNING,
           type: DialogType.YES_NO,
@@ -153,7 +187,7 @@ export class TituloComponent extends BaseComponent {
   }
 
   private excluirRegistros(): void {
-    const ids = this.table.selectedRows.map((row) => row.id);
+    const ids = this.table.getSelectedRows().map((row) => row.id);
     this.dataManager.removerTitulo(ids).then((titulosRemovidos) => {
       const dialog: DialogComponent = new DialogComponent();
       dialog.openDialog(
@@ -180,22 +214,31 @@ export class TituloComponent extends BaseComponent {
     );
   }
 
-  btnCriarClick() {
-    const modal: ModalComponent = new ModalComponent();
-    modal.openModal(330, null, 'titulo/titulo-detail').then((ready) => {
-      const tituloDetail = new TituloDetail(this.dataManager);
-      modal.setContentID(tituloDetail.componentID);
+  private btnCriarClick(): void {
+    this.modal.openModal(330, null, 'titulo/titulo-detail').then((ready) => {
+      new TituloDetail(this.dataManager);
     });
   }
 
-  loadInitialData() {
-    this.dataManager.listarTitulo().then((titulos) => {
-      this.data = titulos;
-      this.table.updateData(this.data);
+  private loadInitialData(): void {
+    this.filtrar();
+  }
+
+  private filtrar(): void {
+    this.dataManager.filtrarTitulo(this.filtro).then((result) => {
+      this.data = result.result;
+      if (result.pagination) {
+        this.filtro.page = result.pagination.page;
+        this.filtro.pageSize = result.pagination.pageSize;
+        this.filtro.totalPages = result.pagination.totalPages;
+        this.filtro.orderBy = result.pagination.orderBy;
+        this.filtro.sortOrder = result.pagination.sortOrder;
+      }
+      this.table.updateData(this.data, this.filtro);
     });
   }
 
-  dateFormatter(date: Date): string {
+  private dateFormatter(date: Date): string {
     if (date) {
       return new Intl.DateTimeFormat(navigator.language, {
         day: 'numeric',
@@ -208,7 +251,7 @@ export class TituloComponent extends BaseComponent {
     return '';
   }
 
-  moneyFormatter(money: number): string {
+  private moneyFormatter(money: number): string {
     if (money) {
       return new Intl.NumberFormat(navigator.language, {
         style: 'currency',
@@ -219,7 +262,7 @@ export class TituloComponent extends BaseComponent {
     return '';
   }
 
-  tipoFormatter(tipo: TipoTitulo): string {
+  private tipoFormatter(tipo: TipoTitulo): string {
     if (tipo) {
       const color = tipo === TipoTitulo.PAGAR ? 'red' : 'green';
       return `<p style="color: ${color}; margin: 0px">${tipo}</p>`;
@@ -234,33 +277,50 @@ export class TituloComponent extends BaseComponent {
     origin: string
   ): void {
     if (message === 'titulo-criado') {
-      this.table.appendRow(payload as Titulo);
+      this.tituloCriado(payload);
     }
     if (message === 'titulo-editado') {
-      const titulo = payload as Titulo;
-      this.table.editRow(titulo.id, titulo);
+      this.tituloEditado(payload);
     }
     if (message === 'titulo-pagar') {
-      const dto = payload as TituloPagarDto;
-      const registros = [...this.table.selectedRows]
-        .filter((it) => dto.ids.includes(it.id))
-        .map((it) => {
-          it.dataPagamento = dto.dataPagamento;
-          it.situacao = SituacaoTitulo.PAGO;
-          return it;
-        });
-      registros.forEach((item) => this.table.editRow(item.id, item));
-
-      const dialog: DialogComponent = new DialogComponent();
-      dialog.openDialog(
-        'Informação',
-        `Registros modificados: ${registros.length}.`,
-        {
-          severity: DialogSeverity.INFO,
-          type: DialogType.OK,
-        }
-      );
+      this.tituloPagar(payload);
     }
+    if (message === 'cancelar-edicao') {
+      this.modal.closeModal();
+    }
+  }
+
+  private tituloCriado(titulo: Titulo): void {
+    this.table.appendRow(titulo);
+    this.modal.closeModal();
+  }
+
+  private tituloEditado(titulo: Titulo): void {
+    this.table.editRow(titulo.id, titulo);
+    this.modal.closeModal();
+  }
+
+  private tituloPagar(dto: TituloPagarDto): void {
+    const registros = [...this.table.getSelectedRows()]
+      .filter((it) => dto.ids.includes(it.id))
+      .map((it) => {
+        it.dataPagamento = dto.dataPagamento;
+        it.situacao = SituacaoTitulo.PAGO;
+        return it;
+      });
+    registros.forEach((item) => this.table.editRow(item.id, item));
+
+    this.modal.closeModal();
+
+    const dialog: DialogComponent = new DialogComponent();
+    dialog.openDialog(
+      'Informação',
+      `Registros modificados: ${registros.length}.`,
+      {
+        severity: DialogSeverity.INFO,
+        type: DialogType.OK,
+      }
+    );
   }
 }
 

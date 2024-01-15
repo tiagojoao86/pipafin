@@ -1,14 +1,11 @@
-import { BaseComponent } from '../base.component.js';
-import { MessagesControl } from '../messages.component.js';
 import { DialogOptions } from './dialog-options.js';
 import { DialogSeverity } from './dialog-severity.js';
 import { DialogType } from './dialog-type.js';
 import { ModalComponent } from './modal.component.js';
 
-export class DialogComponent extends BaseComponent {
+export class DialogComponent {
   modal: ModalComponent;
   constructor() {
-    super();
     this.modal = new ModalComponent();
   }
 
@@ -20,7 +17,6 @@ export class DialogComponent extends BaseComponent {
         this.dialogHtml(title, message, options.severity, options.type)
       )
       .then(() => {
-        this.modal.setContentID(this.componentID);
         this.addEventListeners(options);
       });
   }
@@ -107,7 +103,6 @@ export class DialogComponent extends BaseComponent {
   }
 
   publishCloseModal() {
-    super.unsubscribeMessages();
-    MessagesControl.publishMessage('close-modal', null, this.componentID);
+    this.modal.closeModal();
   }
 }

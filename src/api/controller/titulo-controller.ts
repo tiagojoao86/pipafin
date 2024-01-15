@@ -1,9 +1,8 @@
 import { Request, Router } from 'express';
-import { FiltroTituloNumeroDto } from '../../view/public/model/titulo/dto/filtro-titulo.dto';
-import { SituacaoTitulo } from '../../view/public/model/titulo/enum/situacao-titulo.enum';
 import { TituloService } from '../service/titulo.service';
 import { EditarTituloDto } from 'src/view/public/model/titulo/dto/editar-titulo.dto';
 import { TituloPagarDto } from 'src/view/public/model/titulo/dto/titulo-pagar.dto';
+import { FiltrarTituloDTO } from 'src/view/public/model/titulo/dto/filtrar-titulo';
 
 export class TituloController {
   constructor(private router: Router, private tituloService: TituloService) {}
@@ -50,10 +49,10 @@ export class TituloController {
     );
 
     this.router.post('/filtrar', (req, res, next) => {
-      const filtroDto: FiltroTituloNumeroDto = req.body;
-      res
-        .status(200)
-        .json(this.tituloService.filtrarTitulosPeloNumero(filtroDto));
+      const filtroDto: FiltrarTituloDTO = req.body;
+      this.tituloService
+        .filtrar(filtroDto)
+        .then((filtrarResult) => res.status(200).json(filtrarResult));
     });
 
     return this.router;

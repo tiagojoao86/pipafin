@@ -97,7 +97,7 @@ export class TituloDetail extends BaseComponent {
   }
 
   cancelarEdicao(): void {
-    this.publishCloseModal();
+    MessagesControl.publishMessage('cancelar-edicao', null, this.componentID);
   }
 
   formatMoney($event: any) {
@@ -161,7 +161,6 @@ export class TituloDetail extends BaseComponent {
           titulo,
           this.componentID
         );
-        this.publishCloseModal();
       });
   }
 
@@ -184,13 +183,7 @@ export class TituloDetail extends BaseComponent {
 
     this.dataManager.salvarTitulo(criarTitulo).then((titulo) => {
       MessagesControl.publishMessage('titulo-criado', titulo, this.componentID);
-      this.publishCloseModal();
     });
-  }
-
-  publishCloseModal() {
-    super.unsubscribeMessages();
-    MessagesControl.publishMessage('close-modal', null, this.componentID);
   }
 
   validarForm(formData: FormData): boolean {
