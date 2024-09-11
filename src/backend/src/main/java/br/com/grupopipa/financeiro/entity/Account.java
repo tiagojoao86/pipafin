@@ -26,8 +26,5 @@ public class Account extends EntityBase {
 
     @Column(nullable = false)
     private LocalDateTime dueDate;
-
-    @Column(nullable = false)
-    private AccountTypeEnum type;
     
 }

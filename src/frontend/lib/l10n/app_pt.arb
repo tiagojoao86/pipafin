@@ -1,0 +1,19 @@
+{
+  "appTitle": "Financeiro",
+  "accountCategoryType": "{type, select, payable{à pagar} receivable{à receber} other{sem informação}}",
+  "@accountCategoryType": {
+    "description": "Type for account category",
+    "placeholders": {
+      "type": {
+        "type": "String"
+      }
+    }
+  },
+  "description": "Descrição",
+  "type": "Tipo",
+  "accountCategoryTitle": "Categorias dos Títulos",
+  "mainMenuTitle": "Menu principal",
+  "save": "Salvar",
+  "cancel": "Cacelar",
+  "errorCannotBeEmpty": "Esse campo não pode ser vazio"
+}

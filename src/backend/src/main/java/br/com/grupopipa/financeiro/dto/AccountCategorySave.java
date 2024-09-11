@@ -1,5 +1,6 @@
 package br.com.grupopipa.financeiro.dto;
 
+import br.com.grupopipa.financeiro.enumeration.AccountTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,5 +16,6 @@ public class AccountCategorySave {
 
     private UUID id;
     private String description;
+    private AccountTypeEnum type;
 
 }
