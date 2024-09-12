@@ -1,8 +1,9 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:frontend/enumeration/account_type_enum.dart';
-import 'package:frontend/json/json_converter_adapter.dart';
+import 'package:frontend/model/base_model.dart';
 
-class AccountCategoryDTO extends JsonConverterAdapter {
-  String? id;
+class AccountCategoryDTO extends BaseModel {
   String? description;
   DateTime? createdAt;
   DateTime? updatedAt;
@@ -10,20 +11,21 @@ class AccountCategoryDTO extends JsonConverterAdapter {
   String? createdBy;
   String? updatedBy;
 
-  AccountCategoryDTO.empty();
+  AccountCategoryDTO.empty() : super.empty();
 
-  AccountCategoryDTO(this.id, this.description, this.createdAt, this.updatedAt,
+  AccountCategoryDTO(super.id, this.description, this.createdAt, this.updatedAt,
       this.type, this.createdBy, this.updatedBy);
 
   @override
-  fromJson(Map<String, dynamic> map) {
+  AccountCategoryDTO fromJson(Map<String, dynamic> map) {
     id = map['id'];
     description = map['description'];
-    createdAt = map['createdAt'];
-    updatedAt = map['updatedAt'];
-    type = map['type'];
+    createdAt = DateTime.parse(map['createdAt']);
+    updatedAt = DateTime.parse(map['updatedAt']);
+    type = AccountTypeEnum.fromString(map["type"] as String);
     createdBy = map['createdBy'];
     updatedBy = map['updatedBy'];
+    return this;
   }
 
   @override
@@ -31,6 +33,20 @@ class AccountCategoryDTO extends JsonConverterAdapter {
     // TODO: implement toJson
     throw UnimplementedError();
   }
-  
+
+  @override
+  List<Widget> getInfoList(AppLocalizations? location) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future getDetailNavigator(BuildContext context) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<dynamic> getNewNavigator(BuildContext context) {
+    throw UnimplementedError();
+  }
   
 }

@@ -3,40 +3,47 @@ import 'package:frontend/components/account_category_detail_component.dart';
 import 'package:frontend/basics_components/app_bar_register_component.dart';
 import 'package:frontend/basics_components/card_grid_component.dart';
 import 'package:frontend/basics_components/default_buttons.dart';
-import 'package:frontend/basics_components/text_util.dart';
 import 'package:frontend/model/account_category/account_category_grid.dart';
-import 'package:frontend/services/account_category_service.dart';
+import 'package:frontend/model/base_model.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:frontend/services/account_category_service.dart';
+import 'package:frontend/services/base_service.dart';
 
 AppLocalizations? location;
-const AccountCategoryService service = AccountCategoryService();
+BaseService? service;
 
-class AccountCategoryListComponent extends StatefulWidget {
+class ListComponent<T extends BaseModel> extends StatefulWidget {
 
-  const AccountCategoryListComponent({super.key});
+  const ListComponent({super.key});
 
   @override
   State<StatefulWidget> createState() {
-    return _AccountCategoryListComponentState();
+    return _ListComponentState<T>();
   }
 
 }
 
-class _AccountCategoryListComponentState extends State<AccountCategoryListComponent> {
+class _ListComponentState<T extends BaseModel> extends State<ListComponent> {
 
-  List<AccountCategoryGrid>? list;
+  List<dynamic>? list;
 
-  _AccountCategoryListComponentState() {
-    service.list().then((result) => setState(() => list = result));
+  _ListComponentState() {
+    service = getService(T);
+    service!.list().then((result) => setState(() => list = result));
   }
 
-  updateGridItem(AccountCategoryGrid item) {
+  updateItemOnGrid(T? item, isRemoving) {
+    if (item == null) return;
     setState(() {
       list ??= [];
-
       var findIndex = list?.indexWhere((it) => it.id == item.id);
 
       if (findIndex != null && findIndex != -1) {
+        if (isRemoving) {
+          list!.removeAt(findIndex);
+          return;
+        }
+
         list![findIndex] = item;
         return;
       }
@@ -61,15 +68,10 @@ class _AccountCategoryListComponentState extends State<AccountCategoryListCompon
         appBar: AppBarRegisterComponent(() =>
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => const AccountCategoryDetailComponent('new'),
+                builder: (context) => getNewComponent(T),
               ),
-            ).then((value) {
-              if (value != null) {
-                updateGridItem(value);
-              }
-            }),
-
-            location!.accountCategoryTitle),
+            ).then((value) => updateItemOnGrid(value, false)),
+            getTitle(T)),
         body: _buildItems(context)
     );
   }
@@ -86,36 +88,37 @@ class _AccountCategoryListComponentState extends State<AccountCategoryListCompon
     );
   }
 
-  List<Widget> buildInfoList(AccountCategoryGrid? item) {
-    if (item == null) return [];
-
-    var type = item.type != null ?
-    location!.accountCategoryType(item.type!.name)
-        .toUpperCase()
-        : '';
-    return [
-      TextUtil.label(item.description),
-      TextUtil(type)
-    ];
+  List<Widget> buildInfoList(T? item) {
+    return item == null ? [] : item.getInfoList(location);
   }
 
-  List<Widget> buildActionsList(AccountCategoryGrid? item, BuildContext context) {
+  List<Widget> buildActionsList(T? item, BuildContext context) {
     if (item == null) return [];
     return [
       DefaultButtons.editButton(() {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => AccountCategoryDetailComponent(item.id!),
-          ),
-        ).then((value) {
-          if (value != null) {
-            updateGridItem(value);
-          }
-        });
+        item.getDetailNavigator(context).then((value) => updateItemOnGrid(item, false));
       }),
       DefaultButtons.deleteButton(() async {
-        await service.delete(item.id!);
+        service!.delete(item.id!).then((value) => updateItemOnGrid(item, true));
       }),
     ];
   }
+}
+
+BaseService getService(T) {
+  if (T == AccountCategoryGrid) return const AccountCategoryService();
+
+  throw Exception('Service not assign for $T');
+}
+
+String getTitle(T) {
+  if (T == AccountCategoryGrid) return location!.accountCategoryTitle;
+
+  throw Exception('Title not assign for $T');
+}
+
+StatefulWidget getNewComponent(T) {
+  if (T == AccountCategoryGrid) return const AccountCategoryDetailComponent('new');
+
+  throw Exception('New Component not assign for $T');
 }

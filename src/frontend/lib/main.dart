@@ -4,7 +4,9 @@ import 'package:frontend/components/account_category_detail_component.dart';
 import 'package:frontend/components/account_category_list_component.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:frontend/components/list_component.dart';
 import 'package:frontend/home.dart';
+import 'package:frontend/model/account_category/account_category_grid.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
 
@@ -64,7 +66,7 @@ class App extends StatelessWidget {
           routes: [
             GoRoute(
               path: 'finances/account-category',
-              builder: (context, state) => const AccountCategoryListComponent(),
+              builder: (context, state) => const ListComponent<AccountCategoryGrid>(),
             ),
           ]
       ),

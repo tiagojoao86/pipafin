@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -23,7 +24,7 @@ public class AccountCategoryBusiness {
     }
 
     public AccountCategoryDto save(AccountCategorySave dto) {
-        AccountCategory accountCategory = new AccountCategory();
+        AccountCategory accountCategory = Objects.isNull(dto.getId()) ? new AccountCategory() : findEntityById(dto.getId());
         accountCategory.setFromDto(dto);
 
         accountCategory = repository.save(accountCategory);
@@ -31,16 +32,16 @@ public class AccountCategoryBusiness {
         return new AccountCategoryDto(accountCategory);
     }
 
-    public AccountCategoryDto findById(UUID id) throws EntityNotFoundException {
+    public AccountCategoryDto findById(UUID id) {
         return new AccountCategoryDto(repository.findById(id).orElseThrow(() -> new EntityNotFoundException(AccountCategory.class.getName(), id)));
     }
 
-    public UUID delete(UUID id) throws EntityNotFoundException {
+    public UUID delete(UUID id) {
         repository.delete(findEntityById(id));
         return id;
     }
 
-    private AccountCategory findEntityById(UUID id) throws EntityNotFoundException {
+    private AccountCategory findEntityById(UUID id) {
         return repository.findById(id).orElseThrow(() -> new EntityNotFoundException(AccountCategory.class.getName(), id));
     }
 }

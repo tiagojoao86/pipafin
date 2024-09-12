@@ -1,70 +1,53 @@
-import 'dart:convert';
-
-import 'package:flutter/material.dart';
-import 'package:frontend/basics_components/text_util.dart';
 import 'package:frontend/constants/rest_constants.dart';
 import 'package:frontend/model/account_category/account_category_dto.dart';
 import 'package:frontend/model/account_category/account_category_grid.dart';
 import 'package:frontend/model/account_category/account_category_save.dart';
 import 'package:frontend/services/base_service.dart';
 import 'package:http/http.dart' as http;
-import 'package:frontend/model/rresponse.dart';
+import 'package:frontend/model/rest_response.dart';
 
-class AccountCategoryService extends BaseService {
+class AccountCategoryService extends BaseService<AccountCategoryGrid, AccountCategorySave, AccountCategoryDTO> {
 
   const AccountCategoryService();
 
+  @override
   Future<List<AccountCategoryGrid>> list() async {
-    var response = await http.get(getUrl([RestConstants.rAccountCategory]));    
-    var responseJson = RResponse<AccountCategoryGrid>.fromJson(response, objCreator: () => AccountCategoryGrid());
-    if (responseJson.statusCode == 200) {
-      return responseJson.body as List<AccountCategoryGrid>;
-    }
-    SnackBar(
-      content: TextUtil(responseJson.errorMessage),
-    );
-    throw Exception(responseJson.errorMessage);
+    var response = await http.get(getUrl([RestConstants.rAccountCategory]));
+    var responseJson = RestResponse<AccountCategoryGrid>
+        .fromJson(response, objCreator: () => AccountCategoryGrid());
+
+    return responseJson.body as List<AccountCategoryGrid>;
   }
 
+  @override
   Future<AccountCategoryGrid> save(AccountCategorySave dto) async {
-    var response = await http.post(getUrl([RestConstants.rAccountCategory]), body: dto.toJson(), headers: _getHeaders());
-    var responseJson = RResponse<AccountCategoryGrid>.fromJson(response, objCreator: () => AccountCategoryGrid());
-    if (responseJson.statusCode == 200) {
-      return responseJson.body as AccountCategoryGrid;
-    }
-    SnackBar(
-      content: TextUtil(responseJson.errorMessage),
-    );
-    throw Exception(responseJson.errorMessage);
+    var response = await http.post(getUrl([RestConstants.rAccountCategory]),
+        body: dto.toJson(), headers: getHeaders());
+    var responseJson = RestResponse<AccountCategoryGrid>.fromJson(response, objCreator: () => AccountCategoryGrid());
+
+    return responseJson.body as AccountCategoryGrid;
   }
 
+  @override
   Future<String> delete(String uuid) async {
-    var response = await http.delete(getUrl([RestConstants.rAccountCategory,'/', uuid]), headers: _getHeaders());
-    var responseJson = RResponse<String>.fromJson(response);
-    if (responseJson.statusCode == 200) {
-      return responseJson.body as String;
-    }
-    SnackBar(
-      content: TextUtil(responseJson.errorMessage),
-    );
-    throw Exception(responseJson.errorMessage);
+    var response = await http.delete(getUrl([RestConstants.rAccountCategory,'/', uuid]),
+        headers: getHeaders());
+    var responseJson = RestResponse<String>.fromJson(response);
+
+    return responseJson.body as String;
   }
 
+  @override
   Future<AccountCategoryDTO> findById(String id) async {
-    var response = await http.get(getUrl([RestConstants.rAccountCategory, RestConstants.rFindById]), headers: _getHeaders());
-    var responseJson = RResponse<AccountCategoryDTO>.fromJson(response, objCreator: () => AccountCategoryDTO.empty());
-    if (responseJson.statusCode == 200) {
-      return responseJson.body as AccountCategoryDTO;
-    }
-    SnackBar(
-      content: TextUtil(responseJson.errorMessage),
+    var response = await http.get(
+        getUrl([RestConstants.rAccountCategory, RestConstants.rFindById],
+            queryParameters: <String, String>{"id":id}),
+        headers: getHeaders(),
     );
-    throw Exception(responseJson.errorMessage);
+    var responseJson = RestResponse<AccountCategoryDTO>
+        .fromJson(response, objCreator: () => AccountCategoryDTO.empty());
+
+    return responseJson.body as AccountCategoryDTO;
   }
 
-  Map<String, String> _getHeaders() {
-    return <String, String>{
-     "Content-type":"application/json"
-    };
-  }
 }

@@ -4,6 +4,8 @@ import 'package:frontend/basics_components/default_buttons.dart';
 import 'package:frontend/basics_components/default_colors.dart';
 import 'package:frontend/basics_components/text_util.dart';
 import 'package:frontend/enumeration/account_type_enum.dart';
+import 'package:frontend/model/account_category/account_category_dto.dart';
+import 'package:frontend/model/account_category/account_category_grid.dart';
 import 'package:frontend/model/account_category/account_category_save.dart';
 import 'package:frontend/services/account_category_service.dart';
 
@@ -36,15 +38,15 @@ class _AccountCategoryDetailComponent extends State<AccountCategoryDetailCompone
     String? id = widget.id;
 
     if (id == 'new') {
-      return _buildScaffold(AccountCategorySave.empty());
+      return _buildScaffold(AccountCategoryDTO.empty());
     }
 
-    return _buildBody();
+    return _buildBody(id!);
   }
 
-  FutureBuilder _buildBody() {
+  FutureBuilder _buildBody(String id) {
     return FutureBuilder(
-        future: service.list(),
+        future: service.findById(id),
         builder: (context, snapshot) {
           return snapshot.hasData ?
           _buildScaffold(snapshot.data) :
@@ -55,7 +57,10 @@ class _AccountCategoryDetailComponent extends State<AccountCategoryDetailCompone
     );
   }
 
-  Scaffold _buildScaffold(AccountCategorySave dto) {
+  Scaffold _buildScaffold(AccountCategoryDTO dto) {
+    if (dto.description != null) {
+      _descriptionController.text = dto.description!;
+    }
     return Scaffold(
         appBar: AppBar(
           title: TextUtil.subTitle(location!.accountCategoryTitle, foreground: DefaultColors.black1),
@@ -82,6 +87,7 @@ class _AccountCategoryDetailComponent extends State<AccountCategoryDetailCompone
                   child: ButtonTheme(
                     alignedDropdown: true,
                     child: DropdownButtonFormField(
+                      value: dto.type,
                       validator: _emptyValidator,
                       items: AccountTypeEnum.getDropdownList(context),
                       onChanged: (value) => dto.type = value,
@@ -106,13 +112,13 @@ class _AccountCategoryDetailComponent extends State<AccountCategoryDetailCompone
     );
   }
 
-  Future<void> _validateAndSave(AccountCategorySave dto, BuildContext context) async {
+  Future<void> _validateAndSave(AccountCategoryDTO dto, BuildContext context) async {
     if (!_formKey.currentState!.validate()) {
       return;
     }
     dto.description = _descriptionController.text;
-    await service.save(dto);
-    if (context.mounted) _close(context);
+    AccountCategoryGrid dtoGrid = await service.save(AccountCategorySave.fromDTO(dto));
+    if (context.mounted) _close(context, dto: dtoGrid);
   }
 
   String? _emptyValidator(value) {
@@ -124,8 +130,8 @@ class _AccountCategoryDetailComponent extends State<AccountCategoryDetailCompone
     return null;
   }
 
-  void _close(BuildContext context) {
-    Navigator.of(context).pop();
+  void _close(BuildContext context, {dto}) {
+    Navigator.of(context).pop(dto);
   }
 
 }

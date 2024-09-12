@@ -52,7 +52,7 @@ public class AccountCategoryRest {
     }
 
     @GetMapping(R_FIND_BY_ID)
-    public Response findById(@RequestParam UUID id) {
+    public Response findById(@RequestParam(F_ID) UUID id) {
         try {
             return ok(business.findById(id));
         } catch (EntityNotFoundException e) {

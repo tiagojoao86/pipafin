@@ -1,15 +1,15 @@
 import 'dart:convert';
-import 'package:frontend/json/json_converter_adapter.dart';
+import 'package:frontend/model/base_model.dart';
 import 'package:http/http.dart';
 
-class RResponse<T> {
+class RestResponse<T> {
   int? statusCode;
   String? errorMessage;
   dynamic body;
 
-  RResponse();
+  RestResponse();
 
-  RResponse.fromJson(Response response, {Function? objCreator}) {
+  RestResponse.fromJson(Response response, {Function? objCreator}) {
     var json = utf8.decode(response.bodyBytes);
     Map<String, dynamic> map = jsonDecode(json);
     statusCode = map['statusCode'];
@@ -18,7 +18,10 @@ class RResponse<T> {
 
     if (statusCode == 200) {
       _extractBody(jsonBody, objCreator);
+      return;
     }
+
+    throw Exception('Error: $statusCode. Message: $errorMessage');
   }
 
   _extractBody(jsonBody, objCreator) {
@@ -35,7 +38,7 @@ class RResponse<T> {
     for (final item in jsonBody) {
       if (objCreator != null) {
         var obj = objCreator();
-        if (obj is JsonConverterAdapter) {
+        if (obj is BaseModel) {          ;
           result.add(obj.fromJson(item));
           continue;
         }
@@ -48,7 +51,7 @@ class RResponse<T> {
   _extractBodyAsOther(jsonBody, objCreator) {
     if (objCreator != null) {
       var obj = objCreator();
-      if (obj is JsonConverterAdapter) {
+      if (obj is BaseModel) {
         body = obj.fromJson(jsonBody);
         return;
       }
