@@ -2,21 +2,21 @@ package br.com.grupopipa.financeiro.entity;
 
 import java.time.LocalDateTime;
 
-import br.com.grupopipa.financeiro.enumeration.AccountTypeEnum;
+import br.com.grupopipa.financeiro.dto.AccountDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 
-@Entity
+@Entity(name = "account")
 @Getter
-public class Account extends EntityBase {
+public class AccountEntity extends BaseEntity<AccountDTO> {
 
     @Column(nullable = false)
     private String description;
 
     @ManyToOne
-    private AccountCategory category;
+    private AccountCategoryEntity category;
 
     @Column(nullable = false)
     private double value;
@@ -26,5 +26,9 @@ public class Account extends EntityBase {
 
     @Column(nullable = false)
     private LocalDateTime dueDate;
-    
+
+    @Override
+    public void fillFromDTO(AccountDTO item) {
+
+    }
 }

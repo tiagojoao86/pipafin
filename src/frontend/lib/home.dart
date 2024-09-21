@@ -36,16 +36,23 @@ class HomeScreen extends StatelessWidget {
         title: TextUtil.subTitle(location!.mainMenuTitle,
             foreground: DefaultColors.black1),
       ),
-      body: GridView.builder(
-        primary: false,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3, childAspectRatio: 4),
-        itemCount: 1,
-        itemBuilder: (ctx, index) => DefaultButtons.mainMenuButton(
-                () => context.go('/finances/account-category'),
+      body: GridView.extent(
+        maxCrossAxisExtent: 400,
+        childAspectRatio: 4,
+        children: [
+          DefaultButtons.mainMenuButton(
+            () => context.go('/finances/account-category'),
             location!.accountCategoryTitle,
-            const Icon(Icons.account_balance_sharp)),
-      ),
+            const Icon(Icons.account_balance_sharp)
+          ),
+          DefaultButtons.mainMenuButton(
+                  () => context.go('/finances/persons'),
+              location!.personTitle,
+              const Icon(Icons.people)
+          ),
+
+        ],
+      )
     );
   }
 }

@@ -1,7 +1,7 @@
 package br.com.grupopipa.financeiro.dto;
 
-import br.com.grupopipa.financeiro.entity.AccountCategory;
-import br.com.grupopipa.financeiro.enumeration.AccountTypeEnum;
+import br.com.grupopipa.financeiro.entity.AccountCategoryEntity;
+import br.com.grupopipa.financeiro.enumeration.AccountCategoryTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,17 +14,18 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AccountCategoryDto {
+public class AccountCategoryDTO implements DTO<AccountCategoryEntity> {
 
     private UUID id;
     private String description;
+    private AccountCategoryTypeEnum type;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private AccountTypeEnum type;
     private String createdBy;
     private String updatedBy;
 
-    public AccountCategoryDto(AccountCategory entity) {
+    @Override
+    public void fillFromEntity(AccountCategoryEntity entity) {
         this.id = entity.getId();
         this.description = entity.getDescription();
         this.type = entity.getType();

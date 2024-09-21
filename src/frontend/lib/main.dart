@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/basics_components/default_colors.dart';
-import 'package:frontend/components/account_category_detail_component.dart';
-import 'package:frontend/components/account_category_list_component.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:frontend/components/list_component.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:frontend/basics_components/default_colors.dart';
+import 'package:frontend/components/account_category/account_category_list_component.dart';
+import 'package:frontend/components/person/person_list_component.dart';
 import 'package:frontend/home.dart';
-import 'package:frontend/model/account_category/account_category_grid.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:frontend/provider/account_category_provider.dart';
+import 'package:frontend/provider/person_provider.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 final theme = ThemeData(
   useMaterial3: true,
@@ -22,7 +23,15 @@ final theme = ThemeData(
 AppLocalizations? location;
 
 void main() {
-  runApp(const App());
+  runApp(
+    MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => AccountCategoryProvider()),
+          ChangeNotifierProvider(create: (_) => PersonProvider()),
+        ],
+        child: const App()
+    )
+  );
 }
 
 class App extends StatelessWidget {
@@ -66,7 +75,11 @@ class App extends StatelessWidget {
           routes: [
             GoRoute(
               path: 'finances/account-category',
-              builder: (context, state) => const ListComponent<AccountCategoryGrid>(),
+              builder: (context, state) => const AccountCategoryListComponent(),
+            ),
+            GoRoute(
+              path: 'finances/persons',
+              builder: (context, state) => const PersonListComponent(),
             ),
           ]
       ),

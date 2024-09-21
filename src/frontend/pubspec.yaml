@@ -43,6 +43,9 @@ dependencies:
   json_annotation: ^4.9.0
   google_fonts: ^6.2.1
   go_router: ^14.2.7
+  provider: ^6.1.2
+  flutterlifecyclehooks: ^5.0.0
+  mask_text_input_formatter: ^2.9.0
 
 dev_dependencies:
   flutter_test:

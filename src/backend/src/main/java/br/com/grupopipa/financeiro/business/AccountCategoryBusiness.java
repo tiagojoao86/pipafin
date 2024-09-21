@@ -1,47 +1,40 @@
 package br.com.grupopipa.financeiro.business;
 
-import br.com.grupopipa.financeiro.dto.AccountCategoryDto;
-import br.com.grupopipa.financeiro.dto.AccountCategoryGrid;
-import br.com.grupopipa.financeiro.dto.AccountCategorySave;
-import br.com.grupopipa.financeiro.entity.AccountCategory;
-import br.com.grupopipa.financeiro.exception.EntityNotFoundException;
-import br.com.grupopipa.financeiro.repository.AccountCategoryRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import br.com.grupopipa.financeiro.dto.AccountCategoryDTO;
+import br.com.grupopipa.financeiro.dto.AccountCategoryGridDTO;
+import br.com.grupopipa.financeiro.entity.AccountCategoryEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
-import java.util.Objects;
-import java.util.UUID;
+import java.util.function.IntFunction;
 
 @Service
-public class AccountCategoryBusiness {
+public class AccountCategoryBusiness extends BaseBusiness<AccountCategoryEntity, AccountCategoryGridDTO,AccountCategoryDTO> {
 
-    @Autowired
-    private AccountCategoryRepository repository;
+    @Override
+    public AccountCategoryGridDTO convertEntityToGridObject(AccountCategoryEntity item) {
+        AccountCategoryGridDTO grid = new AccountCategoryGridDTO();
+        grid.fillFromEntity(item);
 
-    public AccountCategoryGrid[] list() {
-        return repository.findAll().stream().map(AccountCategoryGrid::new).toArray(AccountCategoryGrid[]::new);
+        return grid;
     }
 
-    public AccountCategoryDto save(AccountCategorySave dto) {
-        AccountCategory accountCategory = Objects.isNull(dto.getId()) ? new AccountCategory() : findEntityById(dto.getId());
-        accountCategory.setFromDto(dto);
-
-        accountCategory = repository.save(accountCategory);
-
-        return new AccountCategoryDto(accountCategory);
+    @Override
+    public IntFunction<AccountCategoryGridDTO[]> createGridObjectArray() {
+        return AccountCategoryGridDTO[]::new;
     }
 
-    public AccountCategoryDto findById(UUID id) {
-        return new AccountCategoryDto(repository.findById(id).orElseThrow(() -> new EntityNotFoundException(AccountCategory.class.getName(), id)));
+    @Override
+    public AccountCategoryEntity createEntityObject() {
+        return new AccountCategoryEntity();
     }
 
-    public UUID delete(UUID id) {
-        repository.delete(findEntityById(id));
-        return id;
+    @Override
+    public AccountCategoryDTO createDtoObject() {
+        return new AccountCategoryDTO();
     }
 
-    private AccountCategory findEntityById(UUID id) {
-        return repository.findById(id).orElseThrow(() -> new EntityNotFoundException(AccountCategory.class.getName(), id));
+    @Override
+    public String getEntityClassName() {
+        return AccountCategoryEntity.class.getName();
     }
 }

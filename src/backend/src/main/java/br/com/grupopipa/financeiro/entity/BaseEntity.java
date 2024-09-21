@@ -15,7 +15,7 @@ import java.util.UUID;
 
 @MappedSuperclass
 @Getter
-public abstract class EntityBase {
+public abstract class BaseEntity<D> {
     
     @Setter
     @Id
@@ -28,7 +28,7 @@ public abstract class EntityBase {
     private String createdBy;
     private String updatedBy;
 
-    public EntityBase() {}
+    public BaseEntity() {}
 
     @PrePersist
     public void create() {
@@ -44,4 +44,6 @@ public abstract class EntityBase {
         this.updatedAt = LocalDateTime.now();
         this.updatedBy = Session.getUser();
     }
+
+    public abstract void fillFromDTO(D item);
 }

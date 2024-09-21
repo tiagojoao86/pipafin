@@ -10,9 +10,9 @@ enum AccountTypeEnum {
     return values.firstWhere((e) => e.name == key.toLowerCase());
   }
 
-  static List<DropdownMenuItem> getDropdownList(BuildContext context) {
+  static List<DropdownMenuItem<AccountTypeEnum>> getDropdownList(BuildContext context) {
     AppLocalizations? location = AppLocalizations.of(context);
-    List<DropdownMenuItem> list = [];
+    List<DropdownMenuItem<AccountTypeEnum>> list = [];
 
     for (AccountTypeEnum item in values) {
       list.add(

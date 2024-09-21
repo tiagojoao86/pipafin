@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:frontend/model/base_model.dart';
+import 'package:frontend/model/model.dart';
 import 'package:http/http.dart';
 
 class RestResponse<T> {
@@ -37,9 +37,10 @@ class RestResponse<T> {
     List<T> result = [];
     for (final item in jsonBody) {
       if (objCreator != null) {
-        var obj = objCreator();
-        if (obj is BaseModel) {          ;
-          result.add(obj.fromJson(item));
+        T obj = objCreator();
+        if (obj is Model) {
+          obj.fillFromJson(item);
+          result.add(obj);
           continue;
         }
       }
@@ -50,9 +51,10 @@ class RestResponse<T> {
 
   _extractBodyAsOther(jsonBody, objCreator) {
     if (objCreator != null) {
-      var obj = objCreator();
-      if (obj is BaseModel) {
-        body = obj.fromJson(jsonBody);
+      T obj = objCreator();
+      if (obj is Model) {
+        obj.fillFromJson(jsonBody);
+        body = obj;
         return;
       }
     }

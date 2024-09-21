@@ -15,5 +15,38 @@
   "mainMenuTitle": "Menu principal",
   "save": "Salvar",
   "cancel": "Cacelar",
-  "errorCannotBeEmpty": "Esse campo não pode ser vazio"
+  "errorCannotBeEmpty": "Esse campo não pode ser vazio",
+  "noRegistersFound": "Nenhum registro encontrado",
+  "personType": "{type, select, natural{Pessoa Física} legal{Pessoa Jurídica} other{sem informação}}",
+  "@personType": {
+    "description": "Type for person",
+    "placeholders": {
+      "type": {
+        "type": "String"
+      }
+    }
+  },
+  "documentType": "{type, select, cpf{cpf} cnpj{cnpj} other{sem informação}}",
+  "@documentType": {
+    "description": "Type for Document",
+    "placeholders": {
+      "type": {
+        "type": "String"
+      }
+    }
+  },
+  "name": "Nome",
+  "fantasyName": "Nome fantasia",
+  "document": "Documento",
+  "addressNumber": "Número",
+  "addressStreet": "Logradouro",
+  "addressNeighborhood": "Bairro",
+  "addressCity": "Cidade",
+  "addressState": "Estado",
+  "addressPostalCode": "CEP",
+  "phone1": "Telefone 1",
+  "phone2": "Telefone 2",
+  "personTitle": "Pessoas",
+  "registerTypeTitle": "Tipo do cadastro",
+  "documentTypeTitle": "Tipo do documento"
 }

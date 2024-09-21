@@ -1,9 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:frontend/enumeration/account_type_enum.dart';
-import 'package:frontend/model/base_model.dart';
+import 'dart:convert';
 
-class AccountCategoryDTO extends BaseModel {
+import 'package:frontend/model/model.dart';
+import 'package:frontend/enumeration/account_type_enum.dart';
+
+class AccountCategoryDTO implements Model {
+  String? id;
   String? description;
   DateTime? createdAt;
   DateTime? updatedAt;
@@ -11,13 +12,10 @@ class AccountCategoryDTO extends BaseModel {
   String? createdBy;
   String? updatedBy;
 
-  AccountCategoryDTO.empty() : super.empty();
-
-  AccountCategoryDTO(super.id, this.description, this.createdAt, this.updatedAt,
-      this.type, this.createdBy, this.updatedBy);
+  AccountCategoryDTO();
 
   @override
-  AccountCategoryDTO fromJson(Map<String, dynamic> map) {
+  void fillFromJson(Map<String, dynamic> map) {
     id = map['id'];
     description = map['description'];
     createdAt = DateTime.parse(map['createdAt']);
@@ -25,28 +23,20 @@ class AccountCategoryDTO extends BaseModel {
     type = AccountTypeEnum.fromString(map["type"] as String);
     createdBy = map['createdBy'];
     updatedBy = map['updatedBy'];
-    return this;
   }
 
   @override
   String toJson() {
-    // TODO: implement toJson
-    throw UnimplementedError();
+    Map<String, dynamic> map = {};
+    map.putIfAbsent("id", () => id);
+    map.putIfAbsent("description", () => description);
+    map.putIfAbsent("type", () => type!.name.toUpperCase());
+
+    return jsonEncode(map);
   }
 
   @override
-  List<Widget> getInfoList(AppLocalizations? location) {
-    throw UnimplementedError();
+  String getId() {
+    return id!;
   }
-
-  @override
-  Future getDetailNavigator(BuildContext context) {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<dynamic> getNewNavigator(BuildContext context) {
-    throw UnimplementedError();
-  }
-  
 }
