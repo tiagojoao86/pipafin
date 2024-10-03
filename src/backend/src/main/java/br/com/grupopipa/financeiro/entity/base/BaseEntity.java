@@ -1,4 +1,4 @@
-package br.com.grupopipa.financeiro.entity;
+package br.com.grupopipa.financeiro.entity.base;
 
 import br.com.grupopipa.financeiro.config.Session;
 import jakarta.persistence.GeneratedValue;

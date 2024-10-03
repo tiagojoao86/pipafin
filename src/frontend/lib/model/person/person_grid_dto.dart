@@ -1,6 +1,4 @@
-import 'package:frontend/enumeration/account_type_enum.dart';
 import 'package:frontend/enumeration/person_type_enum.dart';
-import 'package:frontend/model/account_category/account_category_dto.dart';
 import 'package:frontend/model/model.dart';
 import 'package:frontend/model/person/person_dto.dart';
 

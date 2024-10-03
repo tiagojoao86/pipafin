@@ -2,21 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:frontend/basics_components/text_util.dart';
 
-enum AccountTypeEnum {
+enum AccountCategoryTypeEnum {
   payable,
   receivable;
 
-  static AccountTypeEnum fromString(String key) {
+  static AccountCategoryTypeEnum fromString(String key) {
     return values.firstWhere((e) => e.name == key.toLowerCase());
   }
 
-  static List<DropdownMenuItem<AccountTypeEnum>> getDropdownList(BuildContext context) {
+  static List<DropdownMenuItem<AccountCategoryTypeEnum>> getDropdownList(BuildContext context) {
     AppLocalizations? location = AppLocalizations.of(context);
-    List<DropdownMenuItem<AccountTypeEnum>> list = [];
+    List<DropdownMenuItem<AccountCategoryTypeEnum>> list = [];
 
-    for (AccountTypeEnum item in values) {
+    for (AccountCategoryTypeEnum item in values) {
       list.add(
-        DropdownMenuItem<AccountTypeEnum>(
+        DropdownMenuItem<AccountCategoryTypeEnum>(
           value: item,
           child: TextUtil(location!.accountCategoryType(item.name).toUpperCase(), textSize: 16,),
         ),

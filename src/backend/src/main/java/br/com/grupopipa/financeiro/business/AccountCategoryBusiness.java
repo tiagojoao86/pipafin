@@ -1,14 +1,18 @@
 package br.com.grupopipa.financeiro.business;
 
-import br.com.grupopipa.financeiro.dto.AccountCategoryDTO;
-import br.com.grupopipa.financeiro.dto.AccountCategoryGridDTO;
+import br.com.grupopipa.financeiro.business.base.BaseBusiness;
+import br.com.grupopipa.financeiro.dto.accountcategory.AccountCategoryDTO;
+import br.com.grupopipa.financeiro.dto.accountcategory.AccountCategoryFilterDTO;
+import br.com.grupopipa.financeiro.dto.accountcategory.AccountCategoryGridDTO;
 import br.com.grupopipa.financeiro.entity.AccountCategoryEntity;
+import br.com.grupopipa.financeiro.repository.AccountCategoryRepository;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.function.IntFunction;
 
 @Service
-public class AccountCategoryBusiness extends BaseBusiness<AccountCategoryEntity, AccountCategoryGridDTO,AccountCategoryDTO> {
+public class AccountCategoryBusiness extends BaseBusiness<AccountCategoryEntity, AccountCategoryGridDTO, AccountCategoryDTO, AccountCategoryFilterDTO, AccountCategoryRepository> {
 
     @Override
     public AccountCategoryGridDTO convertEntityToGridObject(AccountCategoryEntity item) {
@@ -37,4 +41,5 @@ public class AccountCategoryBusiness extends BaseBusiness<AccountCategoryEntity,
     public String getEntityClassName() {
         return AccountCategoryEntity.class.getName();
     }
+
 }

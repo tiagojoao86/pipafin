@@ -1,5 +1,6 @@
-package br.com.grupopipa.financeiro.dto;
+package br.com.grupopipa.financeiro.dto.person;
 
+import br.com.grupopipa.financeiro.dto.DTO;
 import br.com.grupopipa.financeiro.entity.PersonEntity;
 import br.com.grupopipa.financeiro.enumeration.DocumentTypeEnum;
 import br.com.grupopipa.financeiro.enumeration.PersonTypeEnum;
@@ -15,7 +16,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
-public class PersonDTO implements DTO<PersonEntity>{
+public class PersonDTO implements DTO<PersonEntity> {
 
     private UUID id;
     private String name;

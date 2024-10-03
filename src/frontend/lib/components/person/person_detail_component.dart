@@ -6,13 +6,14 @@ import 'package:frontend/components/base/detail_component.dart';
 import 'package:frontend/enumeration/document_type_enum.dart';
 import 'package:frontend/enumeration/person_type_enum.dart';
 import 'package:frontend/model/person/person_dto.dart';
+import 'package:frontend/model/person/person_filter_dto.dart';
 import 'package:frontend/model/person/person_grid_dto.dart';
-import 'package:frontend/provider/person_provider.dart';
+import 'package:frontend/state/person_store_state.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class PersonDetailComponent
-    extends DetailComponent<PersonProvider, PersonGridDTO, PersonDTO> {
-  const PersonDetailComponent(super.id, {super.key});
+    extends DetailComponent<PersonGridDTO, PersonDTO, PersonFilterDTO, PersonStoreState> {
+  const PersonDetailComponent({super.id, super.key});
 
   @override
   State<StatefulWidget> createState() {
@@ -21,16 +22,18 @@ class PersonDetailComponent
 }
 
 class _PersonDetailComponentState
-    extends DetailComponentState<PersonProvider, PersonGridDTO, PersonDTO> {
-  MaskTextInputFormatter postalCodeFormatter = TextFormComponent.postalCodeFormatter;
+    extends DetailComponentState<PersonGridDTO, PersonDTO, PersonFilterDTO, PersonStoreState> {
+  MaskTextInputFormatter postalCodeFormatter =
+      TextFormComponent.postalCodeFormatter;
   MaskTextInputFormatter phoneFormatter = TextFormComponent.phoneFormatter;
   MaskTextInputFormatter cpfFormatter = TextFormComponent.cpfFormatter;
-  PersonTypeEnum? registerType;
+
+  _PersonDetailComponentState() : super(PersonDTO(), PersonStoreState());
 
   void _changeTypeRegister(PersonTypeEnum? type) {
-    setState(() {
-      registerType = type;
-    });
+    if (type != null) {
+      store.updateTypePersonState(type);
+    }
   }
 
   @override
@@ -42,25 +45,25 @@ class _PersonDetailComponentState
   List<Widget> buildInnerForm(PersonDTO dto, BuildContext context) {
     return [
       DropdownComponent(
-          registerType, emptyValidator, PersonTypeEnum.getDropdownList(context),
+          store.type, emptyValidator, PersonTypeEnum.getDropdownList(context),
           (value) {
         _changeTypeRegister(value);
         dto.personType = value;
       }, location!.registerTypeTitle),
-      Visibility(
-        visible: registerType != null,
-        child: Column(mainAxisSize: MainAxisSize.min, children: [
-          ..._getMainDataForm(dto),
-          ..._getAddressForm(dto),
-          ..._getPhonesForm(dto),
-        ]),
-      )
-    ];
-  }
+      ListenableBuilder(
+          listenable: store,
+          builder: (context, child) {
+            if (store.typePersonState is EmptyPersonState) {
+              return const Center();
+            }
 
-  @override
-  getDtoBuildFunction() {
-    return PersonDTO();
+            return Column(mainAxisSize: MainAxisSize.min, children: [
+              ..._getMainDataForm(dto),
+              ..._getAddressForm(dto),
+              ..._getPhonesForm(dto),
+            ]);
+          })
+    ];
   }
 
   @override
@@ -69,9 +72,9 @@ class _PersonDetailComponentState
   }
 
   @override
-  void setDataToControllers(PersonDTO dto) {
-    if (dto.personType != null && registerType == null) {
-      registerType = dto.personType;
+  void setDataToControllers() {
+    if (dto.personType != null && store.type == null) {
+      store.updateTypePersonState(dto.personType!);
     }
     if (dto.name != null) {
       getControllers().nameController.text = dto.name!;
@@ -81,7 +84,8 @@ class _PersonDetailComponentState
     }
     if (dto.document != null) {
       if (dto.documentType == DocumentTypeEnum.cpf) {
-        getControllers().documentController.text = cpfFormatter.maskText(dto.document!);
+        getControllers().documentController.text =
+            cpfFormatter.maskText(dto.document!);
       } else {
         getControllers().documentController.text = dto.document!;
       }
@@ -107,25 +111,26 @@ class _PersonDetailComponentState
           postalCodeFormatter.maskText(dto.addressPostalCode!);
     }
     if (dto.phone1 != null) {
-      getControllers().phone1Controller.text = phoneFormatter.maskText(dto.phone1!);
+      getControllers().phone1Controller.text =
+          phoneFormatter.maskText(dto.phone1!);
     }
     if (dto.phone2 != null) {
-      getControllers().phone2Controller.text = phoneFormatter.maskText(dto.phone2!);
+      getControllers().phone2Controller.text =
+          phoneFormatter.maskText(dto.phone2!);
     }
   }
 
   @override
-  Future<void> validateAndSave(PersonDTO dto, PersonProvider provider, formKey,
-      VoidCallback close) async {
-    if (!formKey.currentState!.validate()) {
+  Future<void> validateAndSave(Function close) async {
+    if (!super.formKey.currentState!.validate()) {
       return;
     }
     dto.name = getControllers().nameController.text;
     dto.fantasyName = getControllers().fantasyNameController.text;
 
-    dto.document = dto.documentType == DocumentTypeEnum.cpf ?
-      cpfFormatter.unmaskText(getControllers().documentController.text) :
-      getControllers().documentController.text;
+    dto.document = dto.documentType == DocumentTypeEnum.cpf
+        ? cpfFormatter.unmaskText(getControllers().documentController.text)
+        : getControllers().documentController.text;
 
     dto.addressNumber = getControllers().addressNumberController.text;
     dto.addressStreet = getControllers().addressStreetController.text;
@@ -133,43 +138,45 @@ class _PersonDetailComponentState
         getControllers().addressNeighborhoodController.text;
     dto.addressState = getControllers().addressStateController.text;
     dto.addressCity = getControllers().addressCityController.text;
-    dto.addressPostalCode =
-        postalCodeFormatter.unmaskText(getControllers().addressPostalCodeController.text);
-    dto.phone1 = phoneFormatter.unmaskText(getControllers().phone1Controller.text);
-    dto.phone2 = phoneFormatter.unmaskText(getControllers().phone2Controller.text);
-    dto.personType = registerType;
-    provider.save(dto);
-    close();
+    dto.addressPostalCode = postalCodeFormatter
+        .unmaskText(getControllers().addressPostalCodeController.text);
+    dto.phone1 =
+        phoneFormatter.unmaskText(getControllers().phone1Controller.text);
+    dto.phone2 =
+        phoneFormatter.unmaskText(getControllers().phone2Controller.text);
+    dto.personType = store.type;
+    PersonGridDTO? gridDTO = await store.save(dto);
+    close(gridDTO);
   }
 
   List<Widget> _getMainDataForm(PersonDTO dto) {
     return [
-      TextFormComponent(
-          location!.name, getControllers().nameController,
+      TextFormComponent(location!.name, getControllers().nameController,
           validator: emptyValidator),
       TextFormComponent(
         location!.fantasyName,
         getControllers().fantasyNameController,
         validator: emptyValidator,
-        visible: registerType == PersonTypeEnum.legal,
+        visible: store.typePersonState is LegalPersonState,
       ),
       Row(
         children: [
           DropdownComponent(
-            flex: 2,
-            dto.documentType,
-            emptyValidator,
-            DocumentTypeEnum.getDropdownList(context),
-            (value) => dto.documentType = value,
-            location!.documentTypeTitle),
+              flex: 2,
+              dto.documentType,
+              emptyValidator,
+              DocumentTypeEnum.getDropdownList(context),
+              (value) => dto.documentType = value,
+              location!.documentTypeTitle),
           TextFormComponent(
             flex: 8,
             location!.document,
             getControllers().documentController,
-            validator:
-              dto.documentType == DocumentTypeEnum.cpf ?
-              TextFormComponent.cpfValidator : emptyValidator,
-            formatter: dto.documentType == DocumentTypeEnum.cpf ? cpfFormatter : null,
+            validator: dto.documentType == DocumentTypeEnum.cpf
+                ? TextFormComponent.cpfValidator
+                : emptyValidator,
+            formatter:
+                dto.documentType == DocumentTypeEnum.cpf ? cpfFormatter : null,
           ),
         ],
       ),
@@ -179,9 +186,8 @@ class _PersonDetailComponentState
   List<Widget> _getAddressForm(PersonDTO dto) {
     return [
       TextFormComponent(location!.addressPostalCode,
-        getControllers().addressPostalCodeController,
-        validator: emptyValidator,
-        formatter: postalCodeFormatter),
+          getControllers().addressPostalCodeController,
+          validator: emptyValidator, formatter: postalCodeFormatter),
       Row(children: [
         TextFormComponent(
             flex: 8,
@@ -189,19 +195,20 @@ class _PersonDetailComponentState
             getControllers().addressStreetController,
             validator: emptyValidator),
         TextFormComponent(
-            flex: 2,
-            location!.addressNumber,
-            getControllers().addressNumberController, ),
+          flex: 2,
+          location!.addressNumber,
+          getControllers().addressNumberController,
+        ),
       ]),
       Row(children: [
         TextFormComponent(location!.addressNeighborhood,
             getControllers().addressNeighborhoodController,
             validator: emptyValidator),
-        TextFormComponent(location!.addressCity,
-            getControllers().addressCityController,
+        TextFormComponent(
+            location!.addressCity, getControllers().addressCityController,
             validator: emptyValidator),
-        TextFormComponent(location!.addressState,
-            getControllers().addressStateController,
+        TextFormComponent(
+            location!.addressState, getControllers().addressStateController,
             validator: emptyValidator),
       ]),
     ];

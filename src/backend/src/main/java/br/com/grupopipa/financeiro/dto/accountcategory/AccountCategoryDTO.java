@@ -1,5 +1,6 @@
-package br.com.grupopipa.financeiro.dto;
+package br.com.grupopipa.financeiro.dto.accountcategory;
 
+import br.com.grupopipa.financeiro.dto.DTO;
 import br.com.grupopipa.financeiro.entity.AccountCategoryEntity;
 import br.com.grupopipa.financeiro.enumeration.AccountCategoryTypeEnum;
 import lombok.AllArgsConstructor;

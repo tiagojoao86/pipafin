@@ -1,6 +1,7 @@
 package br.com.grupopipa.financeiro.entity;
 
-import br.com.grupopipa.financeiro.dto.PersonDTO;
+import br.com.grupopipa.financeiro.dto.person.PersonDTO;
+import br.com.grupopipa.financeiro.entity.base.BaseEntity;
 import br.com.grupopipa.financeiro.enumeration.DocumentTypeEnum;
 import br.com.grupopipa.financeiro.enumeration.PersonTypeEnum;
 import jakarta.persistence.Column;

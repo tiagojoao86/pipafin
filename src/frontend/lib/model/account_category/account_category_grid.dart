@@ -1,11 +1,11 @@
-import 'package:frontend/enumeration/account_type_enum.dart';
+import 'package:frontend/enumeration/account_category_type_enum.dart';
 import 'package:frontend/model/account_category/account_category_dto.dart';
 import 'package:frontend/model/model.dart';
 
 class AccountCategoryGrid implements Model {
   String? id;
   String? description;
-  AccountTypeEnum? type;
+  AccountCategoryTypeEnum? type;
 
   AccountCategoryGrid();
 
@@ -19,7 +19,7 @@ class AccountCategoryGrid implements Model {
   void fillFromJson(Map<String, dynamic> map) {
     id = map["id"] as String;
     description = map["description"] as String;
-    type = AccountTypeEnum.fromString(map["type"] as String);
+    type = AccountCategoryTypeEnum.fromString(map["type"] as String);
   }
 
   @override

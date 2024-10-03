@@ -1,6 +1,7 @@
 package br.com.grupopipa.financeiro.entity;
 
-import br.com.grupopipa.financeiro.dto.AccountCategoryDTO;
+import br.com.grupopipa.financeiro.dto.accountcategory.AccountCategoryDTO;
+import br.com.grupopipa.financeiro.entity.base.BaseEntity;
 import br.com.grupopipa.financeiro.enumeration.AccountCategoryTypeEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,7 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity(name = "account_category")
+@Entity(name = "accountCategory")
 @Getter
 @Setter
 @AllArgsConstructor

@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:frontend/constants/rest_constants.dart';
+import 'package:frontend/model/filter/filter_dto.dart';
 import 'package:frontend/model/model.dart';
 import 'package:frontend/model/rest_response.dart';
 import 'package:http/http.dart' as http;
@@ -23,8 +24,8 @@ abstract class BaseService<G extends Model, D extends Model> {
     };
   }
 
-  Future<List<G>> list() async {
-    var response = await http.get(getUrl([]));
+  Future<List<G>> list(FilterDTO filter) async {
+    var response = await http.post(getUrl(["/query"]), headers: getHeaders(), body: filter.toJson());
     var responseJson = RestResponse<G>
         .fromJson(response, objCreator: getGridObjectConstructor());
 

@@ -1,14 +1,14 @@
 import 'dart:convert';
 
 import 'package:frontend/model/model.dart';
-import 'package:frontend/enumeration/account_type_enum.dart';
+import 'package:frontend/enumeration/account_category_type_enum.dart';
 
 class AccountCategoryDTO implements Model {
   String? id;
   String? description;
   DateTime? createdAt;
   DateTime? updatedAt;
-  AccountTypeEnum? type;
+  AccountCategoryTypeEnum? type;
   String? createdBy;
   String? updatedBy;
 
@@ -20,7 +20,7 @@ class AccountCategoryDTO implements Model {
     description = map['description'];
     createdAt = DateTime.parse(map['createdAt']);
     updatedAt = DateTime.parse(map['updatedAt']);
-    type = AccountTypeEnum.fromString(map["type"] as String);
+    type = AccountCategoryTypeEnum.fromString(map["type"] as String);
     createdBy = map['createdBy'];
     updatedBy = map['updatedBy'];
   }

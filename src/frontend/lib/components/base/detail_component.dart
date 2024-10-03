@@ -3,90 +3,96 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:frontend/basics_components/default_buttons.dart';
 import 'package:frontend/basics_components/default_colors.dart';
 import 'package:frontend/basics_components/text_util.dart';
+import 'package:frontend/model/filter/filter_dto.dart';
 import 'package:frontend/model/model.dart';
-import 'package:frontend/provider/base_provider.dart';
-import 'package:provider/provider.dart';
+import 'package:frontend/state/base_state.dart';
+import 'package:frontend/state/base_store_state.dart';
 
 AppLocalizations? location;
-abstract class DetailComponent<P extends BaseProvider<G, D>, G extends Model, D extends Model> extends StatefulWidget {
 
+abstract class DetailComponent<G extends Model, D extends Model, F extends FilterDTO,
+    S extends BaseStoreState<G, D, F>> extends StatefulWidget {
   final String? id;
-
-  const DetailComponent(this.id, {super.key});
+  const DetailComponent({this.id, super.key});
 
   @override
   State<StatefulWidget> createState();
-
 }
 
-abstract class DetailComponentState<P extends BaseProvider<G, D>, G extends Model, D extends Model> extends State<DetailComponent<P,G,D>> {
-
+abstract class DetailComponentState<G extends Model, D extends Model, F extends FilterDTO,
+    S extends BaseStoreState<G, D, F>> extends State<DetailComponent<G, D, F, S>> {
   String getTitle(AppLocalizations? location);
-  void setDataToControllers(D dto);
+  void setDataToControllers();
   List<Widget> buildInnerForm(D dto, BuildContext context);
-  getDtoBuildFunction();
-  void validateAndSave(D dto, P provider, formKey, VoidCallback close);
+  void validateAndSave(Function close);
   Controllers getControllers();
 
-  final _formKey = GlobalKey<FormState>();
+  S store;
+  D dto;
 
-  DetailComponentState();
+  final formKey = GlobalKey<FormState>();
+
+  DetailComponentState(this.dto, this.store);
 
   @override
   Widget build(BuildContext context) {
     location = AppLocalizations.of(context);
-    String? id = widget.id;
+    store.findById(widget.id);
 
-    P provider = Provider.of<P>(context, listen: false);
-
-    if (id == 'new') {
-      return _buildScaffold(getDtoBuildFunction(), provider);
-    }
-
-    return _buildBody(id!, provider);
+    return _buildListenable();
   }
 
-  FutureBuilder _buildBody(String id, P provider) {
-    return FutureBuilder(
-      future: provider.findById(id),
-      builder: (context, snapshot) {
-        if (snapshot.data == null) {
-          return const Center(child: CircularProgressIndicator());
-        } else {
-          return _buildScaffold(snapshot.data!, provider);
-        }
-      },
-    );
-  }
-
-  Scaffold _buildScaffold(D dto, P provider) {
+  Scaffold _buildListenable() {
     getControllers().clear();
-    setDataToControllers(dto);
+    return _buildScaffold();
+  }
+
+  Scaffold _buildScaffold() {
     return Scaffold(
         appBar: AppBar(
-          title: TextUtil.subTitle(getTitle(location), foreground: DefaultColors.black1),
+          title: TextUtil.subTitle(getTitle(location),
+              foreground: DefaultColors.black1),
         ),
-        body: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ...buildInnerForm(dto, context),
-              Row(
-                textDirection: TextDirection.rtl,
-                children: [
-                  DefaultButtons.formSaveButton(() => validateAndSave(dto, provider, _formKey, _close), location!.save),
-                  DefaultButtons.formCancelButton(() => _close(), location!.cancel),
-                ],
-              )
-            ]
-          )
-        )
-    );
+        body: ListenableBuilder(
+            listenable: store,
+            builder: (context, child) {
+              var state = store.state;
+              if (state is FoundedBaseState) {
+                dto = state.dto as D;
+                setDataToControllers();
+                return _buildForm();
+              } else if (state is NewRegisterBaseState) {
+                return _buildForm();
+              } else if (state is ErrorBaseState) {
+                return Center(
+                  child: TextUtil.subTitle(state.message,
+                      foreground: DefaultColors.black1),
+                );
+              } else {
+                return const Center(child: CircularProgressIndicator());
+              }
+            }));
   }
 
-  void _close() {
-    Navigator.of(context).pop();
+  Form _buildForm() {
+    return Form(
+        key: formKey,
+        child: Column(mainAxisSize: MainAxisSize.min, children: [
+          ...buildInnerForm(dto, context),
+          Row(
+            textDirection: TextDirection.rtl,
+            children: [
+              DefaultButtons.formSaveButton(
+                  () => validateAndSave(_close), location!.save),
+              DefaultButtons.formCancelButton(
+                  () => _close(null), location!.cancel),
+            ],
+          )
+        ]));
+  }
+
+  void _close(G? item) {
+    Navigator.of(context).pop(item);
   }
 
   String? emptyValidator(value) {

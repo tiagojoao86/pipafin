@@ -5,53 +5,41 @@ import 'package:frontend/basics_components/default_colors.dart';
 import 'package:frontend/components/account_category/account_category_list_component.dart';
 import 'package:frontend/components/person/person_list_component.dart';
 import 'package:frontend/home.dart';
-import 'package:frontend/provider/account_category_provider.dart';
-import 'package:frontend/provider/person_provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 
 final theme = ThemeData(
   useMaterial3: true,
   colorScheme: ColorScheme.fromSeed(
-    brightness: Brightness.light,
-    seedColor: DefaultColors.blue2
+      brightness: Brightness.light,
+      seedColor: DefaultColors.blue2
   ),
   textTheme: GoogleFonts.latoTextTheme(),
 );
 
-AppLocalizations? location;
-
 void main() {
-  runApp(
-    MultiProvider(
-        providers: [
-          ChangeNotifierProvider(create: (_) => AccountCategoryProvider()),
-          ChangeNotifierProvider(create: (_) => PersonProvider()),
-        ],
-        child: const App()
-    )
-  );
+  runApp(const MyApp());
 }
 
-class App extends StatelessWidget {
-  const App({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-        title: 'Financial Module - Pipa Group',
-        theme: theme,
-        localizationsDelegates: const [
-          AppLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        supportedLocales: const [
-          Locale('pt'),
-        ],
-        routerConfig: buildRouter(context)
+      title: 'Financial Module - Pipa Group',
+      theme: theme,
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('pt'),
+      ],
+      routerConfig: buildRouter(context)
     );
   }
 

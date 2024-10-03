@@ -1,5 +1,6 @@
-package br.com.grupopipa.financeiro.dto;
+package br.com.grupopipa.financeiro.dto.person;
 
+import br.com.grupopipa.financeiro.dto.DTO;
 import br.com.grupopipa.financeiro.entity.PersonEntity;
 import br.com.grupopipa.financeiro.enumeration.PersonTypeEnum;
 import lombok.AllArgsConstructor;

@@ -1,10 +1,9 @@
-package br.com.grupopipa.financeiro.rest;
+package br.com.grupopipa.financeiro.rest.base;
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 
 @Getter
 @Setter
@@ -17,6 +16,10 @@ public class Response {
 
     public static Response ok(Object body) {
         return builder().body(body).statusCode(HttpStatus.OK.value()).build();
+    }
+
+    public static Response ok(String error) {
+        return builder().body(null).errorMessage(error).statusCode(HttpStatus.OK.value()).build();
     }
 
     public static Response internalServerError(String message) {

@@ -1,0 +1,4 @@
+enum LogicOperatorsEnum {
+  and,
+  or;
+}

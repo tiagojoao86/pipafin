@@ -14,7 +14,9 @@
   "accountCategoryTitle": "Categorias dos Títulos",
   "mainMenuTitle": "Menu principal",
   "save": "Salvar",
-  "cancel": "Cacelar",
+  "cancel": "Cancelar",
+  "doFilter": "Filtrar",
+  "filter": "Filtro",
   "errorCannotBeEmpty": "Esse campo não pode ser vazio",
   "noRegistersFound": "Nenhum registro encontrado",
   "personType": "{type, select, natural{Pessoa Física} legal{Pessoa Jurídica} other{sem informação}}",
@@ -48,5 +50,5 @@
   "phone2": "Telefone 2",
   "personTitle": "Pessoas",
   "registerTypeTitle": "Tipo do cadastro",
-  "documentTypeTitle": "Tipo do documento"
+  "documentTypeTitle": "Tipo do documento"  
 }

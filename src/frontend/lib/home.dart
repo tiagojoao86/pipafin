@@ -50,7 +50,6 @@ class HomeScreen extends StatelessWidget {
               location!.personTitle,
               const Icon(Icons.people)
           ),
-
         ],
       )
     );
