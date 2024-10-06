@@ -1,6 +1,8 @@
 
 import 'package:flutter/material.dart';
-import 'package:frontend/model/filter/filter_dto.dart';
+import 'package:frontend/model/data/filter_dto.dart';
+import 'package:frontend/model/data/pageable_data_request.dart';
+import 'package:frontend/model/data/pageable_data_response.dart';
 import 'package:frontend/model/model.dart';
 import 'package:frontend/services/base_service.dart';
 import 'package:frontend/state/base_state.dart';
@@ -9,19 +11,28 @@ abstract class BaseStoreState<G extends Model, D extends Model, F extends Filter
   final BaseService<G,D> service;
 
   List<G> items = [];
+  int totalRegisters = 0;
 
   BaseStoreState(this.service);
 
   BaseState state = EmptyBaseState();
-  
-  list(F filter) async {
-    state = LoadingBaseState();
-    notifyListeners();
 
+  changePage(PageableDataRequest<F> request) {
+    list(request);
+  }
+  
+  list(PageableDataRequest<F> request) async {
     try {
-      items = await service.list(filter);
-      state = ListedBaseState<G>(items);
+      state = LoadingBaseState();
       notifyListeners();
+
+      PageableDataResponse<G> response = await service.list(request);
+      items = response.data;
+      totalRegisters = response.totalRegisters;
+
+      state = ListedBaseState<G>(items, totalRegisters);
+      notifyListeners();
+
     } catch (e) {
       state = ErrorBaseState(e.toString());
       notifyListeners();
@@ -59,7 +70,7 @@ abstract class BaseStoreState<G extends Model, D extends Model, F extends Filter
         items.removeAt(findIndex);
       }
 
-      state = ListedBaseState(items);
+      state = ListedBaseState(items, totalRegisters--);
       notifyListeners();
     } catch (e) {
       state = ErrorBaseState(e.toString());
@@ -89,7 +100,7 @@ abstract class BaseStoreState<G extends Model, D extends Model, F extends Filter
       items.add(gridDto);
     }
 
-    state = ListedBaseState(items);
+    state = ListedBaseState(items, totalRegisters);
     notifyListeners();
   }
 }

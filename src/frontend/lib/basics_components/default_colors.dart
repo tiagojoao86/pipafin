@@ -10,4 +10,6 @@ class DefaultColors {
   static const greenAdd = Color.fromRGBO(70, 126, 24, 1.0);
   static const redRemove = Color.fromRGBO(179, 55, 55, 1.0);
   static const yellowEdit = Color.fromRGBO(228, 175, 0, 1.0);
+
+  static const transparent = Color.fromRGBO(255, 255, 255, 0);
 }

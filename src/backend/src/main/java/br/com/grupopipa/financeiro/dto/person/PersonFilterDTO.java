@@ -1,6 +1,6 @@
 package br.com.grupopipa.financeiro.dto.person;
 
-import br.com.grupopipa.financeiro.dto.FilterDTO;
+import br.com.grupopipa.financeiro.dto.data.FilterDTO;
 import br.com.grupopipa.financeiro.enumeration.PersonTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

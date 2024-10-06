@@ -2,7 +2,7 @@ package br.com.grupopipa.financeiro.entity;
 
 import java.time.LocalDateTime;
 
-import br.com.grupopipa.financeiro.dto.AccountDTO;
+import br.com.grupopipa.financeiro.dto.account.AccountDTO;
 import br.com.grupopipa.financeiro.entity.base.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

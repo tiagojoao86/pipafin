@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:frontend/model/data/pageable_data_response.dart';
 import 'package:frontend/model/model.dart';
 import 'package:http/http.dart';
 
@@ -8,6 +9,25 @@ class RestResponse<T> {
   dynamic body;
 
   RestResponse();
+
+  RestResponse.fromPageableDataResponse(Response response, {Function? objCreator}) {
+    var json = utf8.decode(response.bodyBytes);
+    Map<String, dynamic> map = jsonDecode(json);
+    statusCode = map['statusCode'];
+    errorMessage = map['errorMessage'];
+    var jsonBody = map['body'];
+
+    if (statusCode == 200) {
+      if (jsonBody != null) {
+        var jsonData = jsonBody['data'];
+        PageableDataResponse<T> obj = PageableDataResponse(_extractBodyAsList(jsonData, objCreator), jsonBody['totalRegisters']);
+        body = obj;
+      }
+      return;
+    }
+
+    throw Exception('Error: $statusCode. Message: $errorMessage');
+  }
 
   RestResponse.fromJson(Response response, {Function? objCreator}) {
     var json = utf8.decode(response.bodyBytes);
@@ -26,7 +46,8 @@ class RestResponse<T> {
 
   _extractBody(jsonBody, objCreator) {
     if (jsonBody is List) {
-      _extractBodyAsList(jsonBody, objCreator);
+      List<T> result = _extractBodyAsList(jsonBody, objCreator);
+      body = result;
       return;
     }
 
@@ -46,7 +67,7 @@ class RestResponse<T> {
       }
       result.add(jsonDecode(item));
     }
-    body = result;
+    return result;
   }
 
   _extractBodyAsOther(jsonBody, objCreator) {

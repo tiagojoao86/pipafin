@@ -25,6 +25,10 @@ class DefaultButtons {
         )); //#7b9ecf // #5f83b3
   }
 
+  static Widget transparentButton(VoidCallback cbFunction, Icon icon, {iconSize}) {
+    return _createInkedButton(cbFunction, DefaultColors.transparent, DefaultColors.blue1, icon, iconSize: iconSize);
+  }
+
   static Widget buttonAdd(VoidCallback cbFunction) {
     return _createInkedButton(cbFunction, DefaultColors.greenAdd,
         DefaultColors.white1, const Icon(CupertinoIcons.add));
@@ -86,7 +90,7 @@ class DefaultButtons {
   }
 
   static Widget formPrimaryButton(
-      VoidCallback cbFunction, String text, IconData icon) {
+      VoidCallback cbFunction, String text, IconData icon, {textSize = 14.0}) {
     return Padding(
         padding: const EdgeInsets.all(10.0),
         child: ElevatedButton.icon(
@@ -102,12 +106,13 @@ class DefaultButtons {
           label: TextUtil(
             text,
             foreground: DefaultColors.white1,
+            textSize: textSize,
           ),
         ));
   }
 
   static Widget _createInkedButton(VoidCallback cbFunction,
-      Color backgroundColor, Color iconColor, Icon icon) {
+      Color backgroundColor, Color iconColor, Icon icon, {iconSize = 24.0}) {
     return Padding(
         padding: const EdgeInsets.all(2.0),
         child: Center(
@@ -120,6 +125,7 @@ class DefaultButtons {
               icon: icon,
               color: iconColor,
               onPressed: cbFunction,
+              iconSize: iconSize,
             ),
           ),
         ));

@@ -20,8 +20,9 @@ class FoundedBaseState<D extends Model> implements BaseState {
 
 class ListedBaseState<G extends Model> implements BaseState {
   List<G> list;
+  int totalRegisters;
 
-  ListedBaseState(this.list);
+  ListedBaseState(this.list, this.totalRegisters);
 }
 
 class DeletedBaseState implements BaseState {}

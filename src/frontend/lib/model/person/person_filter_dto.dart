@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:frontend/enumeration/person_type_enum.dart';
-import 'package:frontend/model/filter/filter_dto.dart';
+import 'package:frontend/model/data/filter_dto.dart';
 
 class PersonFilterDTO extends FilterDTO {
 

@@ -1,7 +1,9 @@
 package br.com.grupopipa.financeiro.business.base;
 
 import br.com.grupopipa.financeiro.dto.DTO;
-import br.com.grupopipa.financeiro.dto.FilterDTO;
+import br.com.grupopipa.financeiro.dto.data.FilterDTO;
+import br.com.grupopipa.financeiro.dto.data.PageableDataRequest;
+import br.com.grupopipa.financeiro.dto.data.PageableDataResponse;
 import br.com.grupopipa.financeiro.entity.base.BaseEntity;
 import br.com.grupopipa.financeiro.exception.EntityNotFoundException;
 import br.com.grupopipa.financeiro.repository.base.BaseDAO;
@@ -30,9 +32,13 @@ public abstract class BaseBusiness<T extends BaseEntity<D>, G extends DTO<T>, D 
 
     public abstract String getEntityClassName();
 
-    public G[] list(F filter) {
-        return repository.findWithFilter(filter).stream().map(this::convertEntityToGridObject)
-                .toArray(createGridObjectArray());
+    public PageableDataResponse<G> list(PageableDataRequest<F> pageableDataRequest) {
+        return PageableDataResponse
+                .<G>builder()
+                .totalRegisters(repository.countWithFilter(pageableDataRequest))
+                .data(repository.findWithFilter(pageableDataRequest).stream().map(this::convertEntityToGridObject)
+                        .toArray(createGridObjectArray()))
+                .build();
     }
 
     public D save(D dto) {

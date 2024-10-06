@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:frontend/basics_components/dropdown_component.dart';
 import 'package:frontend/basics_components/text_form_component.dart';
 import 'package:frontend/components/base/detail_component.dart';
 import 'package:frontend/enumeration/account_category_type_enum.dart';
+import 'package:frontend/l10n/l10n_service.dart';
 import 'package:frontend/model/account_category/account_category_dto.dart';
 import 'package:frontend/model/account_category/account_category_filter_dto.dart';
 import 'package:frontend/model/account_category/account_category_grid.dart';
@@ -33,20 +33,20 @@ class _AccountCategoryDetailComponentState extends DetailComponentState<
   List<Widget> buildInnerForm(AccountCategoryDTO dto, BuildContext context) {
     return [
       TextFormComponent(
-          location!.description, getControllers().descriptionController,
+          L10nService.l10n().description, getControllers().descriptionController,
           validator: emptyValidator),
       DropdownComponent(
           dto.type,
           emptyValidator,
-          AccountCategoryTypeEnum.getDropdownList(context),
+          AccountCategoryTypeEnum.getDropdownList(),
           (value) => dto.type = value,
-          location!.type),
+          L10nService.l10n().type),
     ];
   }
 
   @override
-  String getTitle(AppLocalizations? location) {
-    return location!.accountCategoryTitle;
+  String getTitle() {
+    return L10nService.l10n().accountCategoryTitle;
   }
 
   @override

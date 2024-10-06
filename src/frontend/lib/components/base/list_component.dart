@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:frontend/basics_components/app_bar_register_component.dart';
 import 'package:frontend/basics_components/card_grid_component.dart';
 import 'package:frontend/basics_components/default_buttons.dart';
 import 'package:frontend/basics_components/default_colors.dart';
+import 'package:frontend/basics_components/pagination_bar.dart';
 import 'package:frontend/basics_components/text_util.dart';
-import 'package:frontend/model/filter/filter_dto.dart';
+import 'package:frontend/l10n/l10n_service.dart';
+import 'package:frontend/model/data/filter_dto.dart';
+import 'package:frontend/model/data/pageable_data_request.dart';
 import 'package:frontend/model/model.dart';
 import 'package:frontend/state/base_state.dart';
 import 'package:frontend/state/base_store_state.dart';
-
-AppLocalizations? location;
 
 abstract class ListComponent<G extends Model, D extends Model, F extends FilterDTO>
     extends StatefulWidget {
@@ -28,19 +28,24 @@ abstract class ListComponentState<G extends Model, D extends Model, F extends Fi
   List<Widget> buildInfoList(G? item);
   List<Widget> buildFilterComponents();
   BaseStoreState<G, D, F> store;
-  F filter;
+  PageableDataRequest<F> pageableDataRequest;
 
-  ListComponentState(this.store, this.filter);
+  ListComponentState(this.store, this.pageableDataRequest);
+
+  changePage(int pageNumber, int pageSize) {
+    pageableDataRequest.pageNumber = pageNumber;
+    pageableDataRequest.pageSize = pageSize;
+    return store.changePage(pageableDataRequest);
+  }
 
   @override
   void initState() {
     super.initState();
-    store.list(filter);
+    store.list(pageableDataRequest);
   }
 
   @override
   Widget build(BuildContext context) {
-    location = AppLocalizations.of(context);
     return _buildBody();
   }
 
@@ -68,6 +73,18 @@ abstract class ListComponentState<G extends Model, D extends Model, F extends Fi
           () => showFilterModal(),
           getTitleComponent(context)),
       body: getListComponent(),
+      bottomNavigationBar: BottomAppBar(
+          child: getPaginationBar()
+      )
+    );
+  }
+
+  getPaginationBar() {
+    return ListenableBuilder(
+        listenable: store,
+        builder: (context, child) {
+          return PaginationBar(changePage: changePage, totalRegisters: store.totalRegisters);
+        }
     );
   }
 
@@ -86,10 +103,10 @@ abstract class ListComponentState<G extends Model, D extends Model, F extends Fi
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     DefaultButtons.formCancelButton(
-                        () => Navigator.pop(context), location!.cancel),
+                        () => Navigator.pop(context), L10nService.l10n().cancel),
                     DefaultButtons.formPrimaryButton(
                         () => Navigator.pop(context),
-                        location!.doFilter,
+                        L10nService.l10n().doFilter,
                         Icons.search)
                   ],
                 )
@@ -119,10 +136,10 @@ abstract class ListComponentState<G extends Model, D extends Model, F extends Fi
           } else if (state is ListedBaseState) {
             if (state.list.isEmpty) {
               body = Center(
-                  child: TextUtil.subTitle(location!.noRegistersFound,
+                  child: TextUtil.subTitle(L10nService.l10n().noRegistersFound,
                       foreground: DefaultColors.black1));
             } else {
-              return _buildItems(state.list as List<G>);
+              return _buildItems(state);
             }
           }
 
@@ -130,18 +147,21 @@ abstract class ListComponentState<G extends Model, D extends Model, F extends Fi
         });
   }
 
-  Column _buildItems(List<G> list) {
+  Column _buildItems(ListedBaseState state) {
+    var list = state.list as List<G>;
     return Column(mainAxisSize: MainAxisSize.min, children: [
       Expanded(
-        child: ListView.builder(
-            itemCount: list.length,
-            itemBuilder: (BuildContext context, int index) {
-              List<Widget> info = buildList(list[index]);
-              List<Widget> actions = buildActionsList(list[index]);
+        child:
+        ListView.builder(
+          itemCount: list.length,
+          itemBuilder: (BuildContext context, int index) {
+            List<Widget> info = buildList(list[index]);
+            List<Widget> actions = buildActionsList(list[index]);
 
-              return CardGridComponent(info, actions);
-            }),
-      )
+            return CardGridComponent(info, actions);
+          }
+        ),
+      ),
     ]);
   }
 

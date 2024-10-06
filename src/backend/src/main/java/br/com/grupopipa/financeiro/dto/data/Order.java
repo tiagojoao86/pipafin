@@ -1,4 +1,4 @@
-package br.com.grupopipa.financeiro.dto;
+package br.com.grupopipa.financeiro.dto.data;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

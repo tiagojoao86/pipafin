@@ -14,6 +14,15 @@ class Order {
 
     return jsonEncode(map);
   }
+
+  Map<String, dynamic> toMap() {
+    Map<String, dynamic> map = {};
+
+    map.putIfAbsent("direction", () => direction.name.toUpperCase());
+    map.putIfAbsent("property", () => property);
+
+    return map;
+  }
 }
 
 enum SortDirectionEnum {

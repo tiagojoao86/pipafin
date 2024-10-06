@@ -1,7 +1,8 @@
 package br.com.grupopipa.financeiro.repository.base;
 
 import br.com.grupopipa.financeiro.dto.DTO;
-import br.com.grupopipa.financeiro.dto.FilterDTO;
+import br.com.grupopipa.financeiro.dto.data.FilterDTO;
+import br.com.grupopipa.financeiro.dto.data.PageableDataRequest;
 import br.com.grupopipa.financeiro.entity.base.BaseEntity;
 import br.com.grupopipa.financeiro.enumeration.LogicOperatorsEnum;
 import jakarta.persistence.EntityManager;
@@ -41,7 +42,8 @@ public abstract class BaseDAO<D extends DTO<T>, T extends BaseEntity<D>, F exten
         repository.delete(entity);
     }
 
-    public List<T> findWithFilter(F filter) {
+    public List<T> findWithFilter(PageableDataRequest<F> pageableDataRequest) {
+        F filter = pageableDataRequest.getFilter();
         StringBuilder query = new StringBuilder();
         query.append(String.format("SELECT t FROM %s t ", getEntityName()));
 
@@ -49,17 +51,33 @@ public abstract class BaseDAO<D extends DTO<T>, T extends BaseEntity<D>, F exten
             query.append(addWhereFromFilter(filter));
         }
 
-        if (Objects.nonNull(filter.getPage())) {
-            addSort(query, filter.getPage().getSort());
+        Pageable page = pageableDataRequest.getPage();
+
+        if (Objects.nonNull(page)) {
+            addSort(query, page.getSort());
         }
 
         TypedQuery<T> tQuery = em.createQuery(query.toString(), getEntityClass());
 
-        if (Objects.nonNull(filter.getPage())) {
-            addPagination(tQuery, filter.getPage());
+        if (Objects.nonNull(page)) {
+            addPagination(tQuery, page);
         }
 
         return tQuery.getResultList();
+    }
+
+    public Long countWithFilter(PageableDataRequest<F> pageableDataRequest) {
+        F filter = pageableDataRequest.getFilter();
+        StringBuilder query = new StringBuilder();
+        query.append(String.format("SELECT COUNT(t) FROM %s t ", getEntityName()));
+
+        if (Objects.nonNull(filter)) {
+            query.append(addWhereFromFilter(filter));
+        }
+
+        TypedQuery<Long> countQuery = em.createQuery(query.toString(), Long.class);
+
+        return countQuery.getSingleResult();
     }
 
     protected void addWhereClause(StringBuilder where, String clause, LogicOperatorsEnum operator) {

@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:frontend/basics_components/text_util.dart';
 import 'package:frontend/components/base/list_component.dart';
 import 'package:frontend/components/person/person_detail_component.dart';
 import 'package:frontend/enumeration/logic_operators_enum.dart';
 import 'package:frontend/enumeration/person_type_enum.dart';
+import 'package:frontend/l10n/l10n_service.dart';
+import 'package:frontend/model/data/pageable_data_request.dart';
 import 'package:frontend/model/person/person_dto.dart';
 import 'package:frontend/model/person/person_filter_dto.dart';
 import 'package:frontend/model/person/person_grid_dto.dart';
 import 'package:frontend/state/person_store_state.dart';
-
-AppLocalizations? location;
 
 class PersonListComponent extends ListComponent<PersonGridDTO, PersonDTO, PersonFilterDTO> {
   const PersonListComponent({super.key});
@@ -23,14 +22,14 @@ class PersonListComponent extends ListComponent<PersonGridDTO, PersonDTO, Person
 
 class _PersonListComponentState
     extends ListComponentState<PersonGridDTO, PersonDTO, PersonFilterDTO> {
-  _PersonListComponentState() : super(PersonStoreState(), PersonFilterDTO(LogicOperatorsEnum.and));
+  _PersonListComponentState() : super(PersonStoreState(), PageableDataRequest.basic(PersonFilterDTO(LogicOperatorsEnum.and)));
 
   @override
   List<Widget> buildInfoList(PersonGridDTO? item) {
     if (item == null) return [];
 
     var type = item.personType != null
-        ? location!.personType(item.personType!.name).toUpperCase()
+        ? L10nService.l10n().personType(item.personType!.name).toUpperCase()
         : '';
     return [
       item.personType == PersonTypeEnum.legal
@@ -42,7 +41,7 @@ class _PersonListComponentState
 
   @override
   List<Widget> buildFilterComponents() {
-    return [Row()];
+    return [const Row()];
   }
 
   @override
@@ -52,7 +51,6 @@ class _PersonListComponentState
 
   @override
   String getTitleComponent(BuildContext context) {
-    location = AppLocalizations.of(context);
-    return location!.personTitle;
+    return L10nService.l10n().personTitle;
   }
 }

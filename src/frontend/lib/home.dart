@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:frontend/basics_components/default_buttons.dart';
 import 'package:frontend/basics_components/text_util.dart';
 import 'package:frontend/basics_components/default_colors.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:frontend/l10n/l10n_service.dart';
 import 'package:go_router/go_router.dart';
-
-AppLocalizations? location;
 
 class Home extends StatelessWidget {
   final Widget child;
@@ -13,13 +11,13 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    location = AppLocalizations.of(context);
+    L10nService(context);
     return Scaffold(
         appBar: AppBar(
           backgroundColor: DefaultColors.blue1,
           leading: const Icon(Icons.home),
           iconTheme: const IconThemeData(color: DefaultColors.white1),
-          title: Center(child: TextUtil.title(location!.appTitle)),
+          title: Center(child: TextUtil.title(L10nService.l10n().appTitle)),
         ),
         body: child);
   }
@@ -30,10 +28,9 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    location = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: TextUtil.subTitle(location!.mainMenuTitle,
+        title: TextUtil.subTitle(L10nService.l10n().mainMenuTitle,
             foreground: DefaultColors.black1),
       ),
       body: GridView.extent(
@@ -42,12 +39,12 @@ class HomeScreen extends StatelessWidget {
         children: [
           DefaultButtons.mainMenuButton(
             () => context.go('/finances/account-category'),
-            location!.accountCategoryTitle,
+            L10nService.l10n().accountCategoryTitle,
             const Icon(Icons.account_balance_sharp)
           ),
           DefaultButtons.mainMenuButton(
                   () => context.go('/finances/persons'),
-              location!.personTitle,
+              L10nService.l10n().personTitle,
               const Icon(Icons.people)
           ),
         ],

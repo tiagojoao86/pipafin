@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:frontend/basics_components/default_buttons.dart';
 import 'package:frontend/basics_components/default_colors.dart';
 import 'package:frontend/basics_components/text_util.dart';
-import 'package:frontend/model/filter/filter_dto.dart';
+import 'package:frontend/l10n/l10n_service.dart';
+import 'package:frontend/model/data/filter_dto.dart';
 import 'package:frontend/model/model.dart';
 import 'package:frontend/state/base_state.dart';
 import 'package:frontend/state/base_store_state.dart';
-
-AppLocalizations? location;
 
 abstract class DetailComponent<G extends Model, D extends Model, F extends FilterDTO,
     S extends BaseStoreState<G, D, F>> extends StatefulWidget {
@@ -21,7 +19,7 @@ abstract class DetailComponent<G extends Model, D extends Model, F extends Filte
 
 abstract class DetailComponentState<G extends Model, D extends Model, F extends FilterDTO,
     S extends BaseStoreState<G, D, F>> extends State<DetailComponent<G, D, F, S>> {
-  String getTitle(AppLocalizations? location);
+  String getTitle();
   void setDataToControllers();
   List<Widget> buildInnerForm(D dto, BuildContext context);
   void validateAndSave(Function close);
@@ -36,7 +34,6 @@ abstract class DetailComponentState<G extends Model, D extends Model, F extends 
 
   @override
   Widget build(BuildContext context) {
-    location = AppLocalizations.of(context);
     store.findById(widget.id);
 
     return _buildListenable();
@@ -50,7 +47,7 @@ abstract class DetailComponentState<G extends Model, D extends Model, F extends 
   Scaffold _buildScaffold() {
     return Scaffold(
         appBar: AppBar(
-          title: TextUtil.subTitle(getTitle(location),
+          title: TextUtil.subTitle(getTitle(),
               foreground: DefaultColors.black1),
         ),
         body: ListenableBuilder(
@@ -83,9 +80,9 @@ abstract class DetailComponentState<G extends Model, D extends Model, F extends 
             textDirection: TextDirection.rtl,
             children: [
               DefaultButtons.formSaveButton(
-                  () => validateAndSave(_close), location!.save),
+                  () => validateAndSave(_close), L10nService.l10n().save),
               DefaultButtons.formCancelButton(
-                  () => _close(null), location!.cancel),
+                  () => _close(null), L10nService.l10n().cancel),
             ],
           )
         ]));
@@ -99,7 +96,7 @@ abstract class DetailComponentState<G extends Model, D extends Model, F extends 
     var isString = value is String;
 
     if (value == null || (isString && value.isEmpty)) {
-      return location!.errorCannotBeEmpty;
+      return L10nService.l10n().errorCannotBeEmpty;
     }
     return null;
   }

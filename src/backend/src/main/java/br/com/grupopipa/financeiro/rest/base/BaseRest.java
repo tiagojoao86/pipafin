@@ -2,7 +2,8 @@ package br.com.grupopipa.financeiro.rest.base;
 
 import br.com.grupopipa.financeiro.business.base.BaseBusiness;
 import br.com.grupopipa.financeiro.dto.DTO;
-import br.com.grupopipa.financeiro.dto.FilterDTO;
+import br.com.grupopipa.financeiro.dto.data.FilterDTO;
+import br.com.grupopipa.financeiro.dto.data.PageableDataRequest;
 import br.com.grupopipa.financeiro.entity.base.BaseEntity;
 import br.com.grupopipa.financeiro.exception.EntityNotFoundException;
 import jakarta.validation.Valid;
@@ -34,9 +35,9 @@ public abstract class BaseRest<T extends BaseEntity<D>, G extends DTO<T>, D exte
     private BaseBusiness<T,G,D,F,R> business;
 
     @PostMapping(R_QUERY)
-    public Response list(@Valid @RequestBody F filter) {
+    public Response list(@Valid @RequestBody PageableDataRequest<F> pageRequest) {
         try {
-            return ok(business.list(filter));
+            return ok(business.list(pageRequest));
         } catch (Exception e) {
             return internalServerError(String.format("Cause: %s - Message: %s", e.getCause(), e.getMessage()));
         }

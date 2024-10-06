@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:frontend/basics_components/dropdown_component.dart';
 import 'package:frontend/basics_components/text_form_component.dart';
 import 'package:frontend/components/base/detail_component.dart';
 import 'package:frontend/enumeration/document_type_enum.dart';
 import 'package:frontend/enumeration/person_type_enum.dart';
+import 'package:frontend/l10n/l10n_service.dart';
 import 'package:frontend/model/person/person_dto.dart';
 import 'package:frontend/model/person/person_filter_dto.dart';
 import 'package:frontend/model/person/person_grid_dto.dart';
@@ -45,11 +45,11 @@ class _PersonDetailComponentState
   List<Widget> buildInnerForm(PersonDTO dto, BuildContext context) {
     return [
       DropdownComponent(
-          store.type, emptyValidator, PersonTypeEnum.getDropdownList(context),
+          store.type, emptyValidator, PersonTypeEnum.getDropdownList(),
           (value) {
         _changeTypeRegister(value);
         dto.personType = value;
-      }, location!.registerTypeTitle),
+      }, L10nService.l10n().registerTypeTitle),
       ListenableBuilder(
           listenable: store,
           builder: (context, child) {
@@ -67,8 +67,8 @@ class _PersonDetailComponentState
   }
 
   @override
-  String getTitle(AppLocalizations? location) {
-    return location!.personTitle;
+  String getTitle() {
+    return L10nService.l10n().personTitle;
   }
 
   @override
@@ -151,10 +151,10 @@ class _PersonDetailComponentState
 
   List<Widget> _getMainDataForm(PersonDTO dto) {
     return [
-      TextFormComponent(location!.name, getControllers().nameController,
+      TextFormComponent(L10nService.l10n().name, getControllers().nameController,
           validator: emptyValidator),
       TextFormComponent(
-        location!.fantasyName,
+        L10nService.l10n().fantasyName,
         getControllers().fantasyNameController,
         validator: emptyValidator,
         visible: store.typePersonState is LegalPersonState,
@@ -165,12 +165,12 @@ class _PersonDetailComponentState
               flex: 2,
               dto.documentType,
               emptyValidator,
-              DocumentTypeEnum.getDropdownList(context),
+              DocumentTypeEnum.getDropdownList(),
               (value) => dto.documentType = value,
-              location!.documentTypeTitle),
+              L10nService.l10n().documentTypeTitle),
           TextFormComponent(
             flex: 8,
-            location!.document,
+            L10nService.l10n().document,
             getControllers().documentController,
             validator: dto.documentType == DocumentTypeEnum.cpf
                 ? TextFormComponent.cpfValidator
@@ -185,30 +185,30 @@ class _PersonDetailComponentState
 
   List<Widget> _getAddressForm(PersonDTO dto) {
     return [
-      TextFormComponent(location!.addressPostalCode,
+      TextFormComponent(L10nService.l10n().addressPostalCode,
           getControllers().addressPostalCodeController,
           validator: emptyValidator, formatter: postalCodeFormatter),
       Row(children: [
         TextFormComponent(
             flex: 8,
-            location!.addressStreet,
+            L10nService.l10n().addressStreet,
             getControllers().addressStreetController,
             validator: emptyValidator),
         TextFormComponent(
           flex: 2,
-          location!.addressNumber,
+          L10nService.l10n().addressNumber,
           getControllers().addressNumberController,
         ),
       ]),
       Row(children: [
-        TextFormComponent(location!.addressNeighborhood,
+        TextFormComponent(L10nService.l10n().addressNeighborhood,
             getControllers().addressNeighborhoodController,
             validator: emptyValidator),
         TextFormComponent(
-            location!.addressCity, getControllers().addressCityController,
+            L10nService.l10n().addressCity, getControllers().addressCityController,
             validator: emptyValidator),
         TextFormComponent(
-            location!.addressState, getControllers().addressStateController,
+            L10nService.l10n().addressState, getControllers().addressStateController,
             validator: emptyValidator),
       ]),
     ];
@@ -219,14 +219,14 @@ class _PersonDetailComponentState
       Row(children: [
         TextFormComponent(
           flex: 5,
-          location!.phone1,
+          L10nService.l10n().phone1,
           getControllers().phone1Controller,
           validator: emptyValidator,
           formatter: phoneFormatter,
         ),
         TextFormComponent(
           flex: 5,
-          location!.phone2,
+          L10nService.l10n().phone2,
           getControllers().phone2Controller,
           formatter: phoneFormatter,
         ),
