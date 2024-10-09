@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/basics_components/default_colors.dart';
+import 'package:frontend/basics_components/default_sizes.dart';
 
 class CardGridComponent extends StatelessWidget {
 
@@ -12,11 +14,15 @@ class CardGridComponent extends StatelessWidget {
     return _buildInfoCardWithActions();
   }
 
-  Card _buildInfoCardWithActions() {
-    return Card(
-      margin: const EdgeInsets.fromLTRB(2.0, 0.5, 2.0, 0.5),
+  Container _buildInfoCardWithActions() {
+    return Container(
+      margin: const EdgeInsets.fromLTRB(15, 1, 15, 3),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(DefaultSizes.borderRadius),
+        color: DefaultColors.itemTransparent
+      ),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.fromLTRB(10, 5, 8, 5),
         child: Row(
           children: [
             Expanded(

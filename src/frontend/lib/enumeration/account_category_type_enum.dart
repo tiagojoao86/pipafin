@@ -10,19 +10,20 @@ enum AccountCategoryTypeEnum {
     return values.firstWhere((e) => e.name == key.toLowerCase());
   }
 
-  static List<DropdownMenuItem<AccountCategoryTypeEnum>> getDropdownList() {
-    List<DropdownMenuItem<AccountCategoryTypeEnum>> list = [];
+  static List<DropdownMenuItem<AccountCategoryTypeEnum>> getDropdownList({List<AccountCategoryTypeEnum>? list}) {
+    var valuesList = list ?? values;
+    List<DropdownMenuItem<AccountCategoryTypeEnum>> componentList = [];
 
-    for (AccountCategoryTypeEnum item in values) {
-      list.add(
+    for (AccountCategoryTypeEnum item in valuesList) {
+      componentList.add(
         DropdownMenuItem<AccountCategoryTypeEnum>(
           value: item,
-          child: TextUtil(L10nService.l10n().accountCategoryType(item.name).toUpperCase(), textSize: 16,),
+          child: Text(L10nService.l10n().accountCategoryType(item.name).toUpperCase()),
         ),
       );
     }
 
-    return list;
+    return componentList;
   }
 
 }

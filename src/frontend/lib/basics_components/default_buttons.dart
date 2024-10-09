@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/basics_components/default_colors.dart';
+import 'package:frontend/basics_components/default_sizes.dart';
 import 'package:frontend/basics_components/text_util.dart';
 
 class DefaultButtons {
@@ -8,89 +9,95 @@ class DefaultButtons {
       VoidCallback cbFunction, String text, Icon icon) {
     return Padding(
         padding: const EdgeInsets.all(5.0),
-        child: ElevatedButton.icon(
+        child: TextButton.icon(
           onPressed: cbFunction,
           style: ElevatedButton.styleFrom(
-            shape: const RoundedRectangleBorder(
-                side: BorderSide.none,
-                borderRadius: BorderRadius.all(Radius.circular(15.0))),
-            backgroundColor: DefaultColors.blue1,
-            iconColor: DefaultColors.white1,
+            shape:  const RoundedRectangleBorder(
+              side: BorderSide.none,
+              borderRadius: BorderRadius.all(Radius.circular(DefaultSizes.borderRadius))),
+            backgroundColor: DefaultColors.itemTransparent,
+            iconColor: DefaultColors.textColor,
           ),
           icon: icon,
           label: TextUtil.label(
             text,
-            foreground: DefaultColors.white1,
+            foreground: DefaultColors.textColor,
           ),
         )); //#7b9ecf // #5f83b3
   }
 
-  static Widget transparentButton(VoidCallback cbFunction, Icon icon, {iconSize}) {
-    return _createInkedButton(cbFunction, DefaultColors.transparent, DefaultColors.blue1, icon, iconSize: iconSize);
+  static Widget transparentButton(VoidCallback cbFunction, Icon icon,
+      {iconSize = DefaultSizes.regularIcon, foregroundColor = DefaultColors.black2}) {
+    return _createInkedButton(cbFunction, DefaultColors.transparent,
+        foregroundColor, icon, iconSize: iconSize);
   }
 
-  static Widget buttonAdd(VoidCallback cbFunction) {
-    return _createInkedButton(cbFunction, DefaultColors.greenAdd,
-        DefaultColors.white1, const Icon(CupertinoIcons.add));
+  static Widget buttonAdd(VoidCallback cbFunction, {iconSize = DefaultSizes.regularIcon,
+    iconColor = DefaultColors.greenAdd, backgroundColor = DefaultColors.transparent}) {
+    return _createInkedButton(cbFunction, backgroundColor,
+        iconColor, const Icon(Icons.add), iconSize: iconSize);
   }
 
-  static Widget deleteButton(VoidCallback cbFunction) {
-    return _createInkedButton(cbFunction, DefaultColors.redRemove,
-        DefaultColors.white1, const Icon(CupertinoIcons.trash_slash));
+  static Widget deleteButton(VoidCallback cbFunction, {iconSize = DefaultSizes.regularIcon,
+  iconColor = DefaultColors.redRemove, backgroundColor = DefaultColors.transparent}) {
+    return _createInkedButton(cbFunction, backgroundColor,
+        iconColor, const Icon(Icons.delete_forever_rounded), iconSize: iconSize);
   }
 
-  static Widget editButton(VoidCallback cbFunction) {
-    return _createInkedButton(cbFunction, DefaultColors.yellowEdit,
-        DefaultColors.white1, const Icon(Icons.edit));
+  static Widget editButton(VoidCallback cbFunction, {iconSize = DefaultSizes.regularIcon,
+    iconColor = DefaultColors.yellowEdit, backgroundColor = DefaultColors.transparent}) {
+    return _createInkedButton(cbFunction, backgroundColor,
+        iconColor, const Icon(Icons.edit), iconSize: iconSize);
   }
 
-  static Widget buttonFilter(VoidCallback cbFunction) {
-    return _createInkedButton(cbFunction, DefaultColors.blue1,
-        DefaultColors.white1, const Icon(CupertinoIcons.search));
+  static Widget buttonFilter(VoidCallback cbFunction, {iconSize = DefaultSizes.regularIcon,
+    iconColor = DefaultColors.black2, backgroundColor = DefaultColors.transparent}) {
+    return _createInkedButton(cbFunction, backgroundColor,
+        iconColor, const Icon(CupertinoIcons.search), iconSize: iconSize);
   }
 
   static Widget formSaveButton(VoidCallback cbFunction, String text) {
     return Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: ElevatedButton.icon(
+        padding: const EdgeInsets.fromLTRB(0, 0, 5, 0),
+        child:  TextButton.icon(
           onPressed: cbFunction,
           style: ElevatedButton.styleFrom(
             shape: const RoundedRectangleBorder(
                 side: BorderSide.none,
-                borderRadius: BorderRadius.all(Radius.circular(8.0))),
-            backgroundColor: DefaultColors.greenAdd,
-            iconColor: DefaultColors.white1,
+                borderRadius: BorderRadius.all(Radius.circular(DefaultSizes.borderRadius))),
+            backgroundColor: DefaultColors.itemTransparent,
+            iconColor: DefaultColors.textColor,
           ),
           icon: const Icon(Icons.save),
           label: TextUtil(
             text,
-            foreground: DefaultColors.white1,
+            foreground: DefaultColors.textColor,
           ),
         ));
   }
 
   static Widget formCancelButton(VoidCallback cbFunction, String text) {
     return Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: ElevatedButton.icon(
+        padding: const EdgeInsets.fromLTRB(0, 0, 5, 0),
+        child: TextButton.icon(
           onPressed: cbFunction,
           style: ElevatedButton.styleFrom(
             shape: const RoundedRectangleBorder(
                 side: BorderSide.none,
-                borderRadius: BorderRadius.all(Radius.circular(8.0))),
-            backgroundColor: DefaultColors.redRemove,
-            iconColor: DefaultColors.white1,
+                borderRadius: BorderRadius.all(Radius.circular(DefaultSizes.borderRadius))),
+            backgroundColor: DefaultColors.itemTransparent,
+            iconColor: DefaultColors.textColor,
           ),
           icon: const Icon(Icons.cancel),
           label: TextUtil(
             text,
-            foreground: DefaultColors.white1,
+            foreground: DefaultColors.textColor,
           ),
         ));
   }
 
   static Widget formPrimaryButton(
-      VoidCallback cbFunction, String text, IconData icon, {textSize = 14.0}) {
+      VoidCallback cbFunction, String text, IconData icon, {textSize = DefaultSizes.regularFont}) {
     return Padding(
         padding: const EdgeInsets.all(10.0),
         child: ElevatedButton.icon(
@@ -98,7 +105,7 @@ class DefaultButtons {
           style: ElevatedButton.styleFrom(
             shape: const RoundedRectangleBorder(
                 side: BorderSide.none,
-                borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                borderRadius: BorderRadius.all(Radius.circular(DefaultSizes.borderRadius))),
             backgroundColor: DefaultColors.blue1,
             iconColor: DefaultColors.white1,
           ),
@@ -112,7 +119,7 @@ class DefaultButtons {
   }
 
   static Widget _createInkedButton(VoidCallback cbFunction,
-      Color backgroundColor, Color iconColor, Icon icon, {iconSize = 24.0}) {
+      Color backgroundColor, Color iconColor, Icon icon, {iconSize = DefaultSizes.regularIcon}) {
     return Padding(
         padding: const EdgeInsets.all(2.0),
         child: Center(

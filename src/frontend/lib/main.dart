@@ -6,15 +6,22 @@ import 'package:frontend/components/account_category/account_category_list_compo
 import 'package:frontend/components/person/person_list_component.dart';
 import 'package:frontend/home.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 final theme = ThemeData(
   useMaterial3: true,
   colorScheme: ColorScheme.fromSeed(
-      brightness: Brightness.light,
-      seedColor: DefaultColors.blue2
+    brightness: Brightness.light,
+    seedColor: DefaultColors.blue1,
   ),
-  textTheme: GoogleFonts.latoTextTheme(),
+  appBarTheme: const AppBarTheme(
+    backgroundColor: DefaultColors.blue1,
+    surfaceTintColor: null,
+    foregroundColor: DefaultColors.black2,
+    shadowColor: null,
+    elevation: null,
+
+  ),
+  scaffoldBackgroundColor: DefaultColors.background
 );
 
 void main() {

@@ -6,13 +6,14 @@ import br.com.grupopipa.financeiro.dto.accountcategory.AccountCategoryFilterDTO;
 import br.com.grupopipa.financeiro.dto.accountcategory.AccountCategoryGridDTO;
 import br.com.grupopipa.financeiro.entity.AccountCategoryEntity;
 import br.com.grupopipa.financeiro.repository.AccountCategoryRepository;
+import br.com.grupopipa.financeiro.repository.DAO.AccountCategoryDAO;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.function.IntFunction;
 
 @Service
-public class AccountCategoryBusiness extends BaseBusiness<AccountCategoryEntity, AccountCategoryGridDTO, AccountCategoryDTO, AccountCategoryFilterDTO, AccountCategoryRepository> {
+public class AccountCategoryBusiness extends BaseBusiness<AccountCategoryDAO, AccountCategoryEntity, AccountCategoryGridDTO, AccountCategoryDTO, AccountCategoryFilterDTO, AccountCategoryRepository> {
 
     @Override
     public AccountCategoryGridDTO convertEntityToGridObject(AccountCategoryEntity item) {

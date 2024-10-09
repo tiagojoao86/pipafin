@@ -6,6 +6,7 @@ import br.com.grupopipa.financeiro.dto.data.FilterDTO;
 import br.com.grupopipa.financeiro.dto.data.PageableDataRequest;
 import br.com.grupopipa.financeiro.entity.base.BaseEntity;
 import br.com.grupopipa.financeiro.exception.EntityNotFoundException;
+import br.com.grupopipa.financeiro.repository.base.BaseDAO;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,10 +30,10 @@ import static br.com.grupopipa.financeiro.rest.base.Response.notFoundException;
 import static br.com.grupopipa.financeiro.rest.base.Response.ok;
 
 @Slf4j
-public abstract class BaseRest<T extends BaseEntity<D>, G extends DTO<T>, D extends DTO<T>, F extends FilterDTO, R extends JpaRepository<T, UUID>> {
+public abstract class BaseRest<BUSS extends BaseBusiness<DAO,T,G,D,F,R>, DAO extends BaseDAO<D,T,F,R>, T extends BaseEntity<D>, G extends DTO<T>, D extends DTO<T>, F extends FilterDTO, R extends JpaRepository<T, UUID>> {
 
     @Autowired
-    private BaseBusiness<T,G,D,F,R> business;
+    protected BUSS business;
 
     @PostMapping(R_QUERY)
     public Response list(@Valid @RequestBody PageableDataRequest<F> pageRequest) {

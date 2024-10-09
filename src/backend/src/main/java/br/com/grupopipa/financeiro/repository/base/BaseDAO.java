@@ -21,7 +21,7 @@ import java.util.UUID;
 public abstract class BaseDAO<D extends DTO<T>, T extends BaseEntity<D>, F extends FilterDTO, R extends JpaRepository<T, UUID>> {
 
     @Autowired
-    R repository;
+    protected R repository;
 
     @PersistenceContext
     EntityManager em;

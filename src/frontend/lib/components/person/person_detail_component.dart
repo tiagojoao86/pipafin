@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/basics_components/dropdown_component.dart';
+import 'package:frontend/basics_components/snack_bar_service.dart';
 import 'package:frontend/basics_components/text_form_component.dart';
 import 'package:frontend/components/base/detail_component.dart';
 import 'package:frontend/enumeration/document_type_enum.dart';
@@ -32,6 +33,12 @@ class _PersonDetailComponentState
 
   void _changeTypeRegister(PersonTypeEnum? type) {
     if (type != null) {
+      if (PersonTypeEnum.legal == type) {
+        dto.documentType = DocumentTypeEnum.cnpj;
+      }
+      if (PersonTypeEnum.natural == type) {
+        dto.documentType = DocumentTypeEnum.cpf;
+      }
       store.updateTypePersonState(type);
     }
   }
@@ -42,7 +49,7 @@ class _PersonDetailComponentState
   }
 
   @override
-  List<Widget> buildInnerForm(PersonDTO dto, BuildContext context) {
+  List<Widget> buildInnerForm(BuildContext context) {
     return [
       DropdownComponent(
           store.type, emptyValidator, PersonTypeEnum.getDropdownList(),
@@ -58,9 +65,9 @@ class _PersonDetailComponentState
             }
 
             return Column(mainAxisSize: MainAxisSize.min, children: [
-              ..._getMainDataForm(dto),
-              ..._getAddressForm(dto),
-              ..._getPhonesForm(dto),
+              ..._getMainDataForm(),
+              ..._getAddressForm(),
+              ..._getPhonesForm(),
             ]);
           })
     ];
@@ -83,12 +90,7 @@ class _PersonDetailComponentState
       getControllers().fantasyNameController.text = dto.fantasyName!;
     }
     if (dto.document != null) {
-      if (dto.documentType == DocumentTypeEnum.cpf) {
-        getControllers().documentController.text =
-            cpfFormatter.maskText(dto.document!);
-      } else {
-        getControllers().documentController.text = dto.document!;
-      }
+      getControllers().documentController.text = store.maskDocument(dto.document);
     }
     if (dto.addressNumber != null) {
       getControllers().addressNumberController.text = dto.addressNumber!;
@@ -125,12 +127,20 @@ class _PersonDetailComponentState
     if (!super.formKey.currentState!.validate()) {
       return;
     }
+
+    var duplicateMessage = await store.verifyDuplicateDocument(
+        store.unmaskDocument(getControllers().documentController.text),
+        dto.documentType!);
+
+    if (duplicateMessage != null) {
+      SnackBarService.showErrorMessage(duplicateMessage);
+      return;
+    }
+
     dto.name = getControllers().nameController.text;
     dto.fantasyName = getControllers().fantasyNameController.text;
 
-    dto.document = dto.documentType == DocumentTypeEnum.cpf
-        ? cpfFormatter.unmaskText(getControllers().documentController.text)
-        : getControllers().documentController.text;
+    dto.document = store.unmaskDocument(getControllers().documentController.text);
 
     dto.addressNumber = getControllers().addressNumberController.text;
     dto.addressStreet = getControllers().addressStreetController.text;
@@ -149,7 +159,7 @@ class _PersonDetailComponentState
     close(gridDTO);
   }
 
-  List<Widget> _getMainDataForm(PersonDTO dto) {
+  List<Widget> _getMainDataForm() {
     return [
       TextFormComponent(L10nService.l10n().name, getControllers().nameController,
           validator: emptyValidator),
@@ -162,28 +172,25 @@ class _PersonDetailComponentState
       Row(
         children: [
           DropdownComponent(
-              flex: 2,
+              flex: 4,
               dto.documentType,
               emptyValidator,
-              DocumentTypeEnum.getDropdownList(),
+              DocumentTypeEnum.getDropdownList(list: store.typePersonState.documentTypeList),
               (value) => dto.documentType = value,
               L10nService.l10n().documentTypeTitle),
           TextFormComponent(
             flex: 8,
             L10nService.l10n().document,
             getControllers().documentController,
-            validator: dto.documentType == DocumentTypeEnum.cpf
-                ? TextFormComponent.cpfValidator
-                : emptyValidator,
-            formatter:
-                dto.documentType == DocumentTypeEnum.cpf ? cpfFormatter : null,
+            validator: store.typePersonState.documentValidator,
+            formatter: store.typePersonState.documentFormatter,
           ),
         ],
       ),
     ];
   }
 
-  List<Widget> _getAddressForm(PersonDTO dto) {
+  List<Widget> _getAddressForm() {
     return [
       TextFormComponent(L10nService.l10n().addressPostalCode,
           getControllers().addressPostalCodeController,
@@ -214,7 +221,7 @@ class _PersonDetailComponentState
     ];
   }
 
-  List<Widget> _getPhonesForm(PersonDTO dto) {
+  List<Widget> _getPhonesForm() {
     return [
       Row(children: [
         TextFormComponent(

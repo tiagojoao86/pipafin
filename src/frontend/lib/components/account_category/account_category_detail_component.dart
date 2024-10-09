@@ -30,7 +30,7 @@ class _AccountCategoryDetailComponentState extends DetailComponentState<
   }
 
   @override
-  List<Widget> buildInnerForm(AccountCategoryDTO dto, BuildContext context) {
+  List<Widget> buildInnerForm(BuildContext context) {
     return [
       TextFormComponent(
           L10nService.l10n().description, getControllers().descriptionController,

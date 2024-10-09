@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/basics_components/default_buttons.dart';
+import 'package:frontend/basics_components/default_colors.dart';
+import 'package:frontend/basics_components/default_sizes.dart';
 import 'package:frontend/basics_components/dropdown_component.dart';
 import 'package:frontend/basics_components/text_util.dart';
+import 'package:frontend/constants/configuration_constants.dart';
 
 class PaginationBar extends StatefulWidget {
 
@@ -28,7 +31,7 @@ class _PaginationBarState extends State<PaginationBar> {
   int pageNumber = 0;
   int totalRegisters = 0;
   int totalPages = 0;
-  int pageSize = 5;
+  int pageSize = ConfigurationConstants.pageSizeDefault;
 
   _PaginationBarState();
 
@@ -82,45 +85,91 @@ class _PaginationBarState extends State<PaginationBar> {
   Widget build(BuildContext context) {
     totalRegisters = widget.totalRegisters;
     totalPages = (totalRegisters / pageSize).ceil();
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Flexible(
-          flex: 8,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              DefaultButtons.transparentButton(getFirstPageCallBack() , const Icon(Icons.first_page), iconSize: 40.0),
-              DefaultButtons.transparentButton(getPreviousPageCallBack() , const Icon(Icons.navigate_before), iconSize: 40.0)
-            ],
-          )
+    return
+      Container(
+        padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+        margin: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+        decoration: const BoxDecoration(
+          color: DefaultColors.transparency,
+          borderRadius: BorderRadius.all(Radius.circular(DefaultSizes.borderRadius)),
         ),
-        Flexible(
-          flex: 2,
-          child: Text("${pageNumber + 1}/$totalPages"),
+        child:
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Flexible(
+              flex: 9,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  DefaultButtons.transparentButton(
+                      getFirstPageCallBack() ,
+                      const Icon(Icons.first_page),
+                      foregroundColor: DefaultColors.textColor
+                  ),
+                  DefaultButtons.transparentButton(
+                      getPreviousPageCallBack(),
+                      const Icon(Icons.navigate_before),
+                      foregroundColor: DefaultColors.textColor
+                  )
+                ],
+              )
+            ),
+            Flexible(
+              flex: 2,
+              child: TextUtil("${pageNumber + 1}/$totalPages", foreground: DefaultColors.textColor,),
+            ),
+            Flexible(
+                flex: 6,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    DefaultButtons.transparentButton(
+                        getNextPageCallBack(),
+                        const Icon(Icons.navigate_next),
+                        foregroundColor: DefaultColors.textColor
+                    ),
+                    DefaultButtons.transparentButton(
+                        getLastPageCallBack(),
+                        const Icon(Icons.last_page),
+                        foregroundColor:
+                        DefaultColors.textColor
+                    ),
+                  ],
+                )
+            ),
+            DropdownComponent<int>(
+              pageSize, (text) => null,
+              getPageOptions(), (value) => changePageSize(value), '',
+              width: 90, height: 40,
+            ),
+          ],
         ),
-        Flexible(
-            flex: 4,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                DefaultButtons.transparentButton(getNextPageCallBack() , const Icon(Icons.navigate_next), iconSize: 40.0),
-                DefaultButtons.transparentButton(getLastPageCallBack() , const Icon(Icons.last_page), iconSize: 40.0),
-              ],
-            )
-        ),
-        DropdownComponent<int>(pageSize, (text) => null, getPageOptions(), (value) => changePageSize(value), '', flex: 3)
-      ],
-    );
+      );
   }
 
   List<DropdownMenuItem<int>> getPageOptions() {
     return [
-      DropdownMenuItem<int>(value: 5, child: TextUtil(5.toString(), textSize: 16,)),
-      DropdownMenuItem<int>(value: 10, child: TextUtil(10.toString(), textSize: 16,)),
-      DropdownMenuItem<int>(value: 15, child: TextUtil(15.toString(), textSize: 16,)),
-      DropdownMenuItem<int>(value: 25, child: TextUtil(25.toString(), textSize: 16,)),
-      DropdownMenuItem<int>(value: 50, child: TextUtil(50.toString(), textSize: 16,)),
+      DropdownMenuItem<int>(
+          value: 5,
+          child: Text(5.toString())
+      ),
+      DropdownMenuItem<int>(
+          value: 10,
+          child: Text(10.toString())
+      ),
+      DropdownMenuItem<int>(
+          value: 15,
+          child: Text(15.toString())
+      ),
+      DropdownMenuItem<int>(
+          value: 25,
+          child: Text(25.toString())
+      ),
+      DropdownMenuItem<int>(
+          value: 50,
+          child: Text(50.toString())
+      ),
     ];
   }
   

@@ -85,6 +85,11 @@ class RestResponse<T> {
       return;
     }
 
+    if (jsonBody is bool) {
+      body = jsonBody;
+      return;
+    }
+
     body = jsonDecode(jsonBody);
   }
 }

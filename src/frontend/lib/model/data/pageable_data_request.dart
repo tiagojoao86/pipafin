@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:frontend/constants/configuration_constants.dart';
 import 'package:frontend/model/data/filter_dto.dart';
 import 'package:frontend/model/data/order.dart';
 
@@ -7,7 +8,7 @@ class PageableDataRequest<F extends FilterDTO> {
   static const String _id = 'id';
 
   F filter;
-  int pageSize = 5;
+  int pageSize = ConfigurationConstants.pageSizeDefault;
   int pageNumber = 0;
   List<Order> orders = [Order(SortDirectionEnum.asc, _id)];
 

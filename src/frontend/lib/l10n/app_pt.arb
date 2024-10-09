@@ -50,5 +50,23 @@
   "phone2": "Telefone 2",
   "personTitle": "Pessoas",
   "registerTypeTitle": "Tipo do cadastro",
-  "documentTypeTitle": "Tipo do documento"  
+  "documentTypeTitle": "Tipo do documento",
+  "invalidField": "{field} é inválido",
+  "@invalidField": {
+    "description": "Mensagem com um único parâmetro para campo inválido",
+    "placeholders": {
+      "field": {
+        "type": "String"
+      }
+    }
+  },
+  "duplicateInfo": "{field} duplicado",
+  "@duplicateInfo": {
+    "description": "Mensagem com um único parâmetro para campo duplicado",
+    "placeholders": {
+      "field": {
+        "type": "String"
+      }
+    }
+  }
 }

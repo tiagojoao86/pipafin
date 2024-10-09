@@ -52,7 +52,7 @@ abstract class BaseService<G extends Model, D extends Model> {
 
   Future<D> findById(String id) async {
     var response = await http.get(
-      getUrl([RestConstants.rFindById], queryParameters: <String, String>{"id":id}),
+      getUrl([RestConstants.rFindById], queryParameters: <String, String>{RestConstants.fId:id}),
       headers: getHeaders());
     var responseJson = RestResponse<D>
         .fromJson(response, objCreator: getDtoObjectConstructor());

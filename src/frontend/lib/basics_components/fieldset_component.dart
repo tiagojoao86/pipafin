@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/basics_components/default_sizes.dart';
 
 class FieldSetComponent extends StatelessWidget {
   final List<Widget> children;
@@ -14,7 +15,7 @@ class FieldSetComponent extends StatelessWidget {
           decoration: InputDecoration(
             labelText: labelText,
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.0),
+              borderRadius: BorderRadius.circular(DefaultSizes.borderRadius),
             ),
           ),
           child: Column(

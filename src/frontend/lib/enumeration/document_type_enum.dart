@@ -10,19 +10,20 @@ enum DocumentTypeEnum {
     return values.firstWhere((e) => e.name == key.toLowerCase());
   }
 
-  static List<DropdownMenuItem<DocumentTypeEnum>> getDropdownList() {
-    List<DropdownMenuItem<DocumentTypeEnum>> list = [];
+  static List<DropdownMenuItem<DocumentTypeEnum>> getDropdownList({List<DocumentTypeEnum>? list}) {
+    var valuesList = list ?? values;
+    List<DropdownMenuItem<DocumentTypeEnum>> componentList = [];
 
-    for (DocumentTypeEnum item in values) {
-      list.add(
+    for (DocumentTypeEnum item in valuesList) {
+      componentList.add(
         DropdownMenuItem<DocumentTypeEnum>(
           value: item,
-          child: TextUtil(L10nService.l10n().documentType(item.name).toUpperCase(), textSize: 16,),
+          child: Text(L10nService.l10n().documentType(item.name).toUpperCase()),
         ),
       );
     }
 
-    return list;
+    return componentList;
   }
 
 }

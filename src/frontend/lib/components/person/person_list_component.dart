@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/basics_components/default_colors.dart';
 import 'package:frontend/basics_components/text_util.dart';
 import 'package:frontend/components/base/list_component.dart';
 import 'package:frontend/components/person/person_detail_component.dart';
@@ -33,9 +34,9 @@ class _PersonListComponentState
         : '';
     return [
       item.personType == PersonTypeEnum.legal
-          ? TextUtil.label(item.fantasyName)
-          : TextUtil.label(item.name),
-      TextUtil(type)
+          ? TextUtil(item.fantasyName, foreground: DefaultColors.white1,)
+          : TextUtil(item.name, foreground: DefaultColors.white1,),
+      TextUtil(type, foreground: DefaultColors.white1)
     ];
   }
 

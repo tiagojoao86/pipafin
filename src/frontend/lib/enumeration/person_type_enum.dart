@@ -17,7 +17,7 @@ enum PersonTypeEnum {
       list.add(
         DropdownMenuItem<PersonTypeEnum>(
           value: item,
-          child: TextUtil(L10nService.l10n().personType(item.name), textSize: 16,),
+          child: Text(L10nService.l10n().personType(item.name)),
         ),
       );
     }

@@ -3,6 +3,7 @@ import 'package:frontend/basics_components/app_bar_register_component.dart';
 import 'package:frontend/basics_components/card_grid_component.dart';
 import 'package:frontend/basics_components/default_buttons.dart';
 import 'package:frontend/basics_components/default_colors.dart';
+import 'package:frontend/basics_components/default_sizes.dart';
 import 'package:frontend/basics_components/pagination_bar.dart';
 import 'package:frontend/basics_components/text_util.dart';
 import 'package:frontend/l10n/l10n_service.dart';
@@ -72,9 +73,20 @@ abstract class ListComponentState<G extends Model, D extends Model, F extends Fi
               ),
           () => showFilterModal(),
           getTitleComponent(context)),
-      body: getListComponent(),
+      body: Container(
+        padding: const EdgeInsets.fromLTRB(5, 10, 5, 10),
+        margin: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+        decoration: const BoxDecoration(
+          color: DefaultColors.transparency,
+          borderRadius: BorderRadius.all(Radius.circular(DefaultSizes.borderRadius)),
+        ),
+        child: getListComponent(),
+      ),
       bottomNavigationBar: BottomAppBar(
-          child: getPaginationBar()
+        padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+        child: getPaginationBar(),
+        color: DefaultColors.transparent,
+        height: DefaultSizes.footerHeight,
       )
     );
   }
@@ -131,13 +143,13 @@ abstract class ListComponentState<G extends Model, D extends Model, F extends Fi
           } else if (state is ErrorBaseState) {
             body = Center(
               child: TextUtil.subTitle(state.message,
-                  foreground: DefaultColors.black1),
+                  foreground: DefaultColors.black2),
             );
           } else if (state is ListedBaseState) {
             if (state.list.isEmpty) {
               body = Center(
                   child: TextUtil.subTitle(L10nService.l10n().noRegistersFound,
-                      foreground: DefaultColors.black1));
+                      foreground: DefaultColors.black2));
             } else {
               return _buildItems(state);
             }
@@ -184,10 +196,10 @@ abstract class ListComponentState<G extends Model, D extends Model, F extends Fi
             store.updateList(value as G);
           }
         });
-      }),
+      }, iconColor: DefaultColors.textColor),
       DefaultButtons.deleteButton(() async {
         store.delete(item.getId()!);
-      }),
+      }, iconColor: DefaultColors.textColor),
     ];
   }
 }

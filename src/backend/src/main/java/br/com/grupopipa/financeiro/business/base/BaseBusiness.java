@@ -17,10 +17,10 @@ import java.util.function.IntFunction;
 
 
 @Service
-public abstract class BaseBusiness<T extends BaseEntity<D>, G extends DTO<T>, D extends DTO<T>, F extends FilterDTO, R extends JpaRepository<T,UUID>> {
+public abstract class BaseBusiness<DAO extends BaseDAO<D,T,F,R>, T extends BaseEntity<D>, G extends DTO<T>, D extends DTO<T>, F extends FilterDTO, R extends JpaRepository<T,UUID>> {
 
     @Autowired
-    private BaseDAO<D,T,F,R> repository;
+    protected DAO repository;
 
     public abstract G convertEntityToGridObject(T item);
 

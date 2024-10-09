@@ -3,9 +3,11 @@ package br.com.grupopipa.financeiro.repository.DAO;
 import br.com.grupopipa.financeiro.dto.person.PersonDTO;
 import br.com.grupopipa.financeiro.dto.person.PersonFilterDTO;
 import br.com.grupopipa.financeiro.entity.PersonEntity;
+import br.com.grupopipa.financeiro.enumeration.DocumentTypeEnum;
 import br.com.grupopipa.financeiro.enumeration.PersonTypeEnum;
 import br.com.grupopipa.financeiro.repository.PersonRepository;
 import br.com.grupopipa.financeiro.repository.base.BaseDAO;
+import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.ObjectUtils;
 
@@ -13,6 +15,14 @@ import java.util.Arrays;
 
 @Repository
 public class PersonDAO extends BaseDAO<PersonDTO, PersonEntity, PersonFilterDTO, PersonRepository> {
+
+    public boolean verifyDuplicateDocument(String document, DocumentTypeEnum type) {
+        PersonEntity personEntity = new PersonEntity();
+        personEntity.setDocument(document);
+        personEntity.setDocumentType(type);
+
+        return !repository.findAll(Example.of(personEntity)).isEmpty();
+    }
 
     @Override
     protected String addWhereFromFilter(PersonFilterDTO filter) {
