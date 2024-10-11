@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/basics_components/component_pattern.dart';
 import 'package:frontend/basics_components/default_colors.dart';
-import 'package:frontend/basics_components/text_util.dart';
 import 'package:frontend/l10n/l10n_service.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
@@ -114,6 +113,15 @@ class TextFormComponent extends StatefulWidget {
 
     return null;
 
+  }
+
+  static String? emptyValidator(value) {
+    var isString = value is String;
+
+    if (value == null || (isString && value.isEmpty)) {
+      return L10nService.l10n().errorCannotBeEmpty;
+    }
+    return null;
   }
 }
 

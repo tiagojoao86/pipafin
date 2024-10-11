@@ -24,7 +24,7 @@ class DefaultColors {
   static const invertedTextColor = Color.fromRGBO(0, 0, 0, 1);
   static const transparency = Color.fromRGBO(64, 64, 64, 0.3);
   static const itemTransparent = Color.fromRGBO(255, 255, 255, 0.1);
-  static const secondaryColor = Color.fromRGBO(228, 175, 0, 1.0);
+  static const secondaryColor = Color.fromRGBO(228, 175, 0, 1);
   static const dangerColor = Color.fromRGBO(255, 172, 172, 1.0);
 
   /*

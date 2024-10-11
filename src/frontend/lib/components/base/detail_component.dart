@@ -3,6 +3,7 @@ import 'package:frontend/basics_components/default_buttons.dart';
 import 'package:frontend/basics_components/default_colors.dart';
 import 'package:frontend/basics_components/default_sizes.dart';
 import 'package:frontend/basics_components/text_util.dart';
+import 'package:frontend/components/base/controllers.dart';
 import 'package:frontend/l10n/l10n_service.dart';
 import 'package:frontend/model/data/filter_dto.dart';
 import 'package:frontend/model/model.dart';
@@ -141,9 +142,4 @@ abstract class DetailComponentState<G extends Model, D extends Model, F extends 
     }
     return null;
   }
-}
-
-abstract class Controllers {
-  const Controllers();
-  void clear();
 }

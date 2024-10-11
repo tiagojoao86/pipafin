@@ -10,13 +10,14 @@ import br.com.grupopipa.financeiro.repository.DAO.PersonDAO;
 import br.com.grupopipa.financeiro.repository.PersonRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
 import java.util.function.IntFunction;
 
 @Service
 public class PersonBusiness extends BaseBusiness<PersonDAO, PersonEntity, PersonGridDTO, PersonDTO, PersonFilterDTO, PersonRepository> {
 
-    public boolean verifyDuplicateDocument(String document, DocumentTypeEnum type) {
-        return repository.verifyDuplicateDocument(document, type);
+    public boolean verifyDuplicateDocument(UUID id, String document, DocumentTypeEnum type) {
+        return repository.verifyDuplicateDocument(id, document, type);
     }
 
     @Override

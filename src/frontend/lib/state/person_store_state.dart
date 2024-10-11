@@ -32,8 +32,8 @@ class PersonStoreState extends BaseStoreState<PersonGridDTO, PersonDTO, PersonFi
     notifyListeners();
   }
 
-  Future<String?> verifyDuplicateDocument(text, DocumentTypeEnum documentType) async {
-    var response = await (service as PersonService).verifyDuplicateDocument(text, documentType);
+  Future<String?> verifyDuplicateDocument(id, text, DocumentTypeEnum documentType) async {
+    var response = await (service as PersonService).verifyDuplicateDocument(id, text, documentType);
 
     if (response == true) {
       return L10nService.l10n().duplicateInfo(documentType.name.toUpperCase());

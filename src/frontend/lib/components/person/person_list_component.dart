@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/basics_components/default_colors.dart';
+import 'package:frontend/basics_components/text_form_component.dart';
 import 'package:frontend/basics_components/text_util.dart';
+import 'package:frontend/components/base/controllers.dart';
 import 'package:frontend/components/base/list_component.dart';
 import 'package:frontend/components/person/person_detail_component.dart';
 import 'package:frontend/enumeration/logic_operators_enum.dart';
@@ -41,8 +43,27 @@ class _PersonListComponentState
   }
 
   @override
+  PersonFilterDTO getFilterData(PageableDataRequest<PersonFilterDTO> pageableDataRequest) {
+    var filter = pageableDataRequest.filter;
+    filter.name = getListFilterControllers().nameController.text;
+    filter.document = getListFilterControllers().documentController.text;
+    return filter;
+  }
+
+  @override
   List<Widget> buildFilterComponents() {
-    return [const Row()];
+    return [
+      Row(
+        children: [
+          TextFormComponent(L10nService.l10n().name, getListFilterControllers().nameController)
+        ],
+      ),
+      Row(
+        children: [
+          TextFormComponent(L10nService.l10n().document, getListFilterControllers().documentController)
+        ],
+      ),
+    ];
   }
 
   @override
@@ -54,4 +75,31 @@ class _PersonListComponentState
   String getTitleComponent(BuildContext context) {
     return L10nService.l10n().personTitle;
   }
+
+  @override
+  PersonListFilterControllers getListFilterControllers() {
+    return PersonListFilterControllers.getInstance();
+  }
 }
+
+class PersonListFilterControllers extends Controllers {
+
+  static PersonListFilterControllers? _instance;
+
+  static getInstance() {
+    _instance ??= PersonListFilterControllers();
+    return _instance;
+  }
+
+  @override
+  void clear() {
+    nameController.clear();
+    documentController.clear();
+  }
+
+  final nameController = TextEditingController();
+  final documentController = TextEditingController();
+
+}
+
+

@@ -12,11 +12,15 @@ class PersonService extends BaseService<PersonGridDTO, PersonDTO> {
 
   const PersonService();
 
-  Future<bool> verifyDuplicateDocument(String document, DocumentTypeEnum type) async {
+  Future<bool> verifyDuplicateDocument(String? id, String document, DocumentTypeEnum type) async {
     var response = await http.get(
         getUrl([RestConstants.rVerifyDuplicateDocument],
-            queryParameters: <String, String>
-            {RestConstants.fDocument:document, RestConstants.fDocumentType:type.name.toUpperCase()}),
+            queryParameters: <String, String?>
+            {
+              RestConstants.fId: id,
+              RestConstants.fDocument:document,
+              RestConstants.fDocumentType:type.name.toUpperCase()
+            }),
         headers: getHeaders());
     var responseJson = RestResponse<bool>
         .fromJson(response);

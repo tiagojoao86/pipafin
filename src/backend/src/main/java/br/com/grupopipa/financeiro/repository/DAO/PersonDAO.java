@@ -8,20 +8,27 @@ import br.com.grupopipa.financeiro.enumeration.PersonTypeEnum;
 import br.com.grupopipa.financeiro.repository.PersonRepository;
 import br.com.grupopipa.financeiro.repository.base.BaseDAO;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.ObjectUtils;
 
 import java.util.Arrays;
+import java.util.UUID;
 
 @Repository
 public class PersonDAO extends BaseDAO<PersonDTO, PersonEntity, PersonFilterDTO, PersonRepository> {
 
-    public boolean verifyDuplicateDocument(String document, DocumentTypeEnum type) {
+    public boolean verifyDuplicateDocument(UUID id, String document, DocumentTypeEnum type) {
         PersonEntity personEntity = new PersonEntity();
         personEntity.setDocument(document);
         personEntity.setDocumentType(type);
 
-        return !repository.findAll(Example.of(personEntity)).isEmpty();
+        return !repository
+                .findAll(Example.of(personEntity))
+                .stream()
+                .filter(it -> !it.getId().equals(id))
+                .toList()
+                .isEmpty();
     }
 
     @Override

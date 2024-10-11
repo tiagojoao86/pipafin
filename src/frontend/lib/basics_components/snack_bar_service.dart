@@ -17,7 +17,7 @@ class SnackBarService {
   }
 
   static void showErrorMessage(String text) {
-    _showMessage(text, DefaultColors.redRemove, DefaultColors.white1);
+    _showMessage(text, DefaultColors.secondaryColor, DefaultColors.invertedTextColor);
   }
 
   static void _showMessage(String text, Color backgroundColor, Color foregroundColor) {

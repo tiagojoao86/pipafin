@@ -7,9 +7,5 @@ abstract class FilterDTO extends Model {
 
   FilterDTO(this.operator);
 
-  Map<String, dynamic> getAttributesMap() {
-    Map<String, dynamic> map = {};
-    map.putIfAbsent("operator", () => operator.name.toUpperCase());
-    return map;
-  }
+  Map<String, dynamic> getAttributesMap();
 }

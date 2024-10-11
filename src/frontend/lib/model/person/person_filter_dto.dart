@@ -25,6 +25,11 @@ class PersonFilterDTO extends FilterDTO {
 
   @override
   String toJson() {
+    return jsonEncode(getAttributesMap());
+  }
+
+  @override
+  Map<String, dynamic> getAttributesMap() {
     Map<String, dynamic> map = {};
     if (name != null && name!.isNotEmpty) {
       map.putIfAbsent("name", () => name);
@@ -47,8 +52,8 @@ class PersonFilterDTO extends FilterDTO {
       map.putIfAbsent("address", () => address);
     }
 
-    map.addAll(super.getAttributesMap());
+    map.putIfAbsent("operator", () => operator.name.toUpperCase());
 
-    return jsonEncode(map);
+    return map;
   }
 }

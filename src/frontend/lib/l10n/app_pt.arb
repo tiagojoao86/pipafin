@@ -68,5 +68,15 @@
         "type": "String"
       }
     }
-  }
+  },
+  "logicOperation": "{type, select, and{E} or{OU} other{sem informação}}",
+  "@logicOperation": {
+    "description": "Logic operator for filter",
+    "placeholders": {
+      "type": {
+        "type": "String"
+      }
+    }
+  },
+  "logicOperator": "Operação"
 }

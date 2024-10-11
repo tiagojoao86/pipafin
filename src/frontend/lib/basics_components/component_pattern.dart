@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/basics_components/default_colors.dart';
+import 'package:frontend/basics_components/default_sizes.dart';
 
 class ComponentPattern {
   static const border = OutlineInputBorder(
@@ -25,17 +26,21 @@ class ComponentPattern {
 
   static const textStyle = TextStyle(
     color: DefaultColors.textColor,
+    fontSize: DefaultSizes.regularFont
   );
 
   static const invertedTextStyle = TextStyle(
     color: DefaultColors.invertedTextColor,
+    fontSize: DefaultSizes.regularFont
   );
 
   static const focusedTextStyle = TextStyle(
     color: DefaultColors.secondaryColor,
+    fontSize: DefaultSizes.regularFont
   );
 
   static const errorTextStyle = TextStyle(
     color: DefaultColors.dangerColor,
+    fontSize: DefaultSizes.regularFont
   );
 }

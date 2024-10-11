@@ -64,7 +64,7 @@ class _DropdownComponent<T> extends State<DropdownComponent<T>> {
 
   Padding _getDropdownButton() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+      padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
       child: ButtonTheme(
           child: DropdownButtonFormField<T>(
               focusNode: _focusNode,

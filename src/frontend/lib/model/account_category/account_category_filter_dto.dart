@@ -21,6 +21,11 @@ class AccountCategoryFilterDTO extends FilterDTO {
 
   @override
   String toJson() {
+    return jsonEncode(getAttributesMap());
+  }
+
+  @override
+  Map<String, dynamic> getAttributesMap() {
     Map<String, dynamic> map = {};
     if (description != null && description!.isNotEmpty) {
       map.putIfAbsent("description", () => description);
@@ -31,8 +36,8 @@ class AccountCategoryFilterDTO extends FilterDTO {
       map.putIfAbsent("types", () => values);
     }
 
-    map.addAll(super.getAttributesMap());
+    map.putIfAbsent("operator", () => operator.name.toUpperCase());
 
-    return jsonEncode(map);
+    return map;
   }
 }

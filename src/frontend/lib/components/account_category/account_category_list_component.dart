@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/basics_components/text_util.dart';
 import 'package:frontend/components/account_category/account_category_detail_component.dart';
+import 'package:frontend/components/base/controllers.dart';
 import 'package:frontend/components/base/list_component.dart';
 import 'package:frontend/enumeration/logic_operators_enum.dart';
 import 'package:frontend/l10n/l10n_service.dart';
@@ -35,6 +36,11 @@ class _AccountCategoryListComponentState
   }
 
   @override
+  AccountCategoryFilterDTO getFilterData(PageableDataRequest<AccountCategoryFilterDTO> pageableDataRequest) {
+    return AccountCategoryFilterDTO(LogicOperatorsEnum.and);
+  }
+
+  @override
   List<Widget> buildFilterComponents() {
     return [];
   }
@@ -48,4 +54,29 @@ class _AccountCategoryListComponentState
   String getTitleComponent(BuildContext context) {
     return L10nService.l10n().accountCategoryTitle;
   }
+
+  @override
+  AccountCategoryListFilterControllers getListFilterControllers() {
+    return AccountCategoryListFilterControllers.getInstance();
+  }
+}
+
+class AccountCategoryListFilterControllers extends Controllers {
+
+  static AccountCategoryListFilterControllers? _instance;
+
+  static getInstance() {
+    _instance ??= AccountCategoryListFilterControllers();
+    return _instance;
+  }
+
+  @override
+  void clear() {
+    descriptionController.clear();
+    typeAccountCategoryController.clear();
+  }
+
+  final descriptionController = TextEditingController();
+  final typeAccountCategoryController = TextEditingController();
+
 }

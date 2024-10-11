@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/basics_components/text_util.dart';
 import 'package:frontend/l10n/l10n_service.dart';
 
 enum AccountCategoryTypeEnum {

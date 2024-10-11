@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:frontend/basics_components/dropdown_component.dart';
 import 'package:frontend/basics_components/snack_bar_service.dart';
 import 'package:frontend/basics_components/text_form_component.dart';
+import 'package:frontend/components/base/controllers.dart';
 import 'package:frontend/components/base/detail_component.dart';
 import 'package:frontend/enumeration/document_type_enum.dart';
 import 'package:frontend/enumeration/person_type_enum.dart';
@@ -129,6 +130,7 @@ class _PersonDetailComponentState
     }
 
     var duplicateMessage = await store.verifyDuplicateDocument(
+        dto.id,
         store.unmaskDocument(getControllers().documentController.text),
         dto.documentType!);
 
