@@ -5,10 +5,14 @@ import 'package:frontend/basics_components/default_sizes.dart';
 import 'package:frontend/basics_components/text_util.dart';
 
 class AppBarRegisterComponent extends AppBar {
+  final BuildContext context;
   AppBarRegisterComponent(
-      VoidCallback cbAdd, VoidCallback cbFilter, String title,
+      VoidCallback cbAdd, VoidCallback cbFilter, String title, this.context,
       {super.key})
       : super(
+          leading: DefaultButtons.transparentButton(
+                  () => Navigator.pop(context), const Icon(Icons.arrow_back)
+          ),
           backgroundColor: DefaultColors.transparency,
           toolbarHeight: DefaultSizes.headerHeight,
           shape: OutlineInputBorder(

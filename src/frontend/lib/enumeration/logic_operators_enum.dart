@@ -23,4 +23,9 @@ enum LogicOperatorsEnum {
 
     return list;
   }
+
+  @override
+  String toString() {
+    return L10nService.l10n().logicOperation(name);
+  }
 }

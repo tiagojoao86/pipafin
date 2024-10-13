@@ -24,4 +24,9 @@ enum PersonTypeEnum {
     return list;
   }
 
+  @override
+  String toString() {
+    return L10nService.l10n().personType(name);
+  }
+
 }

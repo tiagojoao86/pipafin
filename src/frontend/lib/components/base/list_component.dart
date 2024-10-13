@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/basics_components/ShowModalBottomSheetComponent.dart';
 import 'package:frontend/basics_components/app_bar_register_component.dart';
 import 'package:frontend/basics_components/card_grid_component.dart';
 import 'package:frontend/basics_components/default_buttons.dart';
@@ -34,6 +35,7 @@ abstract class ListComponentState<G extends Model, D extends Model, F extends Fi
   List<Widget> buildFilterComponents();
   Controllers getListFilterControllers();
   F getFilterData(PageableDataRequest<F> pageableDataRequest);
+  F getClearFilter();
   BaseStoreState<G, D, F> store;
   PageableDataRequest<F> pageableDataRequest;
   final formFilterListKey = GlobalKey<FormState>();
@@ -49,6 +51,12 @@ abstract class ListComponentState<G extends Model, D extends Model, F extends Fi
   doFilter() {
     pageableDataRequest.pageNumber = 0;
     pageableDataRequest.filter = getFilterData(pageableDataRequest);
+    store.list(pageableDataRequest);
+  }
+
+  clearFilters() {
+    pageableDataRequest.pageNumber = 0;
+    pageableDataRequest.filter = getClearFilter();
     store.list(pageableDataRequest);
   }
 
@@ -85,7 +93,9 @@ abstract class ListComponentState<G extends Model, D extends Model, F extends Fi
                 },
               ),
           () => showFilterModal(),
-          getTitleComponent(context)),
+          getTitleComponent(context),
+          context
+      ),
       body: Container(
         padding: const EdgeInsets.fromLTRB(5, 10, 5, 10),
         margin: const EdgeInsets.fromLTRB(0, 5, 0, 5),
@@ -114,104 +124,57 @@ abstract class ListComponentState<G extends Model, D extends Model, F extends Fi
   }
 
   showFilterModal() {
-    showModalBottomSheet<void>(
-      backgroundColor: DefaultColors.transparent,
-      shape: OutlineInputBorder(
-        borderSide: const BorderSide(
-          color: DefaultColors.transparent,
-          width: 0
-        ),
-        borderRadius: BorderRadius.circular(DefaultSizes.borderRadius)
-      ),
-      context: context,
-      isDismissible: false,
-      builder: (context) {
-        return BottomSheet(
-          backgroundColor: DefaultColors.background,
-          onClosing: () => {},
-          builder: (context) {
-            return Padding(padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-              child: Scaffold(
-                backgroundColor: DefaultColors.transparent,
-                appBar: AppBar(
-                  title:
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        TextUtil.subTitle(L10nService.l10n().filter),
-                        DropdownComponent(
-                          pageableDataRequest.filter.operator,
-                          TextFormComponent.emptyValidator,
-                          LogicOperatorsEnum.getDropdownList(),
-                              (value) {
-                            pageableDataRequest.filter.operator = value!;
-                          },
-                          L10nService.l10n().logicOperator,
-                          width: 100,
-                          height: 50,
-                        ),
-                      ],
-                    ),
-                  iconTheme: const IconThemeData(color: DefaultColors.textColor, size:
-                  DefaultSizes.smallIcon),
-                  backgroundColor: DefaultColors.transparency,
-                  toolbarHeight: DefaultSizes.headerHeight,
-                  shape: OutlineInputBorder(
-                      borderSide: const BorderSide(color: DefaultColors.transparent, width: 0,),
-                      borderRadius: BorderRadius.circular(DefaultSizes.borderRadius)
-                  ),
-                ),
-                body: Container(
-                  padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                  margin: const EdgeInsets.fromLTRB(0, 5, 0, 5),
-                  decoration: const BoxDecoration(
-                    color: DefaultColors.transparency,
-                    borderRadius: BorderRadius.all(Radius.circular(DefaultSizes.borderRadius)),
-                  ),
-                  child: Form(
-                    key: formFilterListKey,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        ...buildFilterComponents(),
-                      ],
-                    ),
-                  ),
-                ),
-                bottomNavigationBar: BottomAppBar(
-                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                  color: DefaultColors.transparent,
-                  height: DefaultSizes.footerHeight,
-                  child: Container(
-                    padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-                    margin: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-                    decoration: const BoxDecoration(
-                      color: DefaultColors.transparency,
-                      borderRadius: BorderRadius.all(Radius.circular(DefaultSizes.borderRadius))
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        DefaultButtons.formCancelButton(
-                                () => Navigator.pop(context),
-                            L10nService.l10n().cancel),
-                        DefaultButtons.formButton(
-                                () {
-                                  doFilter();
-                                  Navigator.pop(context);
-                                },
-                            L10nService.l10n().doFilter,
-                            Icons.search)
-                      ],
-                    ),
-                  ),
-                )
-              ),
-            );
+    var title = Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        TextUtil.subTitle(L10nService.l10n().filter),
+        DropdownComponent(
+          pageableDataRequest.filter.operator,
+          TextFormComponent.emptyValidator,
+          LogicOperatorsEnum.getDropdownList(),
+              (value) {
+            pageableDataRequest.filter.operator = value!;
           },
-        );
-      },
+          L10nService.l10n().logicOperator,
+          width: 100,
+          height: 50,
+        ),
+      ],
     );
+
+    var body = Form(
+      key: formFilterListKey,
+      child: ListView(
+        children: [
+          ...buildFilterComponents(),
+        ],
+      ),
+    );
+
+    var bottom = Row(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        DefaultButtons.formButton(
+                () {
+              clearFilters();
+              Navigator.pop(context);
+            },
+            L10nService.l10n().clear,
+            Icons.clear),
+        DefaultButtons.formCancelButton(
+                () => Navigator.pop(context),
+            L10nService.l10n().cancel),
+        DefaultButtons.formButton(
+                () {
+              doFilter();
+              Navigator.pop(context);
+            },
+            L10nService.l10n().doFilter,
+            Icons.search),
+      ],
+    );
+    ShowModalBottomSheetComponent.getModal(context, title, body, bottom);
   }
 
   ListenableBuilder getListComponent() {

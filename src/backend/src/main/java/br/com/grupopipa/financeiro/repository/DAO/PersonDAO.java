@@ -59,8 +59,9 @@ public class PersonDAO extends BaseDAO<PersonDTO, PersonEntity, PersonFilterDTO,
         if (!ObjectUtils.isEmpty(filter.getAddress())) {
             addWhereClause(sb, String.format("(UPPER(addressNumber) like '%%%S%%' OR UPPER(addressStreet) like '%%%S%%' OR " +
                             "UPPER(addressCity) like '%%%S%%' OR UPPER(addressState) like '%%%S%%' OR " +
-                            "UPPER(addressPostalCode) like '%%%S%%') ",
-                    filter.getAddress(), filter.getAddress(), filter.getAddress(), filter.getAddress(), filter.getAddress()),
+                            "UPPER(addressPostalCode) like '%%%S%%' OR UPPER(addressNeighborhood) like '%%%S%%') ",
+                    filter.getAddress(), filter.getAddress(), filter.getAddress(),
+                            filter.getAddress(), filter.getAddress(), filter.getAddress()),
                     filter.getOperator());
         }
 

@@ -25,4 +25,9 @@ enum DocumentTypeEnum {
     return componentList;
   }
 
+  @override
+  String toString() {
+    return L10nService.l10n().documentType(name);
+  }
+
 }

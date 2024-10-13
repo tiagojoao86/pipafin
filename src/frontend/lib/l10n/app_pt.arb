@@ -40,12 +40,14 @@
   "name": "Nome",
   "fantasyName": "Nome fantasia",
   "document": "Documento",
+  "address": "Endereço",
   "addressNumber": "Número",
   "addressStreet": "Logradouro",
   "addressNeighborhood": "Bairro",
   "addressCity": "Cidade",
   "addressState": "Estado",
   "addressPostalCode": "CEP",
+  "phone": "Telefone",
   "phone1": "Telefone 1",
   "phone2": "Telefone 2",
   "personTitle": "Pessoas",
@@ -78,5 +80,6 @@
       }
     }
   },
-  "logicOperator": "Operação"
+  "logicOperator": "Operação",
+  "clear": "Limpar"
 }

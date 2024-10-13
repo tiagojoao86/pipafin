@@ -49,6 +49,9 @@ abstract class DetailComponentState<G extends Model, D extends Model, F extends 
   Scaffold _buildScaffold() {
     return Scaffold(
         appBar: AppBar(
+          leading: DefaultButtons.transparentButton(
+                  () => Navigator.pop(context), const Icon(Icons.arrow_back)
+          ),
           title: TextUtil.subTitle(getTitle(),
               foreground: DefaultColors.textColor),
           backgroundColor: DefaultColors.transparency,

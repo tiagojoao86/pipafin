@@ -56,8 +56,8 @@ class DefaultButtons {
   }
 
   static Widget transparentButton(VoidCallback cbFunction, Icon icon,
-      {iconSize = DefaultSizes.regularIcon, foregroundColor = DefaultColors.black2}) {
-    return _createInkedButton(cbFunction, DefaultColors.transparent,
+      {iconSize = DefaultSizes.regularIcon, foregroundColor = DefaultColors.textColor}) {
+    return _createIconButton(cbFunction, DefaultColors.transparent,
         foregroundColor, icon, iconSize: iconSize);
   }
 
@@ -152,6 +152,35 @@ class DefaultButtons {
         ));
   }
 
+  static Widget _createIconButton(VoidCallback cbFunction,
+      Color backgroundColor, Color iconColor, Icon icon, {iconSize = DefaultSizes.regularIcon}) {
+    return IconButton(
+      style: ButtonStyle(
+        overlayColor:
+          WidgetStateColor.resolveWith((states) {
+            if (states.contains(WidgetState.pressed)) {
+              return DefaultColors.transparency;
+            }
+            return DefaultColors.secondaryColor;
+          }
+        ),
+        foregroundColor:
+          WidgetStateColor.resolveWith((states) {
+            if (states.contains(WidgetState.pressed)) {
+              return DefaultColors.invertedTextColor;
+            } else if (states.contains(WidgetState.hovered)) {
+              return DefaultColors.invertedTextColor;
+            }
+            return iconColor;
+          }
+        ),
+      ),
+      icon: icon,
+      onPressed: cbFunction,
+      iconSize: iconSize,
+    );
+  }
+
   static Widget _createInkedButton(VoidCallback cbFunction,
       Color backgroundColor, Color iconColor, Icon icon, {iconSize = DefaultSizes.regularIcon}) {
     return Padding(
@@ -162,32 +191,8 @@ class DefaultButtons {
               color: backgroundColor,
               shape: const CircleBorder(),
             ),
-            child:
-            IconButton(
-              style: ButtonStyle(
-                overlayColor:
-                  WidgetStateColor.resolveWith((states) {
-                    if (states.contains(WidgetState.pressed)) {
-                      return DefaultColors.transparency;
-                    }
-                    return DefaultColors.secondaryColor;
-                  }
-                ),
-                foregroundColor:
-                  WidgetStateColor.resolveWith((states) {
-                    if (states.contains(WidgetState.pressed)) {
-                      return DefaultColors.invertedTextColor;
-                    } else if (states.contains(WidgetState.hovered)) {
-                      return DefaultColors.invertedTextColor;
-                    }
-                    return iconColor;
-                  }
-                ),
-              ),
-              icon: icon,
-              onPressed: cbFunction,
-              iconSize: iconSize,
-            ),
+            child: _createIconButton(cbFunction, backgroundColor, iconColor, icon, iconSize: iconSize),
+
           ),
         )
     );

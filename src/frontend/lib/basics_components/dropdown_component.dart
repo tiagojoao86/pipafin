@@ -13,10 +13,13 @@ class DropdownComponent<T> extends StatefulWidget {
   final int flex;
   final double height;
   final double width;
+  final EdgeInsets margin;
+  final bool resetAfterChange;
 
   const DropdownComponent(this.value, this.validator, this.items, this.onChange,
       this.labelText,
-      {super.key, this.flex = 10, this.height = 0, this.width = 0,});
+      {super.key, this.flex = 10, this.height = 0, this.width = 0, this.margin = const EdgeInsets.fromLTRB(10, 5, 10, 5),
+      this.resetAfterChange = false});
 
   @override
   State<StatefulWidget> createState() {
@@ -25,7 +28,7 @@ class DropdownComponent<T> extends StatefulWidget {
 }
 
 class _DropdownComponent<T> extends State<DropdownComponent<T>> {
-
+  final _dropdownKey = GlobalKey<FormFieldState>();
   FocusNode _focusNode = FocusNode();
 
   @override
@@ -64,9 +67,10 @@ class _DropdownComponent<T> extends State<DropdownComponent<T>> {
 
   Padding _getDropdownButton() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+      padding: widget.margin,
       child: ButtonTheme(
           child: DropdownButtonFormField<T>(
+              key: _dropdownKey,
               focusNode: _focusNode,
               value: widget.value,
               validator: widget.validator,
@@ -79,7 +83,7 @@ class _DropdownComponent<T> extends State<DropdownComponent<T>> {
               },
               iconEnabledColor: DefaultColors.secondaryColor,
               iconDisabledColor: DefaultColors.secondaryColor,
-              onChanged: widget.onChange,
+              onChanged: onChange,
               dropdownColor: DefaultColors.secondaryColor,
               style: ComponentPattern.invertedTextStyle,
               decoration: InputDecoration(
@@ -98,5 +102,16 @@ class _DropdownComponent<T> extends State<DropdownComponent<T>> {
           )
       ),
     );
+  }
+
+  onChange(value) {
+    widget.onChange(value);
+    if (widget.resetAfterChange == true) {
+      setState(() {
+        if (_dropdownKey.currentState != null) {
+          _dropdownKey.currentState!.reset();
+        }
+      });
+    }
   }
 }

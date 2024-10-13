@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/basics_components/default_colors.dart';
+import 'package:frontend/basics_components/multi_select_component.dart';
 import 'package:frontend/basics_components/text_form_component.dart';
 import 'package:frontend/basics_components/text_util.dart';
 import 'package:frontend/components/base/controllers.dart';
@@ -25,6 +26,7 @@ class PersonListComponent extends ListComponent<PersonGridDTO, PersonDTO, Person
 
 class _PersonListComponentState
     extends ListComponentState<PersonGridDTO, PersonDTO, PersonFilterDTO> {
+
   _PersonListComponentState() : super(PersonStoreState(), PageableDataRequest.basic(PersonFilterDTO(LogicOperatorsEnum.and)));
 
   @override
@@ -47,23 +49,48 @@ class _PersonListComponentState
     var filter = pageableDataRequest.filter;
     filter.name = getListFilterControllers().nameController.text;
     filter.document = getListFilterControllers().documentController.text;
+    filter.types = pageableDataRequest.filter.types;
+    filter.address = getListFilterControllers().addressController.text;
+    filter.phone = getListFilterControllers().phoneController.text;
     return filter;
   }
 
   @override
+  PersonFilterDTO getClearFilter() {
+    getListFilterControllers().clear();
+    return PersonFilterDTO(LogicOperatorsEnum.and);
+  }
+
+  @override
   List<Widget> buildFilterComponents() {
+    pageableDataRequest.filter.types ??= [];
     return [
-      Row(
+      Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          TextFormComponent(L10nService.l10n().name, getListFilterControllers().nameController)
-        ],
-      ),
-      Row(
-        children: [
-          TextFormComponent(L10nService.l10n().document, getListFilterControllers().documentController)
+          TextFormComponent(L10nService.l10n().name, getListFilterControllers().nameController),
+          TextFormComponent(L10nService.l10n().document, getListFilterControllers().documentController),
+          MultiSelectComponent<PersonTypeEnum>(L10nService.l10n().type, PersonTypeEnum.getDropdownList(),
+                (value) => _addTypePersonToFilter(value), (value) => _removeTypePersonToFilter(value),
+                pageableDataRequest.filter.types!
+          ),
+          TextFormComponent(L10nService.l10n().address, getListFilterControllers().addressController),
+          TextFormComponent(L10nService.l10n().phone, getListFilterControllers().phoneController),
         ],
       ),
     ];
+  }
+
+  _addTypePersonToFilter(value) {
+    if (!pageableDataRequest.filter.types!.contains(value)) {
+      pageableDataRequest.filter.types!.add(value);
+    }
+  }
+
+  _removeTypePersonToFilter(value) {
+    if (pageableDataRequest.filter.types!.contains(value)) {
+      pageableDataRequest.filter.types!.remove(value);
+    }
   }
 
   @override
@@ -95,10 +122,14 @@ class PersonListFilterControllers extends Controllers {
   void clear() {
     nameController.clear();
     documentController.clear();
+    phoneController.clear();
+    addressController.clear();
   }
 
   final nameController = TextEditingController();
   final documentController = TextEditingController();
+  final phoneController = TextEditingController();
+  final addressController = TextEditingController();
 
 }
 
