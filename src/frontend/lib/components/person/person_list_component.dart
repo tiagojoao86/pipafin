@@ -9,6 +9,7 @@ import 'package:frontend/components/person/person_detail_component.dart';
 import 'package:frontend/enumeration/logic_operators_enum.dart';
 import 'package:frontend/enumeration/person_type_enum.dart';
 import 'package:frontend/l10n/l10n_service.dart';
+import 'package:frontend/model/data/sort.dart';
 import 'package:frontend/model/data/pageable_data_request.dart';
 import 'package:frontend/model/person/person_dto.dart';
 import 'package:frontend/model/person/person_filter_dto.dart';
@@ -38,9 +39,9 @@ class _PersonListComponentState
         : '';
     return [
       item.personType == PersonTypeEnum.legal
-          ? TextUtil(item.fantasyName, foreground: DefaultColors.white1,)
-          : TextUtil(item.name, foreground: DefaultColors.white1,),
-      TextUtil(type, foreground: DefaultColors.white1)
+          ? TextUtil(item.tradeName, foreground: DefaultColors.textColor,)
+          : TextUtil(item.name, foreground: DefaultColors.textColor,),
+      TextUtil(type, foreground: DefaultColors.textColor)
     ];
   }
 
@@ -106,6 +107,17 @@ class _PersonListComponentState
   @override
   PersonListFilterControllers getListFilterControllers() {
     return PersonListFilterControllers.getInstance();
+  }
+
+  @override
+  List<DropdownMenuItem<Property>> getPropertiesToSort() {
+    return [
+      DropdownMenuItem(value: Property(L10nService.l10n().name, 'name'), child: Text(L10nService.l10n().name),),
+      DropdownMenuItem(value: Property(L10nService.l10n().tradeName, 'tradeName'), child: Text(L10nService.l10n().tradeName),),
+      DropdownMenuItem(value: Property(L10nService.l10n().type, 'personType'), child: Text(L10nService.l10n().type),),
+      DropdownMenuItem(value: Property(L10nService.l10n().document, 'document'), child: Text(L10nService.l10n().document),),
+      DropdownMenuItem(value: Property(L10nService.l10n().phone1, 'phone1'), child: Text(L10nService.l10n().phone1),),
+    ];
   }
 }
 

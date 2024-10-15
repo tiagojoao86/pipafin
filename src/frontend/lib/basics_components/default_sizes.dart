@@ -7,7 +7,7 @@ class DefaultSizes {
   static const double regularIcon = 24;
   static const double mediumIcon = 28;
 
-  static const double borderRadius = 10;
+  static const double borderRadius = 0;
   static const double headerHeight = 50;
   static const double footerHeight = 60;
 }

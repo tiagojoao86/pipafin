@@ -36,7 +36,7 @@ public class PersonDAO extends BaseDAO<PersonDTO, PersonEntity, PersonFilterDTO,
         StringBuilder sb = new StringBuilder();
 
         if (!ObjectUtils.isEmpty(filter.getName())) {
-            addWhereClause(sb, String.format("(UPPER(name) like '%%%S%%' OR UPPER(fantasyName) like '%%%S%%') ",
+            addWhereClause(sb, String.format("(UPPER(name) like '%%%S%%' OR UPPER(tradeName) like '%%%S%%') ",
                     filter.getName(), filter.getName()), filter.getOperator());
         }
 

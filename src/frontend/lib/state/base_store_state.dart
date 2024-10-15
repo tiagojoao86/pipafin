@@ -1,13 +1,14 @@
 
 import 'package:flutter/material.dart';
+import 'package:frontend/model/base_grid_dto.dart';
 import 'package:frontend/model/data/filter_dto.dart';
 import 'package:frontend/model/data/pageable_data_request.dart';
 import 'package:frontend/model/data/pageable_data_response.dart';
-import 'package:frontend/model/model.dart';
+import 'package:frontend/model/base_dto.dart';
 import 'package:frontend/services/base_service.dart';
 import 'package:frontend/state/base_state.dart';
 
-abstract class BaseStoreState<G extends Model, D extends Model, F extends FilterDTO> extends ChangeNotifier {
+abstract class BaseStoreState<G extends BaseGridDTO, D extends BaseDTO, F extends FilterDTO> extends ChangeNotifier {
   final BaseService<G,D> service;
 
   List<G> items = [];

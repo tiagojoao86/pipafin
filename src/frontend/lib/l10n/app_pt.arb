@@ -1,5 +1,6 @@
 {
   "appTitle": "Financeiro",
+  "id": "id",
   "accountCategoryType": "{type, select, payable{à pagar} receivable{à receber} other{sem informação}}",
   "@accountCategoryType": {
     "description": "Type for account category",
@@ -38,7 +39,8 @@
     }
   },
   "name": "Nome",
-  "fantasyName": "Nome fantasia",
+  "tradeName": "Nome fantasia",
+  "corporateName": "Razão Social",
   "document": "Documento",
   "address": "Endereço",
   "addressNumber": "Número",
@@ -81,5 +83,20 @@
     }
   },
   "logicOperator": "Operação",
-  "clear": "Limpar"
+  "clear": "Limpar",
+  "sort": "Ordenação",
+  "toSort": "Ordenar",
+  "property": "Propriedade",
+  "sortDirection": "{type, select, asc{Crescente} desc{Decrescente} other{sem informação}}",
+  "@sortDirection": {
+    "description": "Sort direction",
+    "placeholders": {
+      "type": {
+        "type": "String"
+      }
+    }
+  },
+  "direction": "Direção",
+  "asc": "Crescente",
+  "desc": "Decrescente"
 }

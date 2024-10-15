@@ -10,16 +10,6 @@ class AccountCategoryFilterDTO extends FilterDTO {
   AccountCategoryFilterDTO(super.operator, {this.description, this.types});
 
   @override
-  void fillFromJson(Map<String, dynamic> map) {
-    throw UnsupportedError("Method fillFromJson in AccountCategoryFilterDTO is not implemented");
-  }
-
-  @override
-  String? getId() {
-    throw UnsupportedError("Method getId in AccountCategoryFilterDTO is not implemented");
-  }
-
-  @override
   String toJson() {
     return jsonEncode(getAttributesMap());
   }

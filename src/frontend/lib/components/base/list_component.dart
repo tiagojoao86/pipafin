@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/basics_components/ShowModalBottomSheetComponent.dart';
+import 'package:frontend/basics_components/show_modal_bottom_sheet_component.dart';
 import 'package:frontend/basics_components/app_bar_register_component.dart';
 import 'package:frontend/basics_components/card_grid_component.dart';
 import 'package:frontend/basics_components/default_buttons.dart';
@@ -7,18 +7,21 @@ import 'package:frontend/basics_components/default_colors.dart';
 import 'package:frontend/basics_components/default_sizes.dart';
 import 'package:frontend/basics_components/dropdown_component.dart';
 import 'package:frontend/basics_components/pagination_bar.dart';
+import 'package:frontend/basics_components/sort_selection_component.dart';
 import 'package:frontend/basics_components/text_form_component.dart';
 import 'package:frontend/basics_components/text_util.dart';
 import 'package:frontend/components/base/controllers.dart';
 import 'package:frontend/enumeration/logic_operators_enum.dart';
 import 'package:frontend/l10n/l10n_service.dart';
+import 'package:frontend/model/base_grid_dto.dart';
 import 'package:frontend/model/data/filter_dto.dart';
+import 'package:frontend/model/data/sort.dart';
 import 'package:frontend/model/data/pageable_data_request.dart';
-import 'package:frontend/model/model.dart';
+import 'package:frontend/model/base_dto.dart';
 import 'package:frontend/state/base_state.dart';
 import 'package:frontend/state/base_store_state.dart';
 
-abstract class ListComponent<G extends Model, D extends Model, F extends FilterDTO>
+abstract class ListComponent<G extends BaseGridDTO, D extends BaseDTO, F extends FilterDTO>
     extends StatefulWidget {
   const ListComponent({super.key});
 
@@ -26,7 +29,7 @@ abstract class ListComponent<G extends Model, D extends Model, F extends FilterD
   State<StatefulWidget> createState();
 }
 
-abstract class ListComponentState<G extends Model, D extends Model, F extends FilterDTO>
+abstract class ListComponentState<G extends BaseGridDTO, D extends BaseDTO, F extends FilterDTO>
     extends State<ListComponent<G, D, F>> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   Widget buildDetailComponent({String? id});
@@ -36,28 +39,53 @@ abstract class ListComponentState<G extends Model, D extends Model, F extends Fi
   Controllers getListFilterControllers();
   F getFilterData(PageableDataRequest<F> pageableDataRequest);
   F getClearFilter();
+  List<DropdownMenuItem<Property>> getPropertiesToSort();
   BaseStoreState<G, D, F> store;
   PageableDataRequest<F> pageableDataRequest;
   final formFilterListKey = GlobalKey<FormState>();
+  List<Sort> sortList = [];
 
   ListComponentState(this.store, this.pageableDataRequest);
 
-  changePage(int pageNumber, int pageSize) {
+  _changePage(int pageNumber, int pageSize) {
     pageableDataRequest.pageNumber = pageNumber;
     pageableDataRequest.pageSize = pageSize;
     return store.changePage(pageableDataRequest);
   }
 
-  doFilter() {
+  _doFilter() {
     pageableDataRequest.pageNumber = 0;
     pageableDataRequest.filter = getFilterData(pageableDataRequest);
     store.list(pageableDataRequest);
   }
 
-  clearFilters() {
+  _clearFilters() {
     pageableDataRequest.pageNumber = 0;
     pageableDataRequest.filter = getClearFilter();
     store.list(pageableDataRequest);
+  }
+
+  _doSort() {
+    pageableDataRequest.pageNumber = 0;
+    store.list(pageableDataRequest);
+  }
+
+  _clearSort() {
+    pageableDataRequest.pageNumber = 0;
+    pageableDataRequest.sort = [];
+    store.list(pageableDataRequest);
+  }
+
+  _addFieldToSort(value) {
+    if (!pageableDataRequest.sort.contains(value)) {
+      pageableDataRequest.sort.add(value);
+    }
+  }
+
+  _removeFieldToSort(value) {
+    if (pageableDataRequest.sort.contains(value)) {
+      pageableDataRequest.sort.remove(value);
+    }
   }
 
   @override
@@ -93,11 +121,12 @@ abstract class ListComponentState<G extends Model, D extends Model, F extends Fi
                 },
               ),
           () => showFilterModal(),
+          () => showSortModal(),
           getTitleComponent(context),
           context
       ),
       body: Container(
-        padding: const EdgeInsets.fromLTRB(5, 10, 5, 10),
+        padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
         margin: const EdgeInsets.fromLTRB(0, 5, 0, 5),
         decoration: const BoxDecoration(
           color: DefaultColors.transparency,
@@ -118,9 +147,68 @@ abstract class ListComponentState<G extends Model, D extends Model, F extends Fi
     return ListenableBuilder(
         listenable: store,
         builder: (context, child) {
-          return PaginationBar(changePage: changePage, totalRegisters: store.totalRegisters);
+          return PaginationBar(changePage: _changePage, totalRegisters: store.totalRegisters);
         }
     );
+  }
+
+  showSortModal() {
+    sortList = pageableDataRequest.sort;
+    var title = Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          TextUtil.subTitle(L10nService.l10n().sort),
+        ]
+    );
+
+    List<DropdownMenuItem<Property>> items = getPropertiesToSort();
+    var body = SortSelectionComponent(
+      propertiesList: items,
+      onAddSortItem: _addFieldToSort,
+      onRemoveSortItem: _removeFieldToSort,
+      initialValues: pageableDataRequest.sort,
+    );
+
+    var bottom = Row(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        DefaultButtons.formButton(
+                () {
+              _clearSort();
+              Navigator.pop(context);
+            },
+            L10nService.l10n().clear,
+            Icons.clear),
+        DefaultButtons.formCancelButton(
+                () => Navigator.pop(context),
+            L10nService.l10n().cancel),
+        DefaultButtons.formButton(
+                () {
+              _doSort();
+              Navigator.pop(context);
+            },
+            L10nService.l10n().toSort,
+            Icons.sort),
+      ],
+    );
+
+    ShowModalBottomSheetComponent.getModal(context, title, body, bottom);
+  }
+
+  List<Widget> getSortList() {
+    List<Widget> components = [];
+
+    for (var value in sortList) {
+      components.add(Row(
+        children: [
+          TextUtil('${value.property.label} (${value.direction.name})'),
+          DefaultButtons.transparentButton(() => _removeFieldToSort(value), const Icon(Icons.close))
+        ],
+      ));
+    }
+
+    return components;
   }
 
   showFilterModal() {
@@ -157,7 +245,7 @@ abstract class ListComponentState<G extends Model, D extends Model, F extends Fi
       children: [
         DefaultButtons.formButton(
                 () {
-              clearFilters();
+              _clearFilters();
               Navigator.pop(context);
             },
             L10nService.l10n().clear,
@@ -167,7 +255,7 @@ abstract class ListComponentState<G extends Model, D extends Model, F extends Fi
             L10nService.l10n().cancel),
         DefaultButtons.formButton(
                 () {
-              doFilter();
+              _doFilter();
               Navigator.pop(context);
             },
             L10nService.l10n().doFilter,
@@ -245,7 +333,7 @@ abstract class ListComponentState<G extends Model, D extends Model, F extends Fi
         });
       }, iconColor: DefaultColors.textColor),
       DefaultButtons.deleteButton(() async {
-        store.delete(item.getId()!);
+        store.delete(item.getId());
       }, iconColor: DefaultColors.textColor),
     ];
   }

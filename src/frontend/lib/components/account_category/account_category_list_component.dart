@@ -11,6 +11,7 @@ import 'package:frontend/l10n/l10n_service.dart';
 import 'package:frontend/model/account_category/account_category_dto.dart';
 import 'package:frontend/model/account_category/account_category_filter_dto.dart';
 import 'package:frontend/model/account_category/account_category_grid.dart';
+import 'package:frontend/model/data/sort.dart';
 import 'package:frontend/model/data/pageable_data_request.dart';
 import 'package:frontend/state/account_category_store_state.dart';
 
@@ -89,6 +90,14 @@ class _AccountCategoryListComponentState
   @override
   AccountCategoryListFilterControllers getListFilterControllers() {
     return AccountCategoryListFilterControllers.getInstance();
+  }
+
+  @override
+  List<DropdownMenuItem<Property>> getPropertiesToSort() {
+    return [
+      DropdownMenuItem(value: Property(L10nService.l10n().description, 'description'), child: Text(L10nService.l10n().description),),
+      DropdownMenuItem(value: Property(L10nService.l10n().type, 'type'), child: Text(L10nService.l10n().type),)
+    ];
   }
 }
 

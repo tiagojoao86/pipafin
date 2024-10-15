@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:frontend/model/model.dart';
+import 'package:frontend/model/base_dto.dart';
 import 'package:frontend/enumeration/account_category_type_enum.dart';
 
-class AccountCategoryDTO implements Model {
+class AccountCategoryDTO implements BaseDTO {
   String? id;
   String? description;
   DateTime? createdAt;

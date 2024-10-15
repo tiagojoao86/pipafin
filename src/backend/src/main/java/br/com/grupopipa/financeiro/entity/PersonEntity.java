@@ -24,7 +24,7 @@ public class PersonEntity extends BaseEntity<PersonDTO> {
     private String name;
 
     @Column(nullable = false)
-    private String fantasyName;
+    private String tradeName;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -64,7 +64,7 @@ public class PersonEntity extends BaseEntity<PersonDTO> {
     public void fillFromDTO(PersonDTO item) {
         this.setId(item.getId());
         this.name = item.getName();
-        this.fantasyName = item.getFantasyName();
+        this.tradeName = item.getTradeName();
         this.personType = item.getPersonType();
         this.document = item.getDocument();
         this.documentType = item.getDocumentType();

@@ -14,16 +14,6 @@ class PersonFilterDTO extends FilterDTO {
   PersonFilterDTO(super.operator, {this.name, this.types, this.document, this.phone, this.address});
 
   @override
-  void fillFromJson(Map<String, dynamic> map) {
-    throw UnsupportedError("Method fillFromJson in PersonFilterDTO is not implemented");
-  }
-
-  @override
-  String? getId() {
-    throw UnsupportedError("Method getId in PersonFilterDTO is not implemented");
-  }
-
-  @override
   String toJson() {
     return jsonEncode(getAttributesMap());
   }

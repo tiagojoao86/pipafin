@@ -7,7 +7,7 @@ import 'package:frontend/basics_components/text_util.dart';
 class AppBarRegisterComponent extends AppBar {
   final BuildContext context;
   AppBarRegisterComponent(
-      VoidCallback cbAdd, VoidCallback cbFilter, String title, this.context,
+      VoidCallback cbAdd, VoidCallback cbFilter, VoidCallback cbSort, String title, this.context,
       {super.key})
       : super(
           leading: DefaultButtons.transparentButton(
@@ -27,8 +27,11 @@ class AppBarRegisterComponent extends AppBar {
                 padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
                 child: DefaultButtons.buttonAdd(cbAdd, iconColor: DefaultColors.textColor)),
             Padding(
-                padding: const EdgeInsets.fromLTRB(0.0, 0.0, 17.0, 0.0),
-                child: DefaultButtons.buttonFilter(cbFilter, iconColor: DefaultColors.textColor))
+                padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+                child: DefaultButtons.buttonFilter(cbFilter, iconColor: DefaultColors.textColor)),
+            Padding(
+                padding: const EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
+                child: DefaultButtons.transparentButton(cbSort, const Icon(Icons.sort)))
           ],
         );
 }

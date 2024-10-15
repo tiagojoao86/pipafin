@@ -16,7 +16,7 @@ class CardGridComponent extends StatelessWidget {
 
   Container _buildInfoCardWithActions() {
     return Container(
-      margin: const EdgeInsets.fromLTRB(15, 1, 15, 3),
+      margin: const EdgeInsets.fromLTRB(0, 1, 0, 3),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(DefaultSizes.borderRadius),
         color: DefaultColors.itemTransparent

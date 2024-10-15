@@ -1,4 +1,5 @@
-import 'package:frontend/model/model.dart';
+import 'package:frontend/model/base_dto.dart';
+import 'package:frontend/model/base_grid_dto.dart';
 
 sealed class BaseState {}
 
@@ -12,13 +13,13 @@ class ErrorBaseState implements BaseState {
   ErrorBaseState(this.message);
 }
 
-class FoundedBaseState<D extends Model> implements BaseState {
+class FoundedBaseState<D extends BaseDTO> implements BaseState {
   final D dto;
 
   FoundedBaseState(this.dto);
 }
 
-class ListedBaseState<G extends Model> implements BaseState {
+class ListedBaseState<G extends BaseGridDTO> implements BaseState {
   List<G> list;
   int totalRegisters;
 

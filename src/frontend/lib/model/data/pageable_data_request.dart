@@ -2,17 +2,17 @@ import 'dart:convert';
 
 import 'package:frontend/constants/configuration_constants.dart';
 import 'package:frontend/model/data/filter_dto.dart';
-import 'package:frontend/model/data/order.dart';
+import 'package:frontend/model/data/sort.dart';
 
 class PageableDataRequest<F extends FilterDTO> {
-  static const String _id = 'id';
+  static const String _id = 'ID';
 
   F filter;
   int pageSize = ConfigurationConstants.pageSizeDefault;
   int pageNumber = 0;
-  List<Order> orders = [Order(SortDirectionEnum.asc, _id)];
+  List<Sort> sort = [];
 
-  PageableDataRequest(this.filter, this.pageSize, this.pageNumber, this.orders);
+  PageableDataRequest(this.filter, this.pageSize, this.pageNumber, this.sort);
 
   PageableDataRequest.basic(this.filter);
 
@@ -21,8 +21,8 @@ class PageableDataRequest<F extends FilterDTO> {
     map.putIfAbsent("filter", () => filter.getAttributesMap());
     map.putIfAbsent("pageSize", () => pageSize);
     map.putIfAbsent("pageNumber", () => pageNumber);
-    List<Map<String, dynamic>> values = orders.map((it) => it.toMap()).toList();
-    map.putIfAbsent("orders", () => values);
+    List<Map<String, dynamic>> values = sort.map((it) => it.toMap()).toList();
+    map.putIfAbsent("sort", () => values);
 
     return jsonEncode(map);
   }

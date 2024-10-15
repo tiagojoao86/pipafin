@@ -1,12 +1,13 @@
 import 'dart:ui';
 import 'package:frontend/constants/rest_constants.dart';
+import 'package:frontend/model/base_grid_dto.dart';
 import 'package:frontend/model/data/pageable_data_request.dart';
 import 'package:frontend/model/data/pageable_data_response.dart';
-import 'package:frontend/model/model.dart';
+import 'package:frontend/model/base_dto.dart';
 import 'package:frontend/model/rest_response.dart';
 import 'package:http/http.dart' as http;
 
-abstract class BaseService<G extends Model, D extends Model> {
+abstract class BaseService<G extends BaseGridDTO, D extends BaseDTO> {
   final String apiUrl = 'localhost:8080';
 
   const BaseService();

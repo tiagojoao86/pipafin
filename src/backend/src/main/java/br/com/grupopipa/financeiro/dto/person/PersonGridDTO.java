@@ -18,7 +18,7 @@ public class PersonGridDTO implements DTO<PersonEntity> {
 
     private UUID id;
     private String name;
-    private String fantasyName;
+    private String tradeName;
     private PersonTypeEnum personType;
 
     @Override
@@ -29,7 +29,7 @@ public class PersonGridDTO implements DTO<PersonEntity> {
     @Override
     public void fillFromEntity(PersonEntity entity) {
         this.setId(entity.getId());
-        this.setFantasyName(entity.getFantasyName());
+        this.setTradeName(entity.getTradeName());
         this.setPersonType(entity.getPersonType());
         this.setName(entity.getName());
     }

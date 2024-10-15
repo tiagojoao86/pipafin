@@ -21,7 +21,7 @@ class ShowModalBottomSheetComponent {
           backgroundColor: DefaultColors.transparent,
           onClosing: () => {},
           builder: (context) {
-            return Padding(padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+            return Padding(padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
               child: Scaffold(
                   backgroundColor: DefaultColors.transparent,
                   appBar: AppBar(

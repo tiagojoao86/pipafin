@@ -1,6 +1,7 @@
 import 'dart:convert';
+import 'package:frontend/model/base_grid_dto.dart';
 import 'package:frontend/model/data/pageable_data_response.dart';
-import 'package:frontend/model/model.dart';
+import 'package:frontend/model/base_dto.dart';
 import 'package:http/http.dart';
 
 class RestResponse<T> {
@@ -59,7 +60,11 @@ class RestResponse<T> {
     for (final item in jsonBody) {
       if (objCreator != null) {
         T obj = objCreator();
-        if (obj is Model) {
+        if (obj is BaseDTO) {
+          obj.fillFromJson(item);
+          result.add(obj);
+          continue;
+        } else if (obj is BaseGridDTO) {
           obj.fillFromJson(item);
           result.add(obj);
           continue;
@@ -73,7 +78,7 @@ class RestResponse<T> {
   _extractBodyAsOther(jsonBody, objCreator) {
     if (objCreator != null) {
       T obj = objCreator();
-      if (obj is Model) {
+      if (obj is BaseDTO) {
         obj.fillFromJson(jsonBody);
         body = obj;
         return;

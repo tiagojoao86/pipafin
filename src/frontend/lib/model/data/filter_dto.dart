@@ -1,11 +1,12 @@
 import 'package:frontend/enumeration/logic_operators_enum.dart';
-import 'package:frontend/model/model.dart';
 
-abstract class FilterDTO extends Model {
+abstract class FilterDTO {
 
   LogicOperatorsEnum operator;
 
   FilterDTO(this.operator);
 
   Map<String, dynamic> getAttributesMap();
+
+  String toJson();
 }

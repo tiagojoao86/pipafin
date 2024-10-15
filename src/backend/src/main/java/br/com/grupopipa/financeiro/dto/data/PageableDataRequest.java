@@ -3,7 +3,6 @@ package br.com.grupopipa.financeiro.dto.data;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.util.ObjectUtils;
 
 import java.util.List;
@@ -15,10 +14,10 @@ public class PageableDataRequest<F extends FilterDTO> {
     private F filter;
     private Integer pageSize;
     private Integer pageNumber;
-    private List<Order> orders;
+    private List<Sort> sort;
 
     public PageRequest getPage() {
-        Sort sort = buildSort();
+        org.springframework.data.domain.Sort sort = buildSort();
 
         if (!ObjectUtils.isEmpty(sort)) {
             return PageRequest.of(Optional.ofNullable(pageNumber).orElse(0), Optional.ofNullable(pageSize).orElse(10), sort);
@@ -26,19 +25,19 @@ public class PageableDataRequest<F extends FilterDTO> {
         return PageRequest.of(Optional.ofNullable(pageNumber).orElse(0), Optional.ofNullable(pageSize).orElse(10));
     }
 
-    private Sort buildSort() {
-        if (ObjectUtils.isEmpty(orders)) {
+    private org.springframework.data.domain.Sort buildSort() {
+        if (ObjectUtils.isEmpty(sort)) {
             return null;
         }
 
-        return Sort.by(orders.stream().map(this::convertToSortOrder).toList());
+        return org.springframework.data.domain.Sort.by(sort.stream().map(this::convertToSortOrder).toList());
     }
 
-    private Sort.Order convertToSortOrder(Order item) {
-        if (Sort.Direction.ASC.equals(item.getDirection())) {
-            return Sort.Order.asc(item.getProperty());
+    private org.springframework.data.domain.Sort.Order convertToSortOrder(Sort item) {
+        if (org.springframework.data.domain.Sort.Direction.ASC.equals(item.getDirection())) {
+            return org.springframework.data.domain.Sort.Order.asc(item.getProperty());
         }
 
-        return Sort.Order.desc(item.getProperty());
+        return org.springframework.data.domain.Sort.Order.desc(item.getProperty());
     }
 }

@@ -87,8 +87,8 @@ class _PersonDetailComponentState
     if (dto.name != null) {
       getControllers().nameController.text = dto.name!;
     }
-    if (dto.fantasyName != null) {
-      getControllers().fantasyNameController.text = dto.fantasyName!;
+    if (dto.tradeName != null) {
+      getControllers().tradeNameController.text = dto.tradeName!;
     }
     if (dto.document != null) {
       getControllers().documentController.text = store.maskDocument(dto.document);
@@ -140,7 +140,7 @@ class _PersonDetailComponentState
     }
 
     dto.name = getControllers().nameController.text;
-    dto.fantasyName = getControllers().fantasyNameController.text;
+    dto.tradeName = getControllers().tradeNameController.text;
 
     dto.document = store.unmaskDocument(getControllers().documentController.text);
 
@@ -163,11 +163,13 @@ class _PersonDetailComponentState
 
   List<Widget> _getMainDataForm() {
     return [
-      TextFormComponent(L10nService.l10n().name, getControllers().nameController,
+      TextFormComponent(store.typePersonState is LegalPersonState ?
+      L10nService.l10n().corporateName : L10nService.l10n().name,
+          getControllers().nameController,
           validator: emptyValidator),
       TextFormComponent(
-        L10nService.l10n().fantasyName,
-        getControllers().fantasyNameController,
+        L10nService.l10n().tradeName,
+        getControllers().tradeNameController,
         validator: emptyValidator,
         visible: store.typePersonState is LegalPersonState,
       ),
@@ -255,7 +257,7 @@ class PersonDetailsControllers extends Controllers {
   @override
   void clear() {
     nameController.clear();
-    fantasyNameController.clear();
+    tradeNameController.clear();
     documentController.clear();
     addressNumberController.clear();
     addressStreetController.clear();
@@ -268,7 +270,7 @@ class PersonDetailsControllers extends Controllers {
   }
 
   final nameController = TextEditingController();
-  final fantasyNameController = TextEditingController();
+  final tradeNameController = TextEditingController();
   final documentController = TextEditingController();
   final addressNumberController = TextEditingController();
   final addressStreetController = TextEditingController();

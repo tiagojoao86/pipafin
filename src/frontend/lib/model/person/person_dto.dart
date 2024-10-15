@@ -2,12 +2,12 @@ import 'dart:convert';
 
 import 'package:frontend/enumeration/document_type_enum.dart';
 import 'package:frontend/enumeration/person_type_enum.dart';
-import 'package:frontend/model/model.dart';
+import 'package:frontend/model/base_dto.dart';
 
-class PersonDTO implements Model {
+class PersonDTO implements BaseDTO {
   String? id;
   String? name;
-  String? fantasyName;
+  String? tradeName;
   PersonTypeEnum? personType;
   String? document;
   DocumentTypeEnum? documentType;
@@ -30,7 +30,7 @@ class PersonDTO implements Model {
   void fillFromJson(Map<String, dynamic> map) {
     id = map['id'];
     name = map['name'];
-    fantasyName = map['fantasyName'];
+    tradeName = map['tradeName'];
     personType = PersonTypeEnum.fromString(map["personType"] as String);
     document = map['document'];
     documentType = DocumentTypeEnum.fromString(map["documentType"] as String);
@@ -53,7 +53,7 @@ class PersonDTO implements Model {
     Map<String, dynamic> map = {};
     map.putIfAbsent("id", () => id);
     map.putIfAbsent("name", () => name);
-    map.putIfAbsent("fantasyName", () => fantasyName);
+    map.putIfAbsent("tradeName", () => tradeName);
     map.putIfAbsent("personType", () => personType!.name.toUpperCase());
     map.putIfAbsent("document", () => document);
     map.putIfAbsent("documentType", () => documentType!.name.toUpperCase());

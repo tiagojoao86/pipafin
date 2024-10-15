@@ -5,12 +5,13 @@ import 'package:frontend/basics_components/default_sizes.dart';
 import 'package:frontend/basics_components/text_util.dart';
 import 'package:frontend/components/base/controllers.dart';
 import 'package:frontend/l10n/l10n_service.dart';
+import 'package:frontend/model/base_grid_dto.dart';
 import 'package:frontend/model/data/filter_dto.dart';
-import 'package:frontend/model/model.dart';
+import 'package:frontend/model/base_dto.dart';
 import 'package:frontend/state/base_state.dart';
 import 'package:frontend/state/base_store_state.dart';
 
-abstract class DetailComponent<G extends Model, D extends Model, F extends FilterDTO,
+abstract class DetailComponent<G extends BaseGridDTO, D extends BaseDTO, F extends FilterDTO,
     S extends BaseStoreState<G, D, F>> extends StatefulWidget {
   final String? id;
   const DetailComponent({this.id, super.key});
@@ -19,7 +20,7 @@ abstract class DetailComponent<G extends Model, D extends Model, F extends Filte
   State<StatefulWidget> createState();
 }
 
-abstract class DetailComponentState<G extends Model, D extends Model, F extends FilterDTO,
+abstract class DetailComponentState<G extends BaseGridDTO, D extends BaseDTO, F extends FilterDTO,
     S extends BaseStoreState<G, D, F>> extends State<DetailComponent<G, D, F, S>> {
   String getTitle();
   void setDataToControllers();
@@ -124,13 +125,14 @@ abstract class DetailComponentState<G extends Model, D extends Model, F extends 
       );
   }
 
-  Form _buildForm() {
-    return Form(
+  Widget _buildForm() {
+    return ListView(children: [
+      Form(
         key: formKey,
         child: Column(mainAxisSize: MainAxisSize.min, children: [
           ...buildInnerForm(context),
 
-        ]));
+        ]))]);
   }
 
   void _close(G? item) {

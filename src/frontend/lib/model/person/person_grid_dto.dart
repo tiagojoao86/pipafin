@@ -1,10 +1,10 @@
 import 'package:frontend/enumeration/person_type_enum.dart';
-import 'package:frontend/model/model.dart';
+import 'package:frontend/model/base_grid_dto.dart';
 import 'package:frontend/model/person/person_dto.dart';
 
-class PersonGridDTO implements Model {
+class PersonGridDTO implements BaseGridDTO {
   String? id;
-  String? fantasyName;
+  String? tradeName;
   String? name;
   PersonTypeEnum? personType;
 
@@ -12,7 +12,7 @@ class PersonGridDTO implements Model {
 
   PersonGridDTO.fromDTO(PersonDTO dto) {
     id = dto.id;
-    fantasyName = dto.fantasyName;
+    tradeName = dto.tradeName;
     personType = dto.personType;
     name = dto.name;
   }
@@ -20,15 +20,11 @@ class PersonGridDTO implements Model {
   @override
   void fillFromJson(Map<String, dynamic> map) {
     id = map["id"] as String;
-    fantasyName = map["fantasyName"] as String;
+    if (map["tradeName"] != null) {
+      tradeName = map["tradeName"] as String;
+    }
     name = map["name"] as String;
     personType = PersonTypeEnum.fromString(map["personType"] as String);
-  }
-
-  @override
-  String toJson() {
-    // TODO: implement toJson
-    throw UnimplementedError();
   }
 
   @override

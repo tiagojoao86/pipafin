@@ -20,7 +20,7 @@ public class PersonDTO implements DTO<PersonEntity> {
 
     private UUID id;
     private String name;
-    private String fantasyName;
+    private String tradeName;
     private PersonTypeEnum personType;
     private String document;
     private DocumentTypeEnum documentType;
@@ -46,7 +46,7 @@ public class PersonDTO implements DTO<PersonEntity> {
     public void fillFromEntity(PersonEntity entity) {
         this.id = entity.getId();
         this.name = entity.getName();
-        this.fantasyName = entity.getFantasyName();
+        this.tradeName = entity.getTradeName();
         this.personType = entity.getPersonType();
         this.document = entity.getDocument();
         this.documentType = entity.getDocumentType();

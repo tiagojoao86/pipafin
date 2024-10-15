@@ -19,8 +19,8 @@ class Home extends StatelessWidget {
         appBar: AppBar(            
           backgroundColor: DefaultColors.transparent,
           leading: Container(
-            padding: const EdgeInsets.fromLTRB(30, 0, 0, 0),
-            child: const Icon(Icons.home)
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+            child: const Icon(Icons.menu)
           ),
           iconTheme: const IconThemeData(color: DefaultColors.textColor),
           
@@ -28,7 +28,7 @@ class Home extends StatelessWidget {
             foreground: DefaultColors.textColor,)),
         ),
         body: Container(
-                margin: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                 child: child
               )
     );
@@ -42,6 +42,11 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: Container(
+            padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+            child: const Icon(Icons.home)
+        ),
+        iconTheme: const IconThemeData(color: DefaultColors.textColor),
         title: TextUtil.subTitle(
             L10nService.l10n().mainMenuTitle,
             foreground: DefaultColors.textColor
